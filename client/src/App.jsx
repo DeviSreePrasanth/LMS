@@ -1,35 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import Home from './pages/Home';
+import Login from './pages/auth/Login';
+import Register from './pages/auth/Register';
+import AddBook from './pages/librarian/AddBook';
+import BookList from './pages/librarian/BookList';
+import Students from './pages/librarian/Students';
+import StudentBookList from './pages/student/BookList';
+import StudentDashboard from './pages/student/Dashboard';
+import LibrarianDashboard from './pages/librarian/Dashboard';
+import { AuthProvider } from './context/AuthContext';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <AuthProvider>
+      <Router>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          {/* Librarian Routes */}
+          <Route path="/librarian/dashboard" element={<LibrarianDashboard />} />
+          <Route path="/librarian/addbook" element={<AddBook />} />
+          <Route path="/librarian/booklist" element={<BookList />} />
+          <Route path="/librarian/students" element={<Students />} />
+          {/* Student Routes */}
+          <Route path="/student/dashboard" element={<StudentDashboard />} />
+          <Route path="/student/booklist" element={<StudentBookList />} />
+        </Routes>
+        <Footer />
+      </Router>
+    </AuthProvider>
+  );
+};
 
-export default App
+export default App;
