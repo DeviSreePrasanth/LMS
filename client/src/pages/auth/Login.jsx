@@ -13,13 +13,26 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
-      login(response.data.token);
-      navigate('/'); // Redirect based on user role later
+        const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+        console.log('User role:', response.data.user.role);  // Correctly accessed
+        console.log('User email:', response.data.user.email);  // Correctly accessed
+
+        login(response.data.token);
+        
+        // Assuming the response contains the role of the user, you can route based on the role
+        const userRole = response.data.user.role;
+        if (userRole === 'librarian') {
+            navigate('/librarian/dashboard'); // Redirect to librarian dashboard
+        } else if (userRole === 'student') {
+            navigate('/student/dashboard'); // Redirect to student dashboard
+        } else {
+            navigate('/'); // Default route
+        }
     } catch (err) {
-      setError('Invalid credentials');
+        setError('Invalid credentials');
     }
-  };
+};
+
 
   return (
     <div className="h-screen flex items-center justify-center bg-gray-100">

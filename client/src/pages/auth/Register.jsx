@@ -1,33 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
 import axios from 'axios';
 
 const Register = () => {
+  const { login } = useContext(AuthContext);
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [role, setRole] = useState('librarian'); // Add role as 'librarian' by default
+  const [role] = useState('student');  // Set default role as 'student'
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-        await axios.post('http://localhost:5000/api/auth/register', { 
-            name, 
-            email, 
-            password, 
-            role 
-        });
-        alert('Registration successful! Please login.');
+      const response = await axios.post('http://localhost:5000/api/auth/register', { name, email, password, role });
+      
+      if (response.data.token) {
+        login(response.data.token);
+        setSuccessMessage('Registration Successful! Please log in.');
+        setTimeout(() => navigate('/login'), 2000); // Redirect after 2 seconds
+      } else {
+        setError('Registration failed. Please try again.');
+      }
     } catch (err) {
-        console.error(err.response.data);
-        setError('Registration failed. Try again.');
+      console.error("Registration Error:", err.response?.data || err.message);
+      setError('Registration failed. Please try again.');
     }
-};
+  };
 
   return (
     <div className="h-screen flex items-center justify-center bg-gray-100">
       <form className="bg-white p-8 rounded shadow-lg w-80" onSubmit={handleRegister}>
         <h2 className="text-2xl font-semibold mb-4">Register</h2>
+        {successMessage && <p className="text-green-600 text-sm">{successMessage}</p>}
         {error && <p className="text-red-600 text-sm">{error}</p>}
         <div className="mb-4">
           <label htmlFor="name" className="block text-sm">Name</label>
@@ -51,7 +59,7 @@ const Register = () => {
             required
           />
         </div>
-        <div className="mb-6">
+        <div className="mb-4">
           <label htmlFor="password" className="block text-sm">Password</label>
           <input
             type="password"
@@ -62,19 +70,7 @@ const Register = () => {
             required
           />
         </div>
-        <div className="mb-4">
-          <label htmlFor="role" className="block text-sm">Role</label>
-          <select
-            id="role"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            className="w-full p-2 mt-1 border rounded"
-            required
-          >
-            <option value="librarian">Librarian</option>
-            <option value="admin">Admin</option>
-          </select>
-        </div>
+        {/* Remove role selection, as it's set to default 'student' */}
         <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">Register</button>
       </form>
     </div>
