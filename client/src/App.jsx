@@ -1,7 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
 import Home from './pages/Home';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
@@ -17,10 +15,9 @@ const App = () => {
   return (
     <AuthProvider>
       <Router>
-        <Navbar />
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
           {/* Librarian Routes */}
           <Route path="/librarian/dashboard" element={<LibrarianDashboard />} />
@@ -31,7 +28,6 @@ const App = () => {
           <Route path="/student/dashboard" element={<StudentDashboard />} />
           <Route path="/student/booklist" element={<StudentBookList />} />
         </Routes>
-        <Footer />
       </Router>
     </AuthProvider>
   );

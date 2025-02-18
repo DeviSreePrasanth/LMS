@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import axios from 'axios';
 
@@ -13,55 +13,64 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-        const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
-        console.log('User role:', response.data.user.role);  // Correctly accessed
-        console.log('User email:', response.data.user.email);  // Correctly accessed
+      const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+      console.log('User role:', response.data.user.role);
+      console.log('User email:', response.data.user.email);
 
-        login(response.data.token);
-        
-        // Assuming the response contains the role of the user, you can route based on the role
-        const userRole = response.data.user.role;
-        if (userRole === 'librarian') {
-            navigate('/librarian/dashboard'); // Redirect to librarian dashboard
-        } else if (userRole === 'student') {
-            navigate('/student/dashboard'); // Redirect to student dashboard
-        } else {
-            navigate('/'); // Default route
-        }
+      login(response.data.token);
+
+      const userRole = response.data.user.role;
+      if (userRole === 'librarian') {
+        navigate('/librarian/dashboard');
+      } else if (userRole === 'student') {
+        navigate('/student/dashboard');
+      } else {
+        navigate('/');
+      }
     } catch (err) {
-        setError('Invalid credentials');
+      setError('Invalid credentials');
     }
-};
-
+  };
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gray-100">
-      <form className="bg-white p-8 rounded shadow-lg w-80" onSubmit={handleLogin}>
-        <h2 className="text-2xl font-semibold mb-4">Login</h2>
-        {error && <p className="text-red-600 text-sm">{error}</p>}
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-sm">Email</label>
+    <div className="h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600">
+      <form className="bg-white p-8 rounded-2xl shadow-lg w-96 space-y-6" onSubmit={handleLogin}>
+        <h2 className="text-3xl font-bold text-center text-gray-800">Login</h2>
+        {error && <p className="text-red-600 text-sm text-center">{error}</p>}
+        <div>
+          <label htmlFor="email" className="block text-sm font-medium text-gray-600">Email</label>
           <input
             type="email"
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-2 mt-1 border rounded"
+            className="w-full p-3 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
         </div>
-        <div className="mb-6">
-          <label htmlFor="password" className="block text-sm">Password</label>
+        <div>
+          <label htmlFor="password" className="block text-sm font-medium text-gray-600">Password</label>
           <input
             type="password"
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-2 mt-1 border rounded"
+            className="w-full p-3 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
         </div>
-        <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">Login</button>
+        <button
+          type="submit"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-lg transition duration-300 ease-in-out"
+        >
+          Login
+        </button>
+        <p className="text-center text-gray-600">
+          Don't have an account?{' '}
+          <Link to="/register" className="text-blue-600 hover:text-blue-800 font-semibold">
+            Register here
+          </Link>
+        </p>
       </form>
     </div>
   );
