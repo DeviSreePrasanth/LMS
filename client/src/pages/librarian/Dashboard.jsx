@@ -1,7 +1,17 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Remove token from localStorage
+    localStorage.removeItem("token");
+
+    // Redirect to login page
+    navigate("/");
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       {/* Header */}
@@ -17,7 +27,10 @@ const Dashboard = () => {
           <Link to="/manage-users" className="text-gray-600 hover:text-blue-600">
             Manage Users
           </Link>
-          <button className="bg-red-500 text-white py-1 px-4 rounded-lg hover:bg-red-600 transition duration-300">
+          <button 
+            onClick={handleLogout} 
+            className="bg-red-500 text-white py-1 px-4 rounded-lg hover:bg-red-600 transition duration-300"
+          >
             Logout
           </button>
         </nav>
