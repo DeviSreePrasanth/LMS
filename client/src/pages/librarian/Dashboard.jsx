@@ -1,76 +1,203 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 
-const Dashboard = () => {
-  const navigate = useNavigate();
+// Import existing components from their respective files
+import AddBook from './AddBook'; // src/pages/librarian/AddBook
+import BookList from './BookList'; // src/pages/librarian/BookList
+import Students from './Students'; // src/pages/librarian/Students
 
-  const handleLogout = () => {
-    // Remove token from localStorage
-    localStorage.removeItem("token");
-
-    // Redirect to login page
-    navigate("/");
-  };
+// Sidebar Component
+const Sidebar = ({ setActiveSection, activeSection }) => {
+  const menuItems = [
+    { name: 'Dashboard', section: 'dashboard' },
+    { name: 'Book List', section: 'booklist' },
+    { name: 'Students', section: 'students' },
+    { name: 'Add New Book', section: 'addbook' },
+    { name: 'Issue Book', section: 'issuebook' },
+    { name: 'Return Book', section: 'returnbook' },
+  ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100">
-      {/* Header */}
-      <header className="bg-white shadow-md py-4 px-6 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-blue-600">Library Management System</h1>
-        <nav className="space-x-6">
-          <Link to="/manage-books" className="text-gray-600 hover:text-blue-600">
-            Manage Books
-          </Link>
-          <Link to="/issued-books" className="text-gray-600 hover:text-blue-600">
-            Issued Books
-          </Link>
-          <Link to="/manage-users" className="text-gray-600 hover:text-blue-600">
-            Manage Users
-          </Link>
-          <button 
-            onClick={handleLogout} 
-            className="bg-red-500 text-white py-1 px-4 rounded-lg hover:bg-red-600 transition duration-300"
+    <motion.div
+      className="w-[250px] bg-[#2c3e50] text-white p-5 fixed h-full"
+      initial={{ x: '-100%' }}
+      animate={{ x: 0 }}
+      transition={{ duration: 0.5, ease: 'easeInOut' }}
+    >
+      <h2 className="text-2xl font-semibold mb-8 text-center">Library System</h2>
+      <ul className="space-y-3">
+        {menuItems.map((item, index) => (
+          <motion.li
+            key={index}
+            className={`p-3 rounded-md cursor-pointer hover:bg-[#1abc9c] transition-transform duration-300 ${
+              activeSection === item.section ? 'bg-[#1abc9c]' : 'bg-[#34495e]'
+            }`}
+            whileHover={{ x: 10 }}
+            onClick={() => setActiveSection(item.section)}
           >
-            Logout
-          </button>
-        </nav>
-      </header>
+            {item.name}
+          </motion.li>
+        ))}
+      </ul>
+    </motion.div>
+  );
+};
 
-      {/* Main Content */}
-      <main className="flex-grow container mx-auto py-10 px-6">
-        {/* Welcome Section */}
-        <section className="mb-10 text-center">
-          <h2 className="text-3xl font-bold text-gray-800">Welcome, Librarian!</h2>
-          <p className="text-gray-600">Manage your library efficiently and effectively.</p>
-        </section>
+// Header Component
+const Header = () => (
+  <motion.div
+    className="flex justify-between items-center bg-white p-5 rounded-lg shadow-md"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.8, ease: 'easeInOut' }}
+  >
+    <h1 className="text-2xl font-bold text-[#2c3e50]">Librarian Dashboard</h1>
+    <div className="flex items-center space-x-3">
+      <span className="text-gray-600">Welcome, Librarian</span>
+      <img
+        src="https://via.placeholder.com/40"
+        alt="Profile"
+        className="w-10 h-10 rounded-full"
+      />
+    </div>
+  </motion.div>
+);
 
-        {/* Cards Section */}
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Link to="/manage-books" className="group block p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <h3 className="text-xl font-semibold text-gray-800 group-hover:text-blue-600">Manage Books</h3>
-            <p className="text-gray-600">Add, edit, and delete books.</p>
-          </Link>
-          <Link to="/issued-books" className="group block p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <h3 className="text-xl font-semibold text-gray-800 group-hover:text-blue-600">View Issued Books</h3>
-            <p className="text-gray-600">Check issued and returned books.</p>
-          </Link>
-          <Link to="/manage-users" className="group block p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <h3 className="text-xl font-semibold text-gray-800 group-hover:text-blue-600">Manage Users</h3>
-            <p className="text-gray-600">View and manage library users.</p>
-          </Link>
-          <Link to="/reports" className="group block p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <h3 className="text-xl font-semibold text-gray-800 group-hover:text-blue-600">Reports & Analytics</h3>
-            <p className="text-gray-600">Generate and view reports.</p>
-          </Link>
-        </section>
-      </main>
+// StatsCard Component
+const StatsCard = ({ title, value }) => (
+  <motion.div
+    className="bg-white p-5 rounded-lg shadow-md text-center"
+    initial={{ y: 50, opacity: 0 }}
+    animate={{ y: 0, opacity: 1 }}
+    transition={{ duration: 0.6, ease: 'easeInOut' }}
+  >
+    <h3 className="text-lg text-[#7f8c8d] mb-2">{title}</h3>
+    <p className="text-2xl font-bold text-[#2c3e50]">{value}</p>
+  </motion.div>
+);
 
-      {/* Footer */}
-      <footer className="bg-white shadow-md py-4 text-center">
-        <p className="text-gray-600">&copy; 2025 Library Management System. All rights reserved.</p>
-      </footer>
+// RecentHistory Component (Dashboard Default View)
+const RecentHistory = () => {
+  const historyData = [
+    { id: 1, student: 'John Doe', book: 'The Great Gatsby', action: 'Issued', date: '2025-02-18' },
+    { id: 2, student: 'Jane Smith', book: '1984', action: 'Returned', date: '2025-02-17' },
+    { id: 3, student: 'Alice Johnson', book: 'To Kill a Mockingbird', action: 'Issued', date: '2025-02-16' },
+    { id: 4, student: 'Bob Brown', book: 'Pride and Prejudice', action: 'Returned', date: '2025-02-15' },
+  ];
+
+  return (
+    <div className="mt-8">
+      <h2 className="text-xl font-semibold text-[#2c3e50] mb-5">Recent History</h2>
+      <div className="bg-white p-5 rounded-lg shadow-md">
+        <table className="w-full text-left">
+          <thead>
+            <tr className="bg-[#f4f7fa] text-[#7f8c8d]">
+              <th className="p-3">Student</th>
+              <th className="p-3">Book</th>
+              <th className="p-3">Action</th>
+              <th className="p-3">Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {historyData.map((entry, index) => (
+              <motion.tr
+                key={entry.id}
+                className="border-b border-gray-200 hover:bg-gray-50"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+              >
+                <td className="p-3">{entry.student}</td>
+                <td className="p-3">{entry.book}</td>
+                <td className="p-3">
+                  <span
+                    className={`${
+                      entry.action === 'Issued' ? 'text-[#1abc9c]' : 'text-[#16a085]'
+                    } font-semibold`}
+                  >
+                    {entry.action}
+                  </span>
+                </td>
+                <td className="p-3">{entry.date}</td>
+              </motion.tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
 
-export default Dashboard;
+// Placeholder Components for IssueBook and ReturnBook (since they aren’t in your routes yet)
+const IssueBook = () => (
+  <div className="mt-8">
+    <h2 className="text-xl font-semibold text-[#2c3e50] mb-5">Issue Book</h2>
+    <div className="bg-white p-5 rounded-lg shadow-md">
+      <p className="text-gray-600">This is the Issue Book section. Add your issue form here.</p>
+    </div>
+  </div>
+);
+
+const ReturnBook = () => (
+  <div className="mt-8">
+    <h2 className="text-xl font-semibold text-[#2c3e50] mb-5">Return Book</h2>
+    <div className="bg-white p-5 rounded-lg shadow-md">
+      <p className="text-gray-600">This is the Return Book section. Add your return form here.</p>
+    </div>
+  </div>
+);
+
+// Main Dashboard Component
+const LibrarianDashboard = () => {
+  const [activeSection, setActiveSection] = useState('dashboard'); // Default to dashboard
+
+  const statsData = [
+    { title: 'Total Books', value: '1,245' },
+    { title: 'Active Loans', value: '87' },
+    { title: 'Registered Members', value: '320' },
+  ];
+
+  // Render content based on active section
+  const renderContent = () => {
+    switch (activeSection) {
+      case 'dashboard':
+        return (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-8">
+              {statsData.map((stat, index) => (
+                <StatsCard key={index} title={stat.title} value={stat.value} />
+              ))}
+            </div>
+            <RecentHistory />
+          </>
+        );
+      case 'booklist':
+        return <BookList />;
+      case 'students':
+        return <Students />;
+      case 'addbook':
+        return <AddBook />;
+      case 'issuebook':
+        return <IssueBook />;
+      case 'returnbook':
+        return <ReturnBook />;
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="flex min-h-screen bg-[#f4f7fa]">
+      {/* Sidebar */}
+      <Sidebar setActiveSection={setActiveSection} activeSection={activeSection} />
+
+      {/* Main Content */}
+      <div className="flex-1 ml-[250px] p-8">
+        <Header />
+        {renderContent()}
+      </div>
+    </div>
+  );
+};
+
+export default LibrarianDashboard;
