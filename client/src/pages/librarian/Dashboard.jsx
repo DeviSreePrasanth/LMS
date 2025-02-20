@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 
 // Import existing components from their respective files
@@ -43,25 +43,65 @@ const Sidebar = ({ setActiveSection, activeSection }) => {
   );
 };
 
-// Header Component
-const Header = () => (
-  <motion.div
-    className="flex justify-between items-center bg-white p-5 rounded-lg shadow-md"
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    transition={{ duration: 0.8, ease: 'easeInOut' }}
-  >
-    <h1 className="text-2xl font-bold text-[#2c3e50]">Librarian Dashboard</h1>
-    <div className="flex items-center space-x-3">
-      <span className="text-gray-600">Welcome, Librarian</span>
-      <img
-        src="https://via.placeholder.com/40"
-        alt="Profile"
-        className="w-10 h-10 rounded-full"
-      />
-    </div>
-  </motion.div>
-);
+// Header Component with Profile Image Upload
+const Header = () => {
+  const [profileImage, setProfileImage] = useState(
+    localStorage.getItem('profileImage') || 'https://via.placeholder.com/40'
+  );
+  const fileInputRef = useRef(null);
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const imageData = reader.result;
+        setProfileImage(imageData);
+        localStorage.setItem('profileImage', imageData);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const resetImage = () => {
+    setProfileImage('https://via.placeholder.com/40');
+    localStorage.removeItem('profileImage');
+  };
+
+  const triggerFileUpload = () => {
+    fileInputRef.current.click();
+  };
+
+  return (
+    <motion.div
+      className="flex justify-between items-center bg-white p-5 rounded-lg shadow-md relative"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8, ease: 'easeInOut' }}
+    >
+      <h1 className="text-2xl font-bold text-[#2c3e50]">Librarian Dashboard</h1>
+      <div className="flex items-center space-x-3">
+        <span className="text-gray-600">Welcome, Librarian</span>
+        <div className="relative">
+          <motion.img
+            src={profileImage}
+            alt="Profile"
+            className="w-10 h-10 rounded-full cursor-pointer"
+            whileHover={{ scale: 1.1 }}
+            onClick={triggerFileUpload}
+          />
+          <input
+            type="file"
+            accept="image/*"
+            ref={fileInputRef}
+            onChange={handleImageUpload}
+            className="hidden"
+          />
+        </div>
+      </div>
+    </motion.div>
+  );
+};
 
 // StatsCard Component
 const StatsCard = ({ title, value }) => (
@@ -128,7 +168,7 @@ const RecentHistory = () => {
   );
 };
 
-// Placeholder Components for IssueBook and ReturnBook (since they aren’t in your routes yet)
+// Placeholder Components for IssueBook and ReturnBook
 const IssueBook = () => (
   <div className="mt-8">
     <h2 className="text-xl font-semibold text-[#2c3e50] mb-5">Issue Book</h2>
@@ -163,6 +203,7 @@ const LibrarianDashboard = () => {
       case 'dashboard':
         return (
           <>
+            <Header /> {/* Header only for dashboard */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-8">
               {statsData.map((stat, index) => (
                 <StatsCard key={index} title={stat.title} value={stat.value} />
@@ -193,7 +234,6 @@ const LibrarianDashboard = () => {
 
       {/* Main Content */}
       <div className="flex-1 ml-[250px] p-8">
-        <Header />
         {renderContent()}
       </div>
     </div>

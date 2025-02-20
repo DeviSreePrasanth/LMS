@@ -21,7 +21,7 @@ const Register = () => {
       if (response.data.token) {
         login(response.data.token);
         setSuccessMessage('Registration Successful! Redirecting to login...');
-        setTimeout(() => navigate('/login'), 2000); // Redirect after 2 seconds
+        setTimeout(() => navigate('/student/dashboard'), 1000);
       } else {
         setError('Registration failed. Please try again.');
       }
