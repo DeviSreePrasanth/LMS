@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-
-// Import components (corrected AddStudents to AddStudent)
-import AddBook from './AddBook'; 
+import AddBook from './AddBook';
 import BookList from './BookList';
-import Students from './Students'; 
-import AddStudent from './AddStudent'; // Fixed typo: AddStudents -> AddStudent
+import Students from './Students';
+import AddStudent from './AddStudent';
+import IssueBook from './IssueBook'; // Import the functional IssueBook
+import ReturnBook from './ReturnBook'; // Import the functional ReturnBook
 
 const Sidebar = ({ setActiveSection, activeSection }) => {
   const menuItems = [
@@ -13,7 +13,7 @@ const Sidebar = ({ setActiveSection, activeSection }) => {
     { name: 'Book List', section: 'booklist' },
     { name: 'Add New Book', section: 'addbook' },
     { name: 'Students', section: 'students' },
-    { name: 'Add Students', section: 'addstudent' }, // Matches case 'addstudent' below
+    { name: 'Add Students', section: 'addstudent' },
     { name: 'Issue Book', section: 'issuebook' },
     { name: 'Return Book', section: 'returnbook' },
   ];
@@ -163,36 +163,15 @@ const RecentHistory = () => {
   );
 };
 
-// Placeholder Components for IssueBook and ReturnBook
-const IssueBook = () => (
-  <div className="mt-8">
-    <h2 className="text-xl font-semibold text-[#2c3e50] mb-5">Issue Book</h2>
-    <div className="bg-white p-5 rounded-lg shadow-md">
-      <p className="text-gray-600">This is the Issue Book section. Add your issue form here.</p>
-    </div>
-  </div>
-);
-
-const ReturnBook = () => (
-  <div className="mt-8">
-    <h2 className="text-xl font-semibold text-[#2c3e50] mb-5">Return Book</h2>
-    <div className="bg-white p-5 rounded-lg shadow-md">
-      <p className="text-gray-600">This is the Return Book section. Add your return form here.</p>
-    </div>
-  </div>
-);
-
 // Main Dashboard Component
 const LibrarianDashboard = () => {
-  const [activeSection, setActiveSection] = useState('dashboard'); // Default to dashboard
-
+  const [activeSection, setActiveSection] = useState('dashboard');
   const statsData = [
     { title: 'Total Books', value: '1,245' },
     { title: 'Active Loans', value: '87' },
     { title: 'Registered Members', value: '320' },
   ];
 
-  // Render content based on active section
   const renderContent = () => {
     switch (activeSection) {
       case 'dashboard':
@@ -211,14 +190,14 @@ const LibrarianDashboard = () => {
         return <BookList />;
       case 'students':
         return <Students />;
-      case 'addstudent': // Fixed typo: 'addstudents' -> 'addstudent'
-        return <AddStudent />;
+      case 'addstudent':
+        return <AddStudent setActiveSection={setActiveSection} />;
       case 'addbook':
         return <AddBook />;
       case 'issuebook':
-        return <IssueBook />;
+        return <IssueBook setActiveSection={setActiveSection} />; // Updated to functional component
       case 'returnbook':
-        return <ReturnBook />;
+        return <ReturnBook setActiveSection={setActiveSection} />; // Updated to functional component
       default:
         return null;
     }
@@ -226,13 +205,8 @@ const LibrarianDashboard = () => {
 
   return (
     <div className="flex min-h-screen bg-[#f4f7fa]">
-      {/* Sidebar */}
       <Sidebar setActiveSection={setActiveSection} activeSection={activeSection} />
-
-      {/* Main Content */}
-      <div className="flex-1 ml-[250px] p-8">
-        {renderContent()}
-      </div>
+      <div className="flex-1 ml-[250px] p-8">{renderContent()}</div>
     </div>
   );
 };

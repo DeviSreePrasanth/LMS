@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const loanSchema = new mongoose.Schema({
+const issuedBookSchema = new mongoose.Schema({
   studentId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Student',
@@ -28,4 +28,4 @@ const loanSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('Loan', loanSchema);
+module.exports = mongoose.model('IssuedBook', issuedBookSchema);
