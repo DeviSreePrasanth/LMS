@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import axios from 'axios';
+import { motion } from 'framer-motion';
 
 const Login = () => {
   const { login } = useContext(AuthContext);
@@ -32,46 +33,79 @@ const Login = () => {
     }
   };
 
+  // Librarian-specific color palette
+  const palette = {
+    primary: '#2c3e50', // Dark blue-gray for headers and text
+    accent: '#1abc9c',  // Teal for highlights and buttons
+    muted: '#7f8c8d',   // Muted gray for secondary text
+    bg: '#f4f7fa',      // Light gray background
+    headerBg: '#1f2937', // Darker gray for headers
+  };
+
   return (
-    <div className="h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600">
-      <form className="bg-white p-8 rounded-2xl shadow-lg w-96 space-y-6" onSubmit={handleLogin}>
-        <h2 className="text-3xl font-bold text-center text-gray-800">Login</h2>
-        {error && <p className="text-red-600 text-sm text-center">{error}</p>}
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-600">Email</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-3 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-600">Password</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-3 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-lg transition duration-300 ease-in-out"
-        >
-          Login
-        </button>
-        <p className="text-center text-gray-600">
-          Don't have an account?{' '}
-          <Link to="/register" className="text-blue-600 hover:text-blue-800 font-semibold">
+    <div className="min-h-screen flex items-center justify-center bg-[#f4f7fa] px-4">
+      <motion.div
+        className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: 'easeInOut' }}
+      >
+        <h2 className={`text-3xl font-bold text-center text-[#2c3e50] mb-6`}>Login</h2>
+        {error && (
+          <motion.p
+            className="text-red-500 text-sm text-center mb-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            {error}
+          </motion.p>
+        )}
+        <form onSubmit={handleLogin} className="space-y-6">
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-[#7f8c8d] mb-2">
+              Email Address
+            </label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa]"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-[#7f8c8d] mb-2">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa]"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+          <motion.button
+            type="submit"
+            className="w-full bg-[#1abc9c] hover:bg-[#16a085] text-white p-3 rounded-md transition duration-300 ease-in-out font-semibold"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Sign In
+          </motion.button>
+        </form>
+        <p className="text-center text-[#7f8c8d] mt-4">
+          Don’t have an account?{' '}
+          <Link to="/register" className="text-[#1abc9c] hover:text-[#16a085] font-semibold transition duration-200">
             Register here
           </Link>
         </p>
-      </form>
+      </motion.div>
     </div>
   );
 };

@@ -1,18 +1,19 @@
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 
-// Import existing components from their respective files
-import AddBook from './AddBook'; // src/pages/librarian/AddBook
-import BookList from './BookList'; // src/pages/librarian/BookList
-import Students from './Students'; // src/pages/librarian/Students
+// Import components (corrected AddStudents to AddStudent)
+import AddBook from './AddBook'; 
+import BookList from './BookList';
+import Students from './Students'; 
+import AddStudent from './AddStudent'; // Fixed typo: AddStudents -> AddStudent
 
-// Sidebar Component
 const Sidebar = ({ setActiveSection, activeSection }) => {
   const menuItems = [
     { name: 'Dashboard', section: 'dashboard' },
     { name: 'Book List', section: 'booklist' },
-    { name: 'Students', section: 'students' },
     { name: 'Add New Book', section: 'addbook' },
+    { name: 'Students', section: 'students' },
+    { name: 'Add Students', section: 'addstudent' }, // Matches case 'addstudent' below
     { name: 'Issue Book', section: 'issuebook' },
     { name: 'Return Book', section: 'returnbook' },
   ];
@@ -43,7 +44,6 @@ const Sidebar = ({ setActiveSection, activeSection }) => {
   );
 };
 
-// Header Component with Profile Image Upload
 const Header = () => {
   const [profileImage, setProfileImage] = useState(
     localStorage.getItem('profileImage') || 'https://via.placeholder.com/40'
@@ -61,11 +61,6 @@ const Header = () => {
       };
       reader.readAsDataURL(file);
     }
-  };
-
-  const resetImage = () => {
-    setProfileImage('https://via.placeholder.com/40');
-    localStorage.removeItem('profileImage');
   };
 
   const triggerFileUpload = () => {
@@ -203,7 +198,7 @@ const LibrarianDashboard = () => {
       case 'dashboard':
         return (
           <>
-            <Header /> {/* Header only for dashboard */}
+            <Header />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-8">
               {statsData.map((stat, index) => (
                 <StatsCard key={index} title={stat.title} value={stat.value} />
@@ -216,6 +211,8 @@ const LibrarianDashboard = () => {
         return <BookList />;
       case 'students':
         return <Students />;
+      case 'addstudent': // Fixed typo: 'addstudents' -> 'addstudent'
+        return <AddStudent />;
       case 'addbook':
         return <AddBook />;
       case 'issuebook':
