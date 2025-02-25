@@ -1,44 +1,56 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
-import { AuthContext } from '../../context/AuthContext'; // Assuming this provides user data
+import { AuthContext } from '../../context/AuthContext';
 import StudentBookList from '../student/BookList';
+import BorrowedBooks from '../student/BorrowedBooks';
+import { useNavigate } from 'react-router-dom';
+import { BiLogOut } from 'react-icons/bi';
 
-// Sidebar Component
-const Sidebar = ({ setActiveSection, activeSection }) => {
+const Sidebar = ({ setActiveSection, activeSection, handleLogout }) => {
   const menuItems = [
     { name: 'Dashboard', section: 'dashboard' },
     { name: 'Book List', section: 'booklist' },
-    { name: 'My Loans', section: 'myloans' },
+    { name: 'Borrowed Books', section: 'studentdetails' },
   ];
 
   return (
     <motion.div
-      className="w-[250px] bg-[#2c3e50] text-white p-5 fixed h-full"
+      className="w-[250px] bg-[#2c3e50] text-white p-5 fixed h-full flex flex-col justify-between"
       initial={{ x: '-100%' }}
       animate={{ x: 0 }}
       transition={{ duration: 0.5, ease: 'easeInOut' }}
     >
-      <h2 className="text-2xl font-semibold mb-8 text-center">Student Portal</h2>
-      <ul className="space-y-3">
-        {menuItems.map((item, index) => (
-          <motion.li
-            key={index}
-            className={`p-3 rounded-md cursor-pointer hover:bg-[#1abc9c] transition-transform duration-300 ${
-              activeSection === item.section ? 'bg-[#1abc9c]' : 'bg-[#34495e]'
-            }`}
-            whileHover={{ x: 10 }}
-            onClick={() => setActiveSection(item.section)}
-          >
-            {item.name}
-          </motion.li>
-        ))}
-      </ul>
+      <div>
+        <h2 className="text-2xl font-semibold mb-8 text-center">Student Portal</h2>
+        <ul className="space-y-3">
+          {menuItems.map((item, index) => (
+            <motion.li
+              key={index}
+              className={`p-3 rounded-md cursor-pointer hover:bg-[#1abc9c] transition-transform duration-300 ${
+                activeSection === item.section ? 'bg-[#1abc9c]' : 'bg-[#34495e]'
+              }`}
+              whileHover={{ x: 10 }}
+              onClick={() => setActiveSection(item.section)}
+            >
+              {item.name}
+            </motion.li>
+          ))}
+        </ul>
+      </div>
+      <motion.button
+        className="w-full p-3 bg-[#e74c3c] hover:bg-[#c0392b] rounded-md flex items-center justify-center space-x-2"
+        onClick={handleLogout}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <BiLogOut size={20} />
+        <span>Logout</span>
+      </motion.button>
     </motion.div>
   );
 };
 
-// Header Component with Profile Image Upload
 const Header = () => {
   const [profileImage, setProfileImage] = useState(
     localStorage.getItem('studentProfileImage') || 'https://via.placeholder.com/40'
@@ -93,7 +105,6 @@ const Header = () => {
   );
 };
 
-// StatsCard Component
 const StatsCard = ({ title, value }) => (
   <motion.div
     className="bg-white p-5 rounded-lg shadow-md text-center"
@@ -106,151 +117,98 @@ const StatsCard = ({ title, value }) => (
   </motion.div>
 );
 
-// MyLoans Component (Updated with real data)
-const MyLoans = () => {
-  const { user } = useContext(AuthContext); // Get authenticated student
-  const [studentData, setStudentData] = useState(null);
-  const [error, setError] = useState(null);
+const StudentDashboard = () => {
+  const { user, logout, loading: authLoading, error: authError } = useContext(AuthContext);
+  const [activeSection, setActiveSection] = useState('dashboard');
+  const [statsData, setStatsData] = useState([
+    { title: 'Total Books', value: '1,245' },
+    { title: 'My Loans', value: '0' },
+    { title: 'Overdue', value: '0' },
+  ]);
+  const [isAuthorized, setIsAuthorized] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchStudentDetails = async () => {
-      if (!user || !user._id) {
-        setError('User not authenticated');
+    const checkStudentAccess = async () => {
+      if (authLoading) return; // Wait for auth context to resolve
+
+      if (!user || !user.email || user.role !== 'student') {
+        console.log('No user, email, or incorrect role');
+        setIsAuthorized(false);
         setLoading(false);
         return;
       }
 
       try {
-        const studentResponse = await axios.get(`http://localhost:5000/api/students/${user._id}`);
-        const student = studentResponse.data;
+        const response = await axios.get(`http://localhost:5000/api/students/email/${user.email}`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        });
+        console.log('Student verification response:', response.data);
 
-        const loansResponse = await axios.get(`http://localhost:5000/api/loans?studentId=${user._id}`);
-        const borrowedBooks = loansResponse.data;
+        if (response.data && response.data.email === user.email) {
+          setIsAuthorized(true);
 
-        setStudentData({ ...student, borrowedBooks });
-        setLoading(false);
+          const loansResponse = await axios.get(`http://localhost:5000/api/loans?studentId=${response.data._id}`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+          });
+          const borrowedBooks = loansResponse.data;
+          const activeLoans = borrowedBooks.filter((book) => !book.returnDate).length;
+          const overdueLoans = borrowedBooks.filter(
+            (book) => !book.returnDate && new Date(book.dueDate) < new Date()
+          ).length;
+
+          setStatsData([
+            { title: 'Total Books', value: '1,245' },
+            { title: 'My Loans', value: activeLoans.toString() },
+            { title: 'Overdue', value: overdueLoans.toString() },
+          ]);
+        } else {
+          setIsAuthorized(false);
+        }
       } catch (err) {
-        setError(err.response?.data?.message || 'Failed to fetch student details');
+        console.error('Authorization error:', err.response?.data || err.message);
+        setIsAuthorized(false);
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchStudentDetails();
-  }, [user]);
+    checkStudentAccess();
+  }, [user, authLoading]);
 
-  if (loading) {
-    return <p className="text-[#2c3e50] text-center mt-8">Loading...</p>;
-  }
+  const handleLogout = () => {
+    logout();
+    navigate('/login'); // Redirect to login page on logout
+  };
 
-  if (error) {
-    return <p className="text-red-500 text-center mt-8">Error: {error}</p>;
-  }
-
-  if (!studentData) {
-    return <p className="text-[#7f8c8d] text-center mt-8">No data available</p>;
-  }
-
-  return (
-    <div className="mt-8">
-      <h2 className="text-xl font-semibold text-[#2c3e50] mb-5">My Loans</h2>
-      <div className="bg-white p-5 rounded-lg shadow-md">
-        {/* Student Info */}
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold text-[#2c3e50] mb-2">My Information</h3>
-          <p><strong>Name:</strong> {studentData.name}</p>
-          <p><strong>Student ID:</strong> {studentData.studentId}</p>
-          <p><strong>Email:</strong> {studentData.email}</p>
-          <p><strong>Total Books Borrowed:</strong> {studentData.borrowedBooks.length}</p>
-        </div>
-
-        {/* Borrowed Books */}
-        <h3 className="text-lg font-semibold text-[#2c3e50] mb-2">Borrowed Books</h3>
-        {studentData.borrowedBooks.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="bg-[#f4f7fa] text-[#7f8c8d]">
-                  <th className="p-3">Book ID</th>
-                  <th className="p-3">Title</th>
-                  <th className="p-3">Issue Date</th>
-                  <th className="p-3">Due Date</th>
-                  <th className="p-3">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {studentData.borrowedBooks.map((book, index) => {
-                  const isOverdue = !book.returnDate && new Date(book.dueDate) < new Date();
-                  return (
-                    <motion.tr
-                      key={book._id}
-                      className="border-b border-gray-200 hover:bg-gray-50"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: index * 0.1 }}
-                    >
-                      <td className="p-3">{book.bid}</td>
-                      <td className="p-3">{book.title}</td>
-                      <td className="p-3">{new Date(book.issueDate).toLocaleDateString()}</td>
-                      <td className="p-3">{new Date(book.dueDate).toLocaleDateString()}</td>
-                      <td className="p-3">
-                        {book.returnDate ? (
-                          <span className="text-green-500">Returned</span>
-                        ) : isOverdue ? (
-                          <span className="text-red-500">Overdue</span>
-                        ) : (
-                          <span className="text-[#1abc9c]">Borrowed</span>
-                        )}
-                      </td>
-                    </motion.tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <p className="text-[#7f8c8d]">You have not borrowed any books yet.</p>
-        )}
+  if (loading || authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#f4f7fa]">
+        <p className="text-[#2c3e50] text-xl">Loading...</p>
       </div>
-    </div>
-  );
-};
+    );
+  }
 
-// Main Student Dashboard Component
-const StudentDashboard = () => {
-  const [activeSection, setActiveSection] = useState('dashboard');
-  const { user } = useContext(AuthContext); // Get authenticated student
-  const [statsData, setStatsData] = useState([
-    { title: 'Total Books', value: '1,245' }, // Static for now
-    { title: 'My Loans', value: '0' },
-    { title: 'Overdue', value: '0' },
-  ]);
-
-  // Fetch stats data when dashboard loads
-  useEffect(() => {
-    const fetchStats = async () => {
-      if (!user || !user._id) return;
-
-      try {
-        const loansResponse = await axios.get(`http://localhost:5000/api/loans?studentId=${user._id}`);
-        const borrowedBooks = loansResponse.data;
-        const activeLoans = borrowedBooks.filter((book) => !book.returnDate).length;
-        const overdueLoans = borrowedBooks.filter(
-          (book) => !book.returnDate && new Date(book.dueDate) < new Date()
-        ).length;
-
-        setStatsData([
-          { title: 'Total Books', value: '1,245' }, // Update this dynamically if you have an API for total books
-          { title: 'My Loans', value: activeLoans.toString() },
-          { title: 'Overdue', value: overdueLoans.toString() },
-        ]);
-      } catch (err) {
-        console.error('Failed to fetch stats:', err);
-      }
-    };
-
-    fetchStats();
-  }, [user]);
+  if (isAuthorized === false) {
+    // Only navigate to /unauthorized if there's an actual error after refresh attempt
+    if (authError) {
+      navigate('/unauthorized');
+      return null;
+    }
+    // Otherwise, keep the dashboard visible until explicitly logged out
+    return (
+      <div className="flex min-h-screen bg-[#f4f7fa]">
+        <Sidebar setActiveSection={setActiveSection} activeSection={activeSection} handleLogout={handleLogout} />
+        <div className="flex-1 ml-[250px] p-8">
+          <Header />
+          <p className="text-red-500 text-xl text-center mt-8">
+            Authentication issue detected. Please log out and log in again.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const renderContent = () => {
     switch (activeSection) {
@@ -262,13 +220,12 @@ const StudentDashboard = () => {
                 <StatsCard key={index} title={stat.title} value={stat.value} />
               ))}
             </div>
-            <MyLoans />
           </>
         );
       case 'booklist':
         return <StudentBookList />;
-      case 'myloans':
-        return <MyLoans />;
+      case 'studentdetails':
+        return <BorrowedBooks />;
       default:
         return null;
     }
@@ -276,10 +233,7 @@ const StudentDashboard = () => {
 
   return (
     <div className="flex min-h-screen bg-[#f4f7fa]">
-      {/* Sidebar */}
-      <Sidebar setActiveSection={setActiveSection} activeSection={activeSection} />
-
-      {/* Main Content */}
+      <Sidebar setActiveSection={setActiveSection} activeSection={activeSection} handleLogout={handleLogout} />
       <div className="flex-1 ml-[250px] p-8">
         <Header />
         {renderContent()}

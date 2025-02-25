@@ -4,6 +4,24 @@ import { AuthContext } from '../../context/AuthContext';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 
+// Function to decode JWT token
+const decodeToken = (token) => {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    );
+    return JSON.parse(jsonPayload);
+  } catch (error) {
+    console.error('Error decoding token:', error);
+    return null;
+  }
+};
+
 const Login = () => {
   const { login } = useContext(AuthContext);
   const [email, setEmail] = useState('');
@@ -13,33 +31,58 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError('');
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
-      console.log('User role:', response.data.user.role);
-      console.log('User email:', response.data.user.email);
+      const loginResponse = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+      console.log('Full login response:', loginResponse.data);
 
-      login(response.data.token);
+      const { token, user } = loginResponse.data;
+      if (!token || !user) {
+        throw new Error('Invalid server response: missing token or user data');
+      }
 
-      const userRole = response.data.user.role;
-      if (userRole === 'librarian') {
-        navigate('/librarian/dashboard');
-      } else if (userRole === 'student') {
-        navigate('/student/dashboard');
-      } else {
-        navigate('/');
+      // Decode token to get email if not present in user object
+      const decodedToken = decodeToken(token);
+      const userEmail = user.email || decodedToken?.user?.email || email; // Fallback to form input if needed
+
+      console.log('User role:', user.role || 'Role not found');
+      console.log('User email:', userEmail || 'Email not found');
+      console.log('User ID:', user.id || 'ID not found');
+
+      if (!userEmail) {
+        throw new Error('Email not received from server or token');
+      }
+
+      const userData = {
+        id: user.id,
+        email: userEmail,
+        role: user.role,
+      };
+
+      await login(token, userData);
+
+      switch (user.role) {
+        case 'student':
+          navigate('/student/dashboard');
+          break;
+        case 'librarian':
+          navigate('/librarian/dashboard');
+          break;
+        default:
+          navigate('/unauthorized');
       }
     } catch (err) {
-      setError('Invalid credentials');
+      console.error('Login error:', err.response?.data || err.message);
+      setError(err.response?.data?.message || 'Invalid credentials or server error');
     }
   };
 
-  // Librarian-specific color palette
   const palette = {
-    primary: '#2c3e50', // Dark blue-gray for headers and text
-    accent: '#1abc9c',  // Teal for highlights and buttons
-    muted: '#7f8c8d',   // Muted gray for secondary text
-    bg: '#f4f7fa',      // Light gray background
-    headerBg: '#1f2937', // Darker gray for headers
+    primary: '#2c3e50',
+    accent: '#1abc9c',
+    muted: '#7f8c8d',
+    bg: '#f4f7fa',
+    headerBg: '#1f2937',
   };
 
   return (
@@ -50,7 +93,7 @@ const Login = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: 'easeInOut' }}
       >
-        <h2 className={`text-3xl font-bold text-center text-[#2c3e50] mb-6`}>Login</h2>
+        <h2 className="text-3xl font-bold text-center text-[#2c3e50] mb-6">Login</h2>
         {error && (
           <motion.p
             className="text-red-500 text-sm text-center mb-4"
