@@ -26,6 +26,7 @@ const Login = () => {
   const { login } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [studentId, setStudentId] = useState(''); // Changed from registrationNumber to studentId
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -33,7 +34,11 @@ const Login = () => {
     e.preventDefault();
     setError('');
     try {
-      const loginResponse = await axios.post('https://lms-o44p.onrender.com/api/auth/login', { email, password });
+      const loginResponse = await axios.post('http://localhost:5000/api/auth/login', {
+        email,
+        password,
+        studentId, // Send studentId instead of registrationNumber
+      });
       console.log('Full login response:', loginResponse.data);
 
       const { token, user } = loginResponse.data;
@@ -43,7 +48,7 @@ const Login = () => {
 
       // Decode token to get email if not present in user object
       const decodedToken = decodeToken(token);
-      const userEmail = user.email || decodedToken?.user?.email || email; // Fallback to form input if needed
+      const userEmail = user.email || decodedToken?.email || email;
 
       console.log('User role:', user.role || 'Role not found');
       console.log('User email:', userEmail || 'Email not found');
@@ -57,9 +62,15 @@ const Login = () => {
         id: user.id,
         email: userEmail,
         role: user.role,
+        studentId: user.studentId || studentId, // Use studentId from response or input
       };
 
       await login(token, userData);
+
+      // Require studentId only for students
+      if (user.role === 'student' && !studentId) {
+        throw new Error('Student ID is required for students');
+      }
 
       switch (user.role) {
         case 'student':
@@ -117,6 +128,19 @@ const Login = () => {
               className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa]"
               placeholder="Enter your email"
               required
+            />
+          </div>
+          <div>
+            <label htmlFor="studentId" className="block text-sm font-medium text-[#7f8c8d] mb-2">
+              Student ID (Students Only)
+            </label>
+            <input
+              type="text"
+              id="studentId"
+              value={studentId}
+              onChange={(e) => setStudentId(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa]"
+              placeholder="Enter your student ID"
             />
           </div>
           <div>

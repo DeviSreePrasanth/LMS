@@ -20,7 +20,7 @@ async function addLibrarian() {
 
     // Create a new librarian
     const newLibrarian = new User({
-      email: 'evil@gmail.com',
+      email: 'dev@gmail.com',
       password: hashedPassword,
       role: 'librarian',
     });

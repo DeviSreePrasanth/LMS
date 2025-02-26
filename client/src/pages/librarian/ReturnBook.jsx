@@ -1,52 +1,69 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const ReturnBook = ({ setActiveSection }) => {
   const [students, setStudents] = useState([]);
-  const [issuedBooks, setIssuedBooks] = useState([]);
+  const [activeLoans, setActiveLoans] = useState({ loans: [], issuedBooks: [] });
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [formData, setFormData] = useState({
     studentName: '',
     studentId: '',
     bookTitle: '',
     issuedBookId: '',
+    type: '',
     returnDate: new Date().toISOString().split('T')[0],
   });
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const studentsResponse = await axios.get('https://lms-o44p.onrender.com/api/students');
+        const token = localStorage.getItem('token');
+        if (!token) {
+          setError('Please log in to continue');
+          setTimeout(() => navigate('/'), 2000);
+          return;
+        }
+
+        const studentsResponse = await axios.get('http://localhost:5000/api/students', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setStudents(studentsResponse.data);
 
-        const issuedBooksResponse = await axios.get('https://lms-o44p.onrender.com/api/loans/active');
-        const activeIssuedBooks = issuedBooksResponse.data.issuedBooks || [];
-        setIssuedBooks(activeIssuedBooks);
+        const activeLoansResponse = await axios.get('http://localhost:5000/api/loans/active', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setActiveLoans({
+          loans: activeLoansResponse.data.loans || [],
+          issuedBooks: activeLoansResponse.data.issuedBooks || [],
+        });
       } catch (err) {
-        setError('Failed to fetch students or active issued books');
+        setError(err.response?.data?.message || 'Failed to fetch students or active loans');
         console.error('Fetch error:', err);
       }
     };
     fetchData();
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     if (formData.studentId) {
-      const booksForStudent = issuedBooks.filter(
-        (book) => book.studentId._id.toString() === formData.studentId
-      );
+      const booksForStudent = [
+        ...activeLoans.loans.filter((loan) => loan.studentId?._id?.toString() === formData.studentId),
+        ...activeLoans.issuedBooks.filter((book) => book.studentId?._id?.toString() === formData.studentId),
+      ];
       setFilteredBooks(booksForStudent);
       if (!booksForStudent.some((book) => book._id === formData.issuedBookId)) {
-        setFormData((prev) => ({ ...prev, bookTitle: '', issuedBookId: '' }));
+        setFormData((prev) => ({ ...prev, bookTitle: '', issuedBookId: '', type: '' }));
       }
     } else {
       setFilteredBooks([]);
     }
-  }, [formData.studentId, issuedBooks]);
+  }, [formData.studentId, activeLoans]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -64,6 +81,7 @@ const ReturnBook = ({ setActiveSection }) => {
         ...prev,
         bookTitle: value,
         issuedBookId: selectedBook ? selectedBook._id : '',
+        type: selectedBook ? (activeLoans.loans.some((l) => l._id === selectedBook._id) ? 'loan' : 'issuedBook') : '',
       }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -81,9 +99,17 @@ const ReturnBook = ({ setActiveSection }) => {
     };
 
     try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Please log in to continue');
+      }
+
       const response = await axios.put(
-        `https://lms-o44p.onrender.com/api/loans/return/${formData.issuedBookId}`,
-        submitData
+        `http://localhost:5000/api/loans/return/${formData.issuedBookId}`,
+        submitData,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
       setSuccess(`Book returned successfully from ${formData.studentName || 'student'}!`);
       setFormData({
@@ -91,12 +117,17 @@ const ReturnBook = ({ setActiveSection }) => {
         studentId: '',
         bookTitle: '',
         issuedBookId: '',
+        type: '',
         returnDate: new Date().toISOString().split('T')[0],
       });
 
-      const updatedResponse = await axios.get('https://lms-o44p.onrender.com/api/loans/active');
-      const activeIssuedBooks = updatedResponse.data.issuedBooks || [];
-      setIssuedBooks(activeIssuedBooks);
+      const updatedResponse = await axios.get('http://localhost:5000/api/loans/active', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setActiveLoans({
+        loans: updatedResponse.data.loans || [],
+        issuedBooks: updatedResponse.data.issuedBooks || [],
+      });
 
       setTimeout(() => setActiveSection('students'), 2000);
     } catch (err) {
@@ -167,8 +198,8 @@ const ReturnBook = ({ setActiveSection }) => {
               disabled={!formData.studentId}
             />
             <datalist id="issuedBooksList">
-              {filteredBooks.map((issuedBook) => (
-                <option key={issuedBook._id} value={issuedBook.title} />
+              {filteredBooks.map((book) => (
+                <option key={book._id} value={book.title} />
               ))}
             </datalist>
           </div>

@@ -4,6 +4,14 @@ const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    studentId: { 
+        type: String, 
+        unique: true, 
+        required: [
+            function() { return this.role === 'student'; }, 
+            'Student ID is required for students'
+        ] 
+    },
     role: { type: String, enum: ['librarian', 'student'], required: true }
 }, { timestamps: true });
 

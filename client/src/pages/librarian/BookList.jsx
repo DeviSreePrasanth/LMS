@@ -17,7 +17,7 @@ const BookList = () => {
     const fetchBooks = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('https://lms-o44p.onrender.com/api/books', {
+        const response = await axios.get('http://localhost:5000/api/books', {
           headers: { Authorization: `Bearer ${token}` },
         });
         const sortedBooks = response.data.sort((a, b) => a.bid - b.bid);
@@ -68,7 +68,7 @@ const BookList = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.delete(`https://lms-o44p.onrender.com/api/books/${bookId}`, {
+      const response = await axios.delete(`http://localhost:5000/api/books/${bookId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.status !== 200) {
@@ -109,7 +109,7 @@ const BookList = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.put(
-        `https://lms-o44p.onrender.com/api/books/${editingBook}`,
+        `http://localhost:5000/api/books/${editingBook}`,
         editData,
         {
           headers: {
@@ -160,7 +160,7 @@ const BookList = () => {
 
   return (
     <motion.div
-      className="px-0 sm:px-0 bg-[#f4f7fa] min-h-screen" // Changed padding to px-0 on mobile, sm:px-6 on larger screens
+      className="p-4 sm:p-6 bg-[#f4f7fa] min-h-screen" // Changed padding to px-0 on mobile, sm:px-6 on larger screens
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6, ease: 'easeInOut' }}

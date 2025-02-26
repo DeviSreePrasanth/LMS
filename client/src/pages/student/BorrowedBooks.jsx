@@ -19,12 +19,12 @@ const BorrowedBooks = () => {
 
       try {
         const token = localStorage.getItem('token');
-        const studentResponse = await axios.get(`https://lms-o44p.onrender.com/api/students/email/${user.email}`, {
+        const studentResponse = await axios.get(`http://localhost:5000/api/students/email/${user.email}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const student = studentResponse.data;
 
-        const loansResponse = await axios.get(`https://lms-o44p.onrender.com/api/loans?studentId=${student._id}`, {
+        const loansResponse = await axios.get(`http://localhost:5000/api/loans?studentId=${student._id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const allBooks = loansResponse.data;

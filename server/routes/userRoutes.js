@@ -5,14 +5,14 @@ const {
   getStudentById,
   getStudentLoans,
   addStudent,
-  getStudentByEmail, // New controller function for email lookup
-} = require('../controllers/studentController');
+  getStudentByEmail,
+} = require('../controllers/userController');
 
-// Routes for students
+// Routes for students (users with role 'student')
 router.get('/students', getAllStudents); // Get all students
 router.get('/students/:id', getStudentById); // Get a single student by ID with loan history
-router.get('/loans', getStudentLoans); // Get loans for a student by studentId
+router.get('/loans', getStudentLoans); // Get loans for a student by studentId (User._id)
 router.post('/students', addStudent); // Add a new student
-router.get('/students/email/:email', getStudentByEmail); // New route to get student by email
+router.get('/students/email/:email', getStudentByEmail); // Get student by email
 
 module.exports = router;

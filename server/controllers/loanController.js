@@ -1,6 +1,6 @@
 const Loan = require('../models/Loan');
-const IssuedBook = require('../models/IssuedBook'); // New model for the separate table
-const Student = require('../models/Student');
+const IssuedBook = require('../models/IssuedBook');
+const User = require('../models/User');
 const Book = require('../models/Book');
 
 // Issue a book
@@ -8,55 +8,37 @@ const issueBook = async (req, res) => {
   const { studentId, bid, title: providedTitle, dueDate } = req.body;
 
   try {
-    // Log incoming request for debugging
     console.log('Issuing book with data:', req.body);
 
-    // Validate required fields (excluding title initially)
     if (!studentId || !bid || !dueDate) {
       return res.status(400).json({ message: 'studentId, bid, and dueDate are required' });
     }
 
-    // Check if student exists
-    const student = await Student.findById(studentId);
+    const student = await User.findOne({ _id: studentId, role: 'student' });
     if (!student) {
       return res.status(404).json({ message: 'Student not found' });
     }
 
-    // Check if book exists and get its title
     const book = await Book.findOne({ bid });
     if (!book) {
       return res.status(404).json({ message: 'Book not found' });
     }
 
-    // Use book's title if providedTitle is missing or empty
     const title = providedTitle && providedTitle.trim() ? providedTitle : book.title;
     if (!title) {
-      return res.status(400).json({ message: 'Title cannot be determined (provide it or ensure book has a title)' });
+      return res.status(400).json({ message: 'Title cannot be determined' });
     }
 
-    // Check if book is already issued in either collection
     const existingLoan = await Loan.findOne({ bid, returnDate: null });
     const existingIssuedBook = await IssuedBook.findOne({ bid, returnDate: null });
     if (existingLoan || existingIssuedBook) {
       return res.status(400).json({ message: 'Book is already issued' });
     }
 
-    // Create and save the new loan (keeping Loan collection)
-    const loan = new Loan({
-      studentId,
-      bid,
-      title,
-      dueDate,
-    });
+    const loan = new Loan({ studentId, bid, title, dueDate });
     const savedLoan = await loan.save();
 
-    // Save to the new IssuedBook collection as well
-    const issuedBook = new IssuedBook({
-      studentId,
-      bid,
-      title,
-      dueDate,
-    });
+    const issuedBook = new IssuedBook({ studentId, bid, title, dueDate });
     const savedIssuedBook = await issuedBook.save();
 
     res.status(201).json({
@@ -73,16 +55,20 @@ const issueBook = async (req, res) => {
 // Get all active loans
 const getActiveLoans = async (req, res) => {
   try {
+    // Debug: Log the ref values
+    console.log('Loan Model Ref:', Loan.schema.paths.studentId.options.ref);
+    console.log('IssuedBook Model Ref:', IssuedBook.schema.paths.studentId.options.ref);
+
     const loans = await Loan.find({ returnDate: null })
-      .populate('studentId', 'name studentId')
+      .populate('studentId', 'name email studentId')
       .lean();
     const issuedBooks = await IssuedBook.find({ returnDate: null })
-      .populate('studentId', 'name studentId')
+      .populate('studentId', 'name email studentId')
       .lean();
 
     res.status(200).json({
       loans,
-      issuedBooks, // Return both for completeness
+      issuedBooks,
     });
   } catch (err) {
     console.error('Error fetching active loans:', err.stack);
@@ -96,12 +82,10 @@ const returnBook = async (req, res) => {
   const { returnDate } = req.body;
 
   try {
-    // Try Loan collection first
     let loan = await Loan.findById(id);
     let issuedBook = null;
 
     if (!loan) {
-      // If not found in Loan, check IssuedBook
       issuedBook = await IssuedBook.findById(id);
       if (!issuedBook) {
         return res.status(404).json({ message: 'Loan or issued book record not found' });
@@ -117,7 +101,6 @@ const returnBook = async (req, res) => {
     record.returnDate = returnDate || new Date();
     const updatedRecord = await record.save();
 
-    // If it’s a Loan, update IssuedBook too (if exists)
     if (loan) {
       const relatedIssuedBook = await IssuedBook.findOne({ bid: record.bid, returnDate: null });
       if (relatedIssuedBook) {
@@ -125,7 +108,6 @@ const returnBook = async (req, res) => {
         await relatedIssuedBook.save();
       }
     } else if (issuedBook) {
-      // If it’s an IssuedBook, update Loan too (if exists)
       const relatedLoan = await Loan.findOne({ bid: record.bid, returnDate: null });
       if (relatedLoan) {
         relatedLoan.returnDate = record.returnDate;

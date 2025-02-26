@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const issuedBookSchema = new mongoose.Schema({
   studentId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Student',
+    ref: 'User', // References User model
     required: true,
   },
   bid: {

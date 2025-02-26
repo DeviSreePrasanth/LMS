@@ -4,85 +4,127 @@ const User = require('../models/User');
 
 // Register User
 const registerUser = async (req, res) => {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, studentId, role } = req.body;
 
     try {
+        // Check if user already exists
         let user = await User.findOne({ email });
         if (user) {
-            return res.status(400).json({ msg: 'User already exists' });
+            return res.status(400).json({ message: 'User already exists' });
         }
 
-        // Only add librarian role through backend, not registration
+        // Prevent librarian registration through this endpoint
         if (role === 'librarian') {
-            return res.status(400).json({ msg: 'Librarian role should be assigned manually' });
+            return res.status(403).json({ message: 'Librarian role must be assigned manually by admin' });
+        }
+
+        // Validate studentId for students
+        if (role === 'student' && !studentId) {
+            return res.status(400).json({ message: 'Student ID is required for students' });
+        }
+
+        // Check if studentId is unique if provided
+        if (studentId) {
+            const existingStudent = await User.findOne({ studentId });
+            if (existingStudent) {
+                return res.status(400).json({ message: 'Student ID already in use' });
+            }
         }
 
         user = new User({
             name,
             email,
             password,
-            role
+            studentId: studentId || undefined, // Only set if provided
+            role: role || 'student' // Default to student if not specified
         });
 
+        // Hash password
         const salt = await bcrypt.genSalt(10);
         user.password = await bcrypt.hash(password, salt);
 
         await user.save();
 
-        // Skip JWT creation if it's causing issues
-        const payload = { user: { id: user.id } };
+        // Create JWT payload
+        const payload = {
+            user: {
+                id: user._id,
+                role: user.role
+            }
+        };
 
-        let token = '';
-        try {
-            token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
-        } catch (err) {
-            console.error('JWT Error:', err.message); // Log JWT error, but continue without token
-        }
+        // Sign JWT token
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        // Send success response with or without token
         res.json({
-            msg: 'Registration successful',
-            token: token || null, // Send token if available
+            message: 'Registration successful',
+            token,
+            user: {
+                id: user._id,
+                email: user.email,
+                role: user.role,
+                studentId: user.studentId
+            }
         });
     } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ msg: 'Server Error', error: err.message });
+        console.error('Registration error:', err.message);
+        res.status(500).json({ message: 'Server Error', error: err.message });
     }
 };
 
 // Login User
 const loginUser = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, studentId } = req.body;
 
     try {
-        // Find the user by email
+        // Find user by email
         let user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ msg: 'Invalid credentials' });
+            return res.status(400).json({ message: 'Invalid credentials' });
         }
 
-        // Compare the password using bcrypt
+        // Compare password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ msg: 'Invalid credentials' });
+            return res.status(400).json({ message: 'Invalid credentials' });
         }
 
-        // Create a payload with user id and role
-        const payload = { user: { id: user._id, role: user.role } }; // Using _id instead of id to match MongoDB's default field name
+        // For students, verify studentId if provided or required
+        if (user.role === 'student') {
+            if (!studentId) {
+                return res.status(400).json({ message: 'Student ID is required for students' });
+            }
+            if (studentId !== user.studentId) {
+                return res.status(400).json({ message: 'Invalid student ID' });
+            }
+        }
 
-        // Generate the JWT token with an expiration time of 1 hour
+        // Create JWT payload
+        const payload = {
+            user: {
+                id: user._id,
+                role: user.role,
+                email: user.email
+            }
+        };
+
+        // Generate JWT token
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        // Send the response containing the token and role
+        // Send response
         res.json({
             token,
-            user: { id: user._id, role: user.role } // Send both the user ID and role in the response
+            user: {
+                id: user._id,
+                email: user.email,
+                role: user.role,
+                studentId: user.studentId || null
+            }
         });
     } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server Error');
+        console.error('Login error:', err.message);
+        res.status(500).json({ message: 'Server Error', error: err.message });
     }
 };
-
 
 module.exports = { registerUser, loginUser };

@@ -162,17 +162,17 @@ const StudentDashboard = () => {
 
         const config = { headers: { Authorization: `Bearer ${token}` } };
 
-        const studentResponse = await axios.get(`https://lms-o44p.onrender.com/api/students/email/${user.email}`, config);
+        const studentResponse = await axios.get(`http://localhost:5000/api/students/email/${user.email}`, config);
         if (!studentResponse.data) {
           throw new Error('Student not found');
         }
         setStudentName(studentResponse.data.name || studentResponse.data.fullName || user.email);
         const studentId = studentResponse.data._id;
 
-        const booksResponse = await axios.get('https://lms-o44p.onrender.com/api/books', config);
+        const booksResponse = await axios.get('http://localhost:5000/api/books', config);
         const totalBooks = booksResponse.data.length;
 
-        const loansResponse = await axios.get(`https://lms-o44p.onrender.com/api/loans?studentId=${studentId}`, config);
+        const loansResponse = await axios.get(`http://localhost:5000/api/loans?studentId=${studentId}`, config);
         const borrowedBooks = loansResponse.data || [];
         const activeLoans = borrowedBooks.filter((book) => !book.returnDate).length;
         const overdueLoans = borrowedBooks.filter(

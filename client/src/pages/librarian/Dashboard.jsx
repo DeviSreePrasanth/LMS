@@ -76,7 +76,7 @@ const Header = ({ isOpen, setIsOpen }) => {
 
   return (
     <motion.div
-      className="fixed top-0 left-0 w-full bg-white px-4 sm:px-6 py-4 shadow-md z-30 md:ml-[250px] md:w-[calc(100%-250px)]"
+      className="fixed top-0 left-0 w-full bg-white p-4 sm:px-6 py-4 shadow-md z-30 md:ml-[250px] md:w-[calc(100%-250px)]"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: 'easeInOut' }}
@@ -144,15 +144,15 @@ const LibrarianDashboard = () => {
         const token = localStorage.getItem('token');
         const config = { headers: { Authorization: `Bearer ${token}` } };
 
-        const booksResponse = await axios.get('https://lms-o44p.onrender.com/api/books', config);
+        const booksResponse = await axios.get('http://localhost:5000/api/books', config);
         const totalBooks = Array.isArray(booksResponse.data) ? booksResponse.data.length : booksResponse.data.books?.length || 0;
 
-        const activeLoansResponse = await axios.get('https://lms-o44p.onrender.com/api/loans/active', config);
+        const activeLoansResponse = await axios.get('http://localhost:5000/api/loans/active', config);
         const activeLoans = Array.isArray(activeLoansResponse.data)
           ? activeLoansResponse.data.length
           : activeLoansResponse.data.issuedBooks?.length || 0;
 
-        const studentsResponse = await axios.get('https://lms-o44p.onrender.com/api/students', config);
+        const studentsResponse = await axios.get('http://localhost:5000/api/students', config);
         const registeredMembers = Array.isArray(studentsResponse.data) ? studentsResponse.data.length : studentsResponse.data.students?.length || 0;
 
         setStatsData([
