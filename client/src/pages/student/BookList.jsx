@@ -9,7 +9,7 @@ const StudentBookList = () => {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState({ status: '', category: '', search: '' });
-  const booksPerPage = 20;
+  const booksPerPage = 10;
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -26,7 +26,6 @@ const StudentBookList = () => {
     fetchBooks();
   }, []);
 
-  // Filtering logic
   useEffect(() => {
     const applyFilters = () => {
       let result = [...books];
@@ -53,7 +52,6 @@ const StudentBookList = () => {
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Pagination logic
   const indexOfLastBook = currentPage * booksPerPage;
   const indexOfFirstBook = indexOfLastBook - booksPerPage;
   const currentBooks = filteredBooks.slice(indexOfFirstBook, indexOfLastBook);
@@ -67,10 +65,8 @@ const StudentBookList = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
-  // Unique categories for filter dropdown
   const uniqueCategories = [...new Set(books.map((book) => book.category.toLowerCase()))];
 
-  // Color palette matching BookList
   const palette = {
     primary: '#2c3e50',
     accent: '#1abc9c',
@@ -81,19 +77,19 @@ const StudentBookList = () => {
 
   return (
     <motion.div
-      className={`p-6 bg-[${palette.bg}]`}
+      className="p-4 sm:p-6 bg-[#f4f7fa] min-h-screen"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6, ease: 'easeInOut' }}
     >
-      <h2 className={`text-3xl font-bold mb-4 text-center text-[${palette.primary}]`}>Book List</h2>
+      <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-center text-[#2c3e50]">Book List</h2>
       {error && (
-        <p className="text-red-500 text-center mb-4">Error: {error}</p>
+        <p className="text-red-500 text-center mb-4 text-sm sm:text-base">Error: {error}</p>
       )}
 
       {/* Search Input */}
-      <div className="mb-6 max-w-md mx-auto relative">
-        <label htmlFor="search" className={`block text-[${palette.muted}] text-sm font-medium mb-2`}>
+      <div className="mb-6 w-full max-w-md mx-auto relative">
+        <label htmlFor="search" className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2">
           Search by Title
         </label>
         <div className="relative">
@@ -104,26 +100,26 @@ const StudentBookList = () => {
             value={filters.search}
             onChange={handleFilterChange}
             placeholder="Search books by title..."
-            className={`w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[${palette.accent}] focus:border-[${palette.accent}] transition duration-200 bg-white text-[${palette.primary}] hover:border-[${palette.accent}]`}
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#1abc9c] focus:border-[#1abc9c] transition duration-200 bg-white text-[#2c3e50] hover:border-[#1abc9c] text-sm sm:text-base"
           />
-          <FaSearch className={`absolute left-3 top-1/2 transform -translate-y-1/2 text-[${palette.muted}] hover:text-[${palette.accent}] transition duration-200`} />
+          <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#7f8c8d] hover:text-[#1abc9c] transition duration-200" />
         </div>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full border-collapse bg-white shadow-md rounded-lg overflow-hidden">
-          <thead className={`bg-[${palette.headerBg}] text-white`}>
+        <table className="min-w-full border-collapse bg-white shadow-md rounded-lg">
+          <thead className="bg-[#1f2937] text-white">
             <tr>
-              <th className="py-3 px-4 text-left">Book ID</th>
-              <th className="py-3 px-4 text-left">Title</th>
-              <th className="py-3 px-4 text-left">Author</th>
-              <th className="py-3 px-4 text-left">
+              <th className="py-2 px-3 sm:px-4 text-left text-xs sm:text-sm">Book ID</th>
+              <th className="py-2 px-3 sm:px-4 text-left text-xs sm:text-sm">Title</th>
+              <th className="py-2 px-3 sm:px-4 text-left text-xs sm:text-sm">Author</th>
+              <th className="py-2 px-3 sm:px-4 text-left text-xs sm:text-sm">
                 Category
                 <select
                   name="category"
                   value={filters.category}
                   onChange={handleFilterChange}
-                  className={`block w-full mt-1 p-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[${palette.accent}] transition duration-200 bg-[${palette.bg}] text-[${palette.primary}]`}
+                  className="block w-full mt-1 p-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 bg-[#f4f7fa] text-[#2c3e50] text-xs sm:text-sm"
                 >
                   <option value="">All</option>
                   {uniqueCategories.map((category) => (
@@ -133,13 +129,13 @@ const StudentBookList = () => {
                   ))}
                 </select>
               </th>
-              <th className="py-3 px-4 text-center">
+              <th className="py-2 px-3 sm:px-4 text-center text-xs sm:text-sm">
                 Status
                 <select
                   name="status"
                   value={filters.status}
                   onChange={handleFilterChange}
-                  className={`block w-full mt-1 p-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[${palette.accent}] transition duration-200 bg-[${palette.bg}] text-[${palette.primary}]`}
+                  className="block w-full mt-1 p-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 bg-[#f4f7fa] text-[#2c3e50] text-xs sm:text-sm"
                 >
                   <option value="">All</option>
                   <option value="available">Available</option>
@@ -151,7 +147,7 @@ const StudentBookList = () => {
           <tbody>
             {filteredBooks.length === 0 ? (
               <tr>
-                <td colSpan="5" className={`py-4 text-center text-[${palette.muted}]`}>
+                <td colSpan="5" className="py-4 text-center text-[#7f8c8d] text-sm sm:text-base">
                   No books match the selected filters or search
                 </td>
               </tr>
@@ -164,14 +160,14 @@ const StudentBookList = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: currentBooks.indexOf(book) * 0.1 }}
                 >
-                  <td className={`py-2 px-4 text-[${palette.primary}]`}>{book.bid}</td>
-                  <td className={`py-2 px-4 text-[${palette.primary}]`}>{book.title}</td>
-                  <td className={`py-2 px-4 text-[${palette.primary}]`}>{book.author}</td>
-                  <td className={`py-2 px-4 text-[${palette.primary}]`}>{book.category}</td>
-                  <td className="py-2 px-4 text-center">
+                  <td className="py-2 px-3 sm:px-4 text-[#2c3e50] text-xs sm:text-sm">{book.bid}</td>
+                  <td className="py-2 px-3 sm:px-4 text-[#2c3e50] text-xs sm:text-sm">{book.title}</td>
+                  <td className="py-2 px-3 sm:px-4 text-[#2c3e50] text-xs sm:text-sm">{book.author}</td>
+                  <td className="py-2 px-3 sm:px-4 text-[#2c3e50] text-xs sm:text-sm">{book.category}</td>
+                  <td className="py-2 px-3 sm:px-4 text-center text-xs sm:text-sm">
                     <span
                       className={`${
-                        book.status === 'available' ? `text-[${palette.accent}]` : 'text-red-500'
+                        book.status === 'available' ? 'text-[#1abc9c]' : 'text-red-500'
                       } font-semibold`}
                     >
                       {book.status}
@@ -185,30 +181,30 @@ const StudentBookList = () => {
       </div>
 
       {filteredBooks.length > 0 && (
-        <div className="flex justify-center mt-4 space-x-4">
+        <div className="flex justify-center mt-4 space-x-2 sm:space-x-4">
           <motion.button
             onClick={handlePreviousPage}
             disabled={currentPage === 1}
-            className={`px-4 py-2 rounded-md text-white transition duration-200 ${
+            className={`px-3 sm:px-4 py-1 sm:py-2 rounded-md text-white transition duration-200 text-xs sm:text-sm ${
               currentPage === 1
-                ? `bg-[${palette.muted}] cursor-not-allowed`
-                : `bg-[${palette.primary}] hover:bg-[#34495e]`
+                ? 'bg-[#7f8c8d] cursor-not-allowed'
+                : 'bg-[#2c3e50] hover:bg-[#34495e]'
             }`}
             whileHover={{ scale: currentPage === 1 ? 1 : 1.05 }}
             whileTap={{ scale: currentPage === 1 ? 1 : 0.95 }}
           >
             Previous
           </motion.button>
-          <span className={`text-[${palette.primary}] self-center`}>
+          <span className="text-[#2c3e50] self-center text-xs sm:text-sm">
             Page {currentPage} of {totalPages}
           </span>
           <motion.button
             onClick={handleNextPage}
             disabled={currentPage === totalPages}
-            className={`px-4 py-2 rounded-md text-white transition duration-200 ${
+            className={`px-3 sm:px-4 py-1 sm:py-2 rounded-md text-white transition duration-200 text-xs sm:text-sm ${
               currentPage === totalPages
-                ? `bg-[${palette.muted}] cursor-not-allowed`
-                : `bg-[${palette.primary}] hover:bg-[#34495e]`
+                ? 'bg-[#7f8c8d] cursor-not-allowed'
+                : 'bg-[#2c3e50] hover:bg-[#34495e]'
             }`}
             whileHover={{ scale: currentPage === totalPages ? 1 : 1.05 }}
             whileTap={{ scale: currentPage === totalPages ? 1 : 0.95 }}

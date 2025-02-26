@@ -114,16 +114,6 @@ const AddStudent = ({ setActiveSection }) => { // Added setActiveSection prop fo
           >
             Add Student
           </motion.button>
-
-          {/* Back Button */}
-          <motion.button
-            onClick={() => setActiveSection ? setActiveSection('students') : navigate('/students')}
-            className="w-full bg-gray-200 hover:bg-gray-300 text-[#2c3e50] p-3 rounded-md transition duration-200"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Back to Students
-          </motion.button>
         </form>
       </div>
     </motion.div>
