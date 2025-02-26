@@ -23,7 +23,7 @@ const Sidebar = ({ setActiveSection, activeSection, handleLogout }) => {
       transition={{ duration: 0.5, ease: 'easeInOut' }}
     >
       <div>
-        <h2 className="text-2xl font-bold mb-8 text-center">Library Portal</h2>
+        <h2 className="text-2xl font-bold mb-8 text-center">Student Portal</h2>
         <ul className="space-y-3">
           {menuItems.map((item, index) => (
             <motion.li

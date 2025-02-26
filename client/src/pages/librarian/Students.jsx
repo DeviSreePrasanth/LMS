@@ -81,7 +81,7 @@ const Students = () => {
         <p className="text-red-500 text-center mb-4">Error: {error}</p>
       )}
       {!students.length ? (
-        <p className={`text-center text-[#7f8c8d]`}>No students found</p>
+        <p className={`text-center text-[#7f8c8d]`}>Loading...</p>
       ) : (
         <>
           <div className="overflow-x-auto">

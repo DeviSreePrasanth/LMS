@@ -6,9 +6,10 @@ const IssueBook = ({ setActiveSection }) => {
   const [students, setStudents] = useState([]);
   const [books, setBooks] = useState([]);
   const [formData, setFormData] = useState({
-    studentId: '',
-    bid: '',
-    title: '',
+    studentName: '', // Display name in frontend
+    studentId: '',   // Actual ObjectId for submission
+    bookName: '',    // Display name in frontend
+    bid: '',         // Actual string ID for submission
     dueDate: '',
   });
   const [error, setError] = useState(null);
@@ -32,12 +33,20 @@ const IssueBook = ({ setActiveSection }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === 'bid') {
-      const selectedBook = books.find((book) => book.bid === value);
+
+    if (name === 'studentName') {
+      const selectedStudent = students.find((student) => student.name === value);
       setFormData((prev) => ({
         ...prev,
-        bid: value,
-        title: selectedBook ? selectedBook.title : '',
+        studentName: value,
+        studentId: selectedStudent ? selectedStudent._id : '', // Use _id for MongoDB ObjectId
+      }));
+    } else if (name === 'bookName') {
+      const selectedBook = books.find((book) => book.title === value);
+      setFormData((prev) => ({
+        ...prev,
+        bookName: value,
+        bid: selectedBook ? String(selectedBook.bid) : '', // Ensure bid is a string
       }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -50,31 +59,38 @@ const IssueBook = ({ setActiveSection }) => {
     setSuccess(null);
     setLoading(true);
 
-    console.log('Submitting issue book data:', formData);
+    // Prepare data for submission (only send studentId, bid, and dueDate)
+    const submitData = {
+      studentId: formData.studentId, // Should be ObjectId like "67bc2663abe5a32421c57d8f"
+      bid: formData.bid,             // Should be string like "16"
+      dueDate: formData.dueDate,
+    };
+
+    console.log('Submitting issue book data:', submitData);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/loans', formData);
+      const response = await axios.post('http://localhost:5000/api/loans', submitData);
       setSuccess('Book issued successfully!');
-      setFormData({ studentId: '', bid: '', title: '', dueDate: '' });
+      setFormData({ studentName: '', studentId: '', bookName: '', bid: '', dueDate: '' });
       setTimeout(() => setActiveSection('students'), 2000);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to issue book');
+      console.error('Error details:', err.response?.data);
     } finally {
       setLoading(false);
     }
   };
 
-  // Librarian-specific color palette (matching AddBook)
   const palette = {
-    primary: '#2c3e50', // Dark blue-gray for headers and text
-    accent: '#1abc9c',  // Teal for highlights
-    muted: '#7f8c8d',   // Muted gray for secondary text
-    bg: '#f4f7fa',      // Light gray background
+    primary: '#2c3e50',
+    accent: '#1abc9c',
+    muted: '#7f8c8d',
+    bg: '#f4f7fa',
   };
 
   return (
     <motion.div
-      className="p-6 bg-[#f4f7fa] max-w-lg mx-auto" // Adjusted to match AddBook: reduced distance from top
+      className="p-6 bg-[#f4f7fa] max-w-lg mx-auto"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: 'easeInOut' }}
@@ -86,48 +102,50 @@ const IssueBook = ({ setActiveSection }) => {
         {success && <p className="text-[#1abc9c] text-center mb-4">{success}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Student Selection */}
+          {/* Student Name with Autocomplete */}
           <div>
-            <label htmlFor="studentId" className="block text-[#7f8c8d] text-sm font-medium mb-2">
-              Select Student
+            <label htmlFor="studentName" className="block text-[#7f8c8d] text-sm font-medium mb-2">
+              Student Name
             </label>
-            <select
-              id="studentId"
-              name="studentId"
-              value={formData.studentId}
+            <input
+              type="text"
+              id="studentName"
+              name="studentName"
+              value={formData.studentName}
               onChange={handleChange}
+              list="studentsList"
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa]"
+              placeholder="Type student name"
               required
-            >
-              <option value="">-- Select a student --</option>
+            />
+            <datalist id="studentsList">
               {students.map((student) => (
-                <option key={student._id} value={student._id}>
-                  {student.name} ({student.studentId})
-                </option>
+                <option key={student._id} value={student.name} />
               ))}
-            </select>
+            </datalist>
           </div>
 
-          {/* Book Selection */}
+          {/* Book Name with Autocomplete */}
           <div>
-            <label htmlFor="bid" className="block text-[#7f8c8d] text-sm font-medium mb-2">
-              Select Book
+            <label htmlFor="bookName" className="block text-[#7f8c8d] text-sm font-medium mb-2">
+              Book Name
             </label>
-            <select
-              id="bid"
-              name="bid"
-              value={formData.bid}
+            <input
+              type="text"
+              id="bookName"
+              name="bookName"
+              value={formData.bookName}
               onChange={handleChange}
+              list="booksList"
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa]"
+              placeholder="Type book name"
               required
-            >
-              <option value="">-- Select a book --</option>
+            />
+            <datalist id="booksList">
               {books.map((book) => (
-                <option key={book._id} value={book.bid}>
-                  {book.title} (ID: {book.bid})
-                </option>
+                <option key={book._id} value={book.title} />
               ))}
-            </select>
+            </datalist>
           </div>
 
           {/* Due Date */}

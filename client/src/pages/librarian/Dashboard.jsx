@@ -7,17 +7,18 @@ import Students from './Students';
 import AddStudent from './AddStudent';
 import IssueBook from './IssueBook';
 import ReturnBook from './ReturnBook';
-import { FaBook, FaUsers, FaPlus, FaExchangeAlt, FaHistory } from 'react-icons/fa';
+import { MdSpaceDashboard } from "react-icons/md";
+import { FaListAlt,FaBook, FaUsers,FaUserPlus, FaPlus,FaUndo, FaExchangeAlt } from 'react-icons/fa';
 
 const Sidebar = ({ setActiveSection, activeSection }) => {
   const menuItems = [
-    { name: 'Dashboard', section: 'dashboard', icon: FaBook },
+    { name: 'Dashboard', section: 'dashboard', icon: MdSpaceDashboard },
     { name: 'Book List', section: 'booklist', icon: FaBook },
     { name: 'Add New Book', section: 'addbook', icon: FaPlus },
     { name: 'Students', section: 'students', icon: FaUsers },
-    { name: 'Add Students', section: 'addstudent', icon: FaPlus },
+    { name: 'Add Students', section: 'addstudent', icon: FaUserPlus },
     { name: 'Issue Book', section: 'issuebook', icon: FaExchangeAlt },
-    { name: 'Return Book', section: 'returnbook', icon: FaHistory },
+    { name: 'Return Book', section: 'returnbook', icon: FaUndo },
   ];
 
   return (
@@ -114,50 +115,6 @@ const StatsCard = ({ title, value, icon: Icon }) => (
   </motion.div>
 );
 
-const RecentHistory = ({ historyData }) => {
-  return (
-    <div className="mt-8">
-      <h2 className="text-xl font-semibold text-[#2c3e50] mb-5">Recent History</h2>
-      <div className="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
-        <table className="w-full text-left">
-          <thead>
-            <tr className="bg-[#f4f7fa] text-[#7f8c8d]">
-              <th className="p-3">Student</th>
-              <th className="p-3">Book</th>
-              <th className="p-3">Action</th>
-              <th className="p-3">Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {historyData.map((entry, index) => (
-              <motion.tr
-                key={entry.id}
-                className="border-b border-gray-200 hover:bg-gray-50"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
-              >
-                <td className="p-3">{entry.student}</td>
-                <td className="p-3">{entry.book}</td>
-                <td className="p-3">
-                  <span
-                    className={`${
-                      entry.action === 'Issued' ? 'text-[#1abc9c]' : 'text-[#16a085]'
-                    } font-semibold`}
-                  >
-                    {entry.action}
-                  </span>
-                </td>
-                <td className="p-3">{new Date(entry.date).toLocaleDateString()}</td>
-              </motion.tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-};
-
 const LibrarianDashboard = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [statsData, setStatsData] = useState([
@@ -165,7 +122,6 @@ const LibrarianDashboard = () => {
     { title: 'Active Loans', value: '0', icon: FaExchangeAlt },
     { title: 'Registered Members', value: '0', icon: FaUsers },
   ]);
-  const [historyData, setHistoryData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -195,16 +151,6 @@ const LibrarianDashboard = () => {
           { title: 'Registered Members', value: registeredMembers.toString(), icon: FaUsers },
         ]);
 
-        // Fetch recent history (unchanged from previous)
-        const recentHistoryResponse = await axios.get('http://localhost:5000/api/loans/recent?limit=5', config);
-        const recentHistory = recentHistoryResponse.data.map((loan) => ({
-          id: loan._id,
-          student: loan.studentId?.name || 'Unknown',
-          book: loan.title || loan.bookId?.title || 'Unknown',
-          action: loan.returnDate ? 'Returned' : 'Issued',
-          date: loan.returnDate || loan.issueDate,
-        }));
-        setHistoryData(recentHistory);
       } catch (err) {
         console.error('Error fetching dashboard data:', err.response?.data || err.message);
       } finally {
@@ -227,14 +173,11 @@ const LibrarianDashboard = () => {
     switch (activeSection) {
       case 'dashboard':
         return (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-              {statsData.map((stat, index) => (
-                <StatsCard key={index} title={stat.title} value={stat.value} icon={stat.icon} />
-              ))}
-            </div>
-            <RecentHistory historyData={historyData} />
-          </>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+            {statsData.map((stat, index) => (
+              <StatsCard key={index} title={stat.title} value={stat.value} icon={stat.icon} />
+            ))}
+          </div>
         );
       case 'booklist':
         return <BookList />;
