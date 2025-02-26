@@ -164,7 +164,7 @@ const StudentDashboard = () => {
       }
 
       try {
-        const studentResponse = await axios.get(`http://localhost:5000/api/students/email/${user.email}`, {
+        const studentResponse = await axios.get(`https://lms-o44p.onrender.com/api/students/email/${user.email}`, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
 
@@ -172,12 +172,12 @@ const StudentDashboard = () => {
           setIsAuthorized(true);
           const studentId = studentResponse.data._id;
 
-          const booksResponse = await axios.get('http://localhost:5000/api/books', {
+          const booksResponse = await axios.get('https://lms-o44p.onrender.com/api/books', {
             headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
           });
           const totalBooks = booksResponse.data.length;
 
-          const loansResponse = await axios.get(`http://localhost:5000/api/loans?studentId=${studentId}`, {
+          const loansResponse = await axios.get(`https://lms-o44p.onrender.com/api/loans?studentId=${studentId}`, {
             headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
           });
           const borrowedBooks = loansResponse.data || [];

@@ -21,10 +21,10 @@ const ReturnBook = ({ setActiveSection }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const studentsResponse = await axios.get('http://localhost:5000/api/students');
+        const studentsResponse = await axios.get('https://lms-o44p.onrender.com/api/students');
         setStudents(studentsResponse.data);
 
-        const issuedBooksResponse = await axios.get('http://localhost:5000/api/loans/active');
+        const issuedBooksResponse = await axios.get('https://lms-o44p.onrender.com/api/loans/active');
         const activeIssuedBooks = issuedBooksResponse.data.issuedBooks || [];
         setIssuedBooks(activeIssuedBooks);
       } catch (err) {
@@ -84,7 +84,7 @@ const ReturnBook = ({ setActiveSection }) => {
 
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/loans/return/${formData.issuedBookId}`,
+        `https://lms-o44p.onrender.com/api/loans/return/${formData.issuedBookId}`,
         submitData
       );
       setSuccess(`Book returned successfully from ${formData.studentName || 'student'}!`);
@@ -96,7 +96,7 @@ const ReturnBook = ({ setActiveSection }) => {
         returnDate: new Date().toISOString().split('T')[0],
       });
 
-      const updatedResponse = await axios.get('http://localhost:5000/api/loans/active');
+      const updatedResponse = await axios.get('https://lms-o44p.onrender.com/api/loans/active');
       const activeIssuedBooks = updatedResponse.data.issuedBooks || [];
       setIssuedBooks(activeIssuedBooks);
 

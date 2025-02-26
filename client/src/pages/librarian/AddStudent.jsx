@@ -24,7 +24,7 @@ const AddStudent = ({ setActiveSection }) => { // Added setActiveSection prop fo
     setSuccess(null);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/students', formData);
+      const response = await axios.post('https://lms-o44p.onrender.com/api/students', formData);
       setSuccess('Student added successfully!');
       setFormData({ name: '', email: '', studentId: '' });
       // Redirect to students section after 2 seconds (consistent with dashboard navigation)

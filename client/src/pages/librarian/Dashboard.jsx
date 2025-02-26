@@ -154,15 +154,15 @@ const LibrarianDashboard = () => {
         const token = localStorage.getItem('token');
         const config = { headers: { Authorization: `Bearer ${token}` } };
 
-        const booksResponse = await axios.get('http://localhost:5000/api/books', config);
+        const booksResponse = await axios.get('https://lms-o44p.onrender.com/api/books', config);
         const totalBooks = Array.isArray(booksResponse.data) ? booksResponse.data.length : booksResponse.data.books?.length || 0;
 
-        const activeLoansResponse = await axios.get('http://localhost:5000/api/loans/active', config);
+        const activeLoansResponse = await axios.get('https://lms-o44p.onrender.com/api/loans/active', config);
         const activeLoans = Array.isArray(activeLoansResponse.data)
           ? activeLoansResponse.data.length
           : activeLoansResponse.data.issuedBooks?.length || 0;
 
-        const studentsResponse = await axios.get('http://localhost:5000/api/students', config);
+        const studentsResponse = await axios.get('https://lms-o44p.onrender.com/api/students', config);
         const registeredMembers = Array.isArray(studentsResponse.data) ? studentsResponse.data.length : studentsResponse.data.students?.length || 0;
 
         setStatsData([

@@ -14,7 +14,7 @@ const StudentBookList = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/books');
+        const response = await axios.get('https://lms-o44p.onrender.com/api/books');
         const sortedBooks = response.data.sort((a, b) => a.bid - b.bid);
         setBooks(sortedBooks);
         setFilteredBooks(sortedBooks);
