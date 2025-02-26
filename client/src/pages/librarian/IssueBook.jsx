@@ -6,10 +6,10 @@ const IssueBook = ({ setActiveSection }) => {
   const [students, setStudents] = useState([]);
   const [books, setBooks] = useState([]);
   const [formData, setFormData] = useState({
-    studentName: '', // Display name in frontend
-    studentId: '',   // Actual ObjectId for submission
-    bookName: '',    // Display name in frontend
-    bid: '',         // Actual string ID for submission
+    studentName: '',
+    studentId: '',
+    bookName: '',
+    bid: '',
     dueDate: '',
   });
   const [error, setError] = useState(null);
@@ -39,14 +39,14 @@ const IssueBook = ({ setActiveSection }) => {
       setFormData((prev) => ({
         ...prev,
         studentName: value,
-        studentId: selectedStudent ? selectedStudent._id : '', // Use _id for MongoDB ObjectId
+        studentId: selectedStudent ? selectedStudent._id : '',
       }));
     } else if (name === 'bookName') {
       const selectedBook = books.find((book) => book.title === value);
       setFormData((prev) => ({
         ...prev,
         bookName: value,
-        bid: selectedBook ? String(selectedBook.bid) : '', // Ensure bid is a string
+        bid: selectedBook ? String(selectedBook.bid) : '',
       }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -59,10 +59,9 @@ const IssueBook = ({ setActiveSection }) => {
     setSuccess(null);
     setLoading(true);
 
-    // Prepare data for submission (only send studentId, bid, and dueDate)
     const submitData = {
-      studentId: formData.studentId, // Should be ObjectId like "67bc2663abe5a32421c57d8f"
-      bid: formData.bid,             // Should be string like "16"
+      studentId: formData.studentId,
+      bid: formData.bid,
       dueDate: formData.dueDate,
     };
 
@@ -90,21 +89,20 @@ const IssueBook = ({ setActiveSection }) => {
 
   return (
     <motion.div
-      className="p-6 bg-[#f4f7fa] max-w-lg mx-auto"
+      className="p-4 sm:p-6 bg-[#f4f7fa] min-h-screen"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: 'easeInOut' }}
     >
-      <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-3xl font-bold mb-6 text-center text-[#2c3e50]">Issue Book</h2>
+      <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md w-full max-w-md mx-auto">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center text-[#2c3e50]">Issue Book</h2>
 
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-        {success && <p className="text-[#1abc9c] text-center mb-4">{success}</p>}
+        {error && <p className="text-red-500 text-center mb-4 text-sm sm:text-base">{error}</p>}
+        {success && <p className="text-[#1abc9c] text-center mb-4 text-sm sm:text-base">{success}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Student Name with Autocomplete */}
           <div>
-            <label htmlFor="studentName" className="block text-[#7f8c8d] text-sm font-medium mb-2">
+            <label htmlFor="studentName" className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2">
               Student Name
             </label>
             <input
@@ -114,7 +112,7 @@ const IssueBook = ({ setActiveSection }) => {
               value={formData.studentName}
               onChange={handleChange}
               list="studentsList"
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa]"
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa] text-sm sm:text-base"
               placeholder="Type student name"
               required
             />
@@ -125,9 +123,8 @@ const IssueBook = ({ setActiveSection }) => {
             </datalist>
           </div>
 
-          {/* Book Name with Autocomplete */}
           <div>
-            <label htmlFor="bookName" className="block text-[#7f8c8d] text-sm font-medium mb-2">
+            <label htmlFor="bookName" className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2">
               Book Name
             </label>
             <input
@@ -137,7 +134,7 @@ const IssueBook = ({ setActiveSection }) => {
               value={formData.bookName}
               onChange={handleChange}
               list="booksList"
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa]"
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa] text-sm sm:text-base"
               placeholder="Type book name"
               required
             />
@@ -148,9 +145,8 @@ const IssueBook = ({ setActiveSection }) => {
             </datalist>
           </div>
 
-          {/* Due Date */}
           <div>
-            <label htmlFor="dueDate" className="block text-[#7f8c8d] text-sm font-medium mb-2">
+            <label htmlFor="dueDate" className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2">
               Due Date
             </label>
             <input
@@ -160,15 +156,14 @@ const IssueBook = ({ setActiveSection }) => {
               value={formData.dueDate}
               onChange={handleChange}
               min={new Date().toISOString().split('T')[0]}
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa]"
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa] text-sm sm:text-base"
               required
             />
           </div>
 
-          {/* Submit Button */}
           <motion.button
             type="submit"
-            className={`w-full bg-[#059669] hover:bg-[#047857] text-white p-3 rounded-md transition duration-200 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`w-full bg-[#059669] hover:bg-[#047857] text-white p-2 sm:p-3 rounded-md transition duration-200 text-sm sm:text-base ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             whileHover={{ scale: loading ? 1 : 1.05 }}
             whileTap={{ scale: loading ? 1 : 0.95 }}
             disabled={loading}
@@ -176,10 +171,9 @@ const IssueBook = ({ setActiveSection }) => {
             {loading ? 'Issuing...' : 'Issue Book'}
           </motion.button>
 
-          {/* Back Button */}
           <motion.button
             onClick={() => setActiveSection('students')}
-            className="w-full bg-gray-200 hover:bg-gray-300 text-[#2c3e50] p-3 rounded-md transition duration-200"
+            className="w-full bg-gray-200 hover:bg-gray-300 text-[#2c3e50] p-2 sm:p-3 rounded-md transition duration-200 text-sm sm:text-base"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >

@@ -11,7 +11,7 @@ const BookList = () => {
   const [editData, setEditData] = useState({ bid: '', title: '', author: '', category: '', status: '' });
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState({ status: '', category: '', search: '' });
-  const booksPerPage = 20;
+  const booksPerPage = 10;
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -160,7 +160,7 @@ const BookList = () => {
 
   return (
     <motion.div
-      className="p-4 sm:p-6 bg-[#f4f7fa] min-h-screen"
+      className="px-0 sm:px-0 bg-[#f4f7fa] min-h-screen" // Changed padding to px-0 on mobile, sm:px-6 on larger screens
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6, ease: 'easeInOut' }}
@@ -171,7 +171,7 @@ const BookList = () => {
       {error && <p className="text-red-500 text-center mb-4 text-sm sm:text-base">Error: {error}</p>}
 
       {/* Search Input */}
-      <div className="mb-6 w-full max-w-md mx-auto relative">
+      <div className="mb-6 w-full max-w-md mx-auto relative px-4 sm:px-0">
         <label htmlFor="search" className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2">
           Search by Title
         </label>
@@ -190,12 +190,12 @@ const BookList = () => {
       </div>
 
       {!filteredBooks.length ? (
-        <p className="text-center text-[#7f8c8d] text-sm sm:text-base">
+        <p className="text-center text-[#7f8c8d] text-sm sm:text-base px-4 sm:px-0">
           No books match the selected filters or search
         </p>
       ) : (
         <>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto px-4 sm:px-0">
             <table className="min-w-full border-collapse bg-white shadow-md rounded-lg">
               <thead className="bg-[#1f2937] text-white">
                 <tr>
@@ -365,7 +365,7 @@ const BookList = () => {
               </tbody>
             </table>
           </div>
-          <div className="flex justify-center mt-4 space-x-2 sm:space-x-4">
+          <div className="flex justify-center mt-4 space-x-2 sm:space-x-4 px-4 sm:px-0">
             <motion.button
               onClick={handlePreviousPage}
               disabled={currentPage === 1}

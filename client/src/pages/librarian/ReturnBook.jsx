@@ -7,17 +7,16 @@ const ReturnBook = ({ setActiveSection }) => {
   const [issuedBooks, setIssuedBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [formData, setFormData] = useState({
-    studentName: '',      // Display name in frontend
-    studentId: '',        // Actual ObjectId for filtering
-    bookTitle: '',        // Display title in frontend
-    issuedBookId: '',     // Actual loan ID for submission
-    returnDate: new Date().toISOString().split('T')[0], // Default to today
+    studentName: '',
+    studentId: '',
+    bookTitle: '',
+    issuedBookId: '',
+    returnDate: new Date().toISOString().split('T')[0],
   });
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Fetch students and active issued books on mount
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -35,7 +34,6 @@ const ReturnBook = ({ setActiveSection }) => {
     fetchData();
   }, []);
 
-  // Filter issued books based on selected student
   useEffect(() => {
     if (formData.studentId) {
       const booksForStudent = issuedBooks.filter(
@@ -118,21 +116,20 @@ const ReturnBook = ({ setActiveSection }) => {
 
   return (
     <motion.div
-      className="p-6 bg-[#f4f7fa] max-w-lg mx-auto"
+      className="p-4 sm:p-6 bg-[#f4f7fa] min-h-screen"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: 'easeInOut' }}
     >
-      <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-3xl font-bold mb-6 text-center text-[#2c3e50]">Return Book</h2>
+      <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md w-full max-w-md mx-auto">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center text-[#2c3e50]">Return Book</h2>
 
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-        {success && <p className="text-[#1abc9c] text-center mb-4">{success}</p>}
+        {error && <p className="text-red-500 text-center mb-4 text-sm sm:text-base">{error}</p>}
+        {success && <p className="text-[#1abc9c] text-center mb-4 text-sm sm:text-base">{success}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Student Name with Autocomplete */}
           <div>
-            <label htmlFor="studentName" className="block text-[#7f8c8d] text-sm font-medium mb-2">
+            <label htmlFor="studentName" className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2">
               Student Name
             </label>
             <input
@@ -142,7 +139,7 @@ const ReturnBook = ({ setActiveSection }) => {
               value={formData.studentName}
               onChange={handleChange}
               list="studentsList"
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa]"
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa] text-sm sm:text-base"
               placeholder="Type student name"
               required
             />
@@ -153,9 +150,8 @@ const ReturnBook = ({ setActiveSection }) => {
             </datalist>
           </div>
 
-          {/* Issued Book Title with Autocomplete */}
           <div>
-            <label htmlFor="bookTitle" className="block text-[#7f8c8d] text-sm font-medium mb-2">
+            <label htmlFor="bookTitle" className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2">
               Book Title
             </label>
             <input
@@ -165,7 +161,7 @@ const ReturnBook = ({ setActiveSection }) => {
               value={formData.bookTitle}
               onChange={handleChange}
               list="issuedBooksList"
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa]"
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa] text-sm sm:text-base"
               placeholder="Type book title"
               required
               disabled={!formData.studentId}
@@ -177,9 +173,8 @@ const ReturnBook = ({ setActiveSection }) => {
             </datalist>
           </div>
 
-          {/* Return Date */}
           <div>
-            <label htmlFor="returnDate" className="block text-[#7f8c8d] text-sm font-medium mb-2">
+            <label htmlFor="returnDate" className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2">
               Return Date
             </label>
             <input
@@ -189,15 +184,14 @@ const ReturnBook = ({ setActiveSection }) => {
               value={formData.returnDate}
               onChange={handleChange}
               min={new Date().toISOString().split('T')[0]}
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa]"
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa] text-sm sm:text-base"
               required
             />
           </div>
 
-          {/* Submit Button */}
           <motion.button
             type="submit"
-            className={`w-full bg-[#059669] hover:bg-[#047857] text-white p-3 rounded-md transition duration-200 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`w-full bg-[#059669] hover:bg-[#047857] text-white p-2 sm:p-3 rounded-md transition duration-200 text-sm sm:text-base ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             whileHover={{ scale: loading ? 1 : 1.05 }}
             whileTap={{ scale: loading ? 1 : 0.95 }}
             disabled={loading}
@@ -205,10 +199,9 @@ const ReturnBook = ({ setActiveSection }) => {
             {loading ? 'Returning...' : 'Return Book'}
           </motion.button>
 
-          {/* Back Button */}
           <motion.button
             onClick={() => setActiveSection('students')}
-            className="w-full bg-gray-200 hover:bg-gray-300 text-[#2c3e50] p-3 rounded-md transition duration-200"
+            className="w-full bg-gray-200 hover:bg-gray-300 text-[#2c3e50] p-2 sm:p-3 rounded-md transition duration-200 text-sm sm:text-base"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >

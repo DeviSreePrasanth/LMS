@@ -30,7 +30,7 @@ const Sidebar = ({ setActiveSection, activeSection }) => {
         className="md:hidden p-4 bg-[#2c3e50] text-white fixed top-0 left-0 w-full z-20 shadow-md"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration:0.2 }}
       >
         <FaBars
           className="text-2xl cursor-pointer"
@@ -43,10 +43,9 @@ const Sidebar = ({ setActiveSection, activeSection }) => {
         className={`w-[250px] bg-[#2c3e50] text-white p-5 fixed h-full flex flex-col justify-between shadow-xl z-10
           ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out`}
         initial={{ x: 0 }} // Start at x: 0 for desktop
-        animate={{ x: isOpen ? 0 : '-100%' }} // Only animate on mobile
-        transition={{ duration: 0.5, ease: 'easeInOut' }}
-        // Ensure desktop doesn't animate unnecessarily
-        {...(window.innerWidth >= 768 ? { animate: { x: 0 } } : {})}
+        animate={{ x: isOpen ? 0 : '-100%' }} // Slide on mobile
+        transition={{ duration: 0.1, ease: [0.4, 0, 0.2, 1] }} // Faster (0.3s) and smoother with custom easing
+        {...(window.innerWidth >= 768 ? { animate: { x: 0 } } : {})} // Ensure desktop stays fixed
       >
         <div>
           <h2 className="text-2xl font-bold mb-8 text-center">Library System</h2>
