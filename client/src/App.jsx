@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './pages/Home';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import AddBook from './pages/librarian/AddBook';
@@ -19,7 +18,6 @@ const App = () => {
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/home" element={<Home />} />
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
           {/* Librarian Routes */}

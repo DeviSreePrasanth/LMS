@@ -27,9 +27,12 @@ const BorrowedBooks = () => {
         const loansResponse = await axios.get(`http://localhost:5000/api/loans?studentId=${student._id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        const borrowedBooks = loansResponse.data.filter((book) => !book.returnDate);
+        const allBooks = loansResponse.data;
 
-        setStudentData({ ...student, borrowedBooks });
+        const borrowedBooks = allBooks.filter((book) => !book.returnDate);
+        const returnedBooks = allBooks.filter((book) => book.returnDate);
+
+        setStudentData({ ...student, borrowedBooks, returnedBooks });
         setLoading(false);
       } catch (err) {
         setError(err.response?.data?.message || 'Failed to fetch student data');
@@ -109,10 +112,11 @@ const BorrowedBooks = () => {
               <strong>Email:</strong> {studentData.email}
             </p>
           </div>
+          
           <h4 className="text-xl font-semibold text-[#2c3e50] mb-2">Currently Borrowed Books</h4>
           <AnimatePresence>
             {studentData.borrowedBooks.length > 0 ? (
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto mb-8">
                 <table className="min-w-full border-collapse bg-gray-50 rounded-lg">
                   <thead className="bg-[#1f2937] text-white">
                     <tr>
@@ -157,6 +161,27 @@ const BorrowedBooks = () => {
               </div>
             ) : (
               <p className="text-[#7f8c8d]">No books currently borrowed</p>
+            )}
+          </AnimatePresence>
+
+          <h4 className="text-xl font-semibold text-[#2c3e50] mb-2">Returned Books</h4>
+          <AnimatePresence>
+            {studentData.returnedBooks.length > 0 ? (
+              <ul className="list-disc list-inside">
+                {studentData.returnedBooks.map((book) => (
+                  <motion.li
+                    key={book._id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <strong>{book.title}</strong> - Returned on {new Date(book.returnDate).toLocaleDateString()}
+                  </motion.li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-[#7f8c8d]">No books have been returned yet</p>
             )}
           </AnimatePresence>
         </div>

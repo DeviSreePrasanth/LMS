@@ -37,7 +37,7 @@ const IssueBook = ({ setActiveSection }) => {
       setFormData((prev) => ({
         ...prev,
         bid: value,
-        title: selectedBook ? selectedBook.title : '', // Ensure title is set here
+        title: selectedBook ? selectedBook.title : '',
       }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -50,7 +50,6 @@ const IssueBook = ({ setActiveSection }) => {
     setSuccess(null);
     setLoading(true);
 
-    // Log the data being sent for debugging
     console.log('Submitting issue book data:', formData);
 
     try {
@@ -65,28 +64,31 @@ const IssueBook = ({ setActiveSection }) => {
     }
   };
 
+  // Librarian-specific color palette (matching AddBook)
   const palette = {
-    primary: '#2c3e50',
-    accent: '#1abc9c',
-    bg: '#f4f7fa',
+    primary: '#2c3e50', // Dark blue-gray for headers and text
+    accent: '#1abc9c',  // Teal for highlights
+    muted: '#7f8c8d',   // Muted gray for secondary text
+    bg: '#f4f7fa',      // Light gray background
   };
 
   return (
     <motion.div
-      className="p-6 bg-[#f4f7fa] min-h-screen flex items-center justify-center"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      className="p-6 bg-[#f4f7fa] max-w-lg mx-auto" // Adjusted to match AddBook: reduced distance from top
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: 'easeInOut' }}
     >
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+      <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
         <h2 className="text-3xl font-bold mb-6 text-center text-[#2c3e50]">Issue Book</h2>
 
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-        {success && <p className="text-green-500 text-center mb-4">{success}</p>}
+        {success && <p className="text-[#1abc9c] text-center mb-4">{success}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Student Selection */}
           <div>
-            <label htmlFor="studentId" className="block text-[#2c3e50] font-semibold mb-2">
+            <label htmlFor="studentId" className="block text-[#7f8c8d] text-sm font-medium mb-2">
               Select Student
             </label>
             <select
@@ -94,7 +96,7 @@ const IssueBook = ({ setActiveSection }) => {
               name="studentId"
               value={formData.studentId}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c]"
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa]"
               required
             >
               <option value="">-- Select a student --</option>
@@ -106,8 +108,9 @@ const IssueBook = ({ setActiveSection }) => {
             </select>
           </div>
 
+          {/* Book Selection */}
           <div>
-            <label htmlFor="bid" className="block text-[#2c3e50] font-semibold mb-2">
+            <label htmlFor="bid" className="block text-[#7f8c8d] text-sm font-medium mb-2">
               Select Book
             </label>
             <select
@@ -115,7 +118,7 @@ const IssueBook = ({ setActiveSection }) => {
               name="bid"
               value={formData.bid}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c]"
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa]"
               required
             >
               <option value="">-- Select a book --</option>
@@ -127,8 +130,9 @@ const IssueBook = ({ setActiveSection }) => {
             </select>
           </div>
 
+          {/* Due Date */}
           <div>
-            <label htmlFor="dueDate" className="block text-[#2c3e50] font-semibold mb-2">
+            <label htmlFor="dueDate" className="block text-[#7f8c8d] text-sm font-medium mb-2">
               Due Date
             </label>
             <input
@@ -138,30 +142,32 @@ const IssueBook = ({ setActiveSection }) => {
               value={formData.dueDate}
               onChange={handleChange}
               min={new Date().toISOString().split('T')[0]}
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c]"
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa]"
               required
             />
           </div>
 
+          {/* Submit Button */}
           <motion.button
             type="submit"
-            className={`w-full py-2 rounded-md text-white bg-[#1e3a8a] hover:bg-[#1e40af] transition duration-200 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`w-full bg-[#059669] hover:bg-[#047857] text-white p-3 rounded-md transition duration-200 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             whileHover={{ scale: loading ? 1 : 1.05 }}
             whileTap={{ scale: loading ? 1 : 0.95 }}
             disabled={loading}
           >
             {loading ? 'Issuing...' : 'Issue Book'}
           </motion.button>
-        </form>
 
-        <motion.button
-          onClick={() => setActiveSection('students')}
-          className="w-full mt-4 py-2 rounded-md text-[#2c3e50] bg-gray-200 hover:bg-gray-300 transition duration-200"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          Back to Students
-        </motion.button>
+          {/* Back Button */}
+          <motion.button
+            onClick={() => setActiveSection('students')}
+            className="w-full bg-gray-200 hover:bg-gray-300 text-[#2c3e50] p-3 rounded-md transition duration-200"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Back to Students
+          </motion.button>
+        </form>
       </div>
     </motion.div>
   );

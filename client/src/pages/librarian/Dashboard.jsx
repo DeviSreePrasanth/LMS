@@ -1,45 +1,50 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import axios from 'axios';
 import AddBook from './AddBook';
 import BookList from './BookList';
 import Students from './Students';
 import AddStudent from './AddStudent';
-import IssueBook from './IssueBook'; // Import the functional IssueBook
-import ReturnBook from './ReturnBook'; // Import the functional ReturnBook
+import IssueBook from './IssueBook';
+import ReturnBook from './ReturnBook';
+import { FaBook, FaUsers, FaPlus, FaExchangeAlt, FaHistory } from 'react-icons/fa';
 
 const Sidebar = ({ setActiveSection, activeSection }) => {
   const menuItems = [
-    { name: 'Dashboard', section: 'dashboard' },
-    { name: 'Book List', section: 'booklist' },
-    { name: 'Add New Book', section: 'addbook' },
-    { name: 'Students', section: 'students' },
-    { name: 'Add Students', section: 'addstudent' },
-    { name: 'Issue Book', section: 'issuebook' },
-    { name: 'Return Book', section: 'returnbook' },
+    { name: 'Dashboard', section: 'dashboard', icon: FaBook },
+    { name: 'Book List', section: 'booklist', icon: FaBook },
+    { name: 'Add New Book', section: 'addbook', icon: FaPlus },
+    { name: 'Students', section: 'students', icon: FaUsers },
+    { name: 'Add Students', section: 'addstudent', icon: FaPlus },
+    { name: 'Issue Book', section: 'issuebook', icon: FaExchangeAlt },
+    { name: 'Return Book', section: 'returnbook', icon: FaHistory },
   ];
 
   return (
     <motion.div
-      className="w-[250px] bg-[#2c3e50] text-white p-5 fixed h-full"
+      className="w-[250px] bg-[#2c3e50] text-white p-5 fixed h-full flex flex-col justify-between shadow-xl"
       initial={{ x: '-100%' }}
       animate={{ x: 0 }}
       transition={{ duration: 0.5, ease: 'easeInOut' }}
     >
-      <h2 className="text-2xl font-semibold mb-8 text-center">Library System</h2>
-      <ul className="space-y-3">
-        {menuItems.map((item, index) => (
-          <motion.li
-            key={index}
-            className={`p-3 rounded-md cursor-pointer hover:bg-[#1abc9c] transition-transform duration-300 ${
-              activeSection === item.section ? 'bg-[#1abc9c]' : 'bg-[#34495e]'
-            }`}
-            whileHover={{ x: 10 }}
-            onClick={() => setActiveSection(item.section)}
-          >
-            {item.name}
-          </motion.li>
-        ))}
-      </ul>
+      <div>
+        <h2 className="text-2xl font-bold mb-8 text-center">Library System</h2>
+        <ul className="space-y-3">
+          {menuItems.map((item, index) => (
+            <motion.li
+              key={index}
+              className={`p-3 rounded-lg cursor-pointer transition-all duration-300 flex items-center gap-3 ${
+                activeSection === item.section ? 'bg-[#1abc9c]' : 'bg-[#34495e] hover:bg-[#1abc9c]'
+              }`}
+              whileHover={{ x: 10 }}
+              onClick={() => setActiveSection(item.section)}
+            >
+              <item.icon className="text-xl" />
+              {item.name}
+            </motion.li>
+          ))}
+        </ul>
+      </div>
     </motion.div>
   );
 };
@@ -63,67 +68,57 @@ const Header = () => {
     }
   };
 
-  const triggerFileUpload = () => {
-    fileInputRef.current.click();
-  };
-
   return (
     <motion.div
-      className="flex justify-between items-center bg-white p-5 rounded-lg shadow-md relative"
+      className="flex justify-between items-center bg-white p-6 rounded-lg shadow-md"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8, ease: 'easeInOut' }}
     >
       <h1 className="text-2xl font-bold text-[#2c3e50]">Librarian Dashboard</h1>
-      <div className="flex items-center space-x-3">
-        <span className="text-gray-600">Welcome, Librarian</span>
-        <div className="relative">
-          <motion.img
-            src={profileImage}
-            alt="Profile"
-            className="w-10 h-10 rounded-full cursor-pointer"
-            whileHover={{ scale: 1.1 }}
-            onClick={triggerFileUpload}
-          />
-          <input
-            type="file"
-            accept="image/*"
-            ref={fileInputRef}
-            onChange={handleImageUpload}
-            className="hidden"
-          />
-        </div>
+      <div className="flex items-center gap-4">
+        <span className="text-[#7f8c8d] font-medium">Welcome, Librarian</span>
+        <motion.img
+          src={profileImage}
+          alt="Profile"
+          className="w-12 h-12 rounded-full cursor-pointer border-2 border-[#34495e]"
+          whileHover={{ scale: 1.1 }}
+          onClick={() => fileInputRef.current.click()}
+        />
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          onChange={handleImageUpload}
+          className="hidden"
+        />
       </div>
     </motion.div>
   );
 };
 
-// StatsCard Component
-const StatsCard = ({ title, value }) => (
+const StatsCard = ({ title, value, icon: Icon }) => (
   <motion.div
-    className="bg-white p-5 rounded-lg shadow-md text-center"
+    className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1"
     initial={{ y: 50, opacity: 0 }}
     animate={{ y: 0, opacity: 1 }}
     transition={{ duration: 0.6, ease: 'easeInOut' }}
   >
-    <h3 className="text-lg text-[#7f8c8d] mb-2">{title}</h3>
-    <p className="text-2xl font-bold text-[#2c3e50]">{value}</p>
+    <div className="flex items-center gap-4">
+      <Icon className="text-2xl text-[#1abc9c]" />
+      <div>
+        <p className="text-[#7f8c8d]">{title}</p>
+        <p className="text-2xl font-bold text-[#2c3e50]">{value}</p>
+      </div>
+    </div>
   </motion.div>
 );
 
-// RecentHistory Component (Dashboard Default View)
-const RecentHistory = () => {
-  const historyData = [
-    { id: 1, student: 'John Doe', book: 'The Great Gatsby', action: 'Issued', date: '2025-02-18' },
-    { id: 2, student: 'Jane Smith', book: '1984', action: 'Returned', date: '2025-02-17' },
-    { id: 3, student: 'Alice Johnson', book: 'To Kill a Mockingbird', action: 'Issued', date: '2025-02-16' },
-    { id: 4, student: 'Bob Brown', book: 'Pride and Prejudice', action: 'Returned', date: '2025-02-15' },
-  ];
-
+const RecentHistory = ({ historyData }) => {
   return (
     <div className="mt-8">
       <h2 className="text-xl font-semibold text-[#2c3e50] mb-5">Recent History</h2>
-      <div className="bg-white p-5 rounded-lg shadow-md">
+      <div className="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
         <table className="w-full text-left">
           <thead>
             <tr className="bg-[#f4f7fa] text-[#7f8c8d]">
@@ -153,7 +148,7 @@ const RecentHistory = () => {
                     {entry.action}
                   </span>
                 </td>
-                <td className="p-3">{entry.date}</td>
+                <td className="p-3">{new Date(entry.date).toLocaleDateString()}</td>
               </motion.tr>
             ))}
           </tbody>
@@ -163,27 +158,82 @@ const RecentHistory = () => {
   );
 };
 
-// Main Dashboard Component
 const LibrarianDashboard = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
-  const statsData = [
-    { title: 'Total Books', value: '1,245' },
-    { title: 'Active Loans', value: '87' },
-    { title: 'Registered Members', value: '320' },
-  ];
+  const [statsData, setStatsData] = useState([
+    { title: 'Total Books', value: '0', icon: FaBook },
+    { title: 'Active Loans', value: '0', icon: FaExchangeAlt },
+    { title: 'Registered Members', value: '0', icon: FaUsers },
+  ]);
+  const [historyData, setHistoryData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const config = { headers: { Authorization: `Bearer ${token}` } };
+
+        // Fetch total number of books
+        const booksResponse = await axios.get('http://localhost:5000/api/books', config);
+        const totalBooks = Array.isArray(booksResponse.data) ? booksResponse.data.length : booksResponse.data.books?.length || 0;
+
+        // Fetch active loans
+        const activeLoansResponse = await axios.get('http://localhost:5000/api/loans/active', config);
+        const activeLoans = Array.isArray(activeLoansResponse.data) 
+          ? activeLoansResponse.data.length 
+          : activeLoansResponse.data.issuedBooks?.length || 0;
+
+        // Fetch registered members (students)
+        const studentsResponse = await axios.get('http://localhost:5000/api/students', config);
+        const registeredMembers = Array.isArray(studentsResponse.data) ? studentsResponse.data.length : studentsResponse.data.students?.length || 0;
+
+        // Update stats with real data
+        setStatsData([
+          { title: 'Total Books', value: totalBooks.toString(), icon: FaBook },
+          { title: 'Active Loans', value: activeLoans.toString(), icon: FaExchangeAlt },
+          { title: 'Registered Members', value: registeredMembers.toString(), icon: FaUsers },
+        ]);
+
+        // Fetch recent history (unchanged from previous)
+        const recentHistoryResponse = await axios.get('http://localhost:5000/api/loans/recent?limit=5', config);
+        const recentHistory = recentHistoryResponse.data.map((loan) => ({
+          id: loan._id,
+          student: loan.studentId?.name || 'Unknown',
+          book: loan.title || loan.bookId?.title || 'Unknown',
+          action: loan.returnDate ? 'Returned' : 'Issued',
+          date: loan.returnDate || loan.issueDate,
+        }));
+        setHistoryData(recentHistory);
+      } catch (err) {
+        console.error('Error fetching dashboard data:', err.response?.data || err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
 
   const renderContent = () => {
+    if (loading) {
+      return (
+        <div className="flex items-center justify-center mt-8">
+          <p className="text-[#2c3e50] text-xl font-semibold">Loading...</p>
+        </div>
+      );
+    }
+
     switch (activeSection) {
       case 'dashboard':
         return (
           <>
-            <Header />
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
               {statsData.map((stat, index) => (
-                <StatsCard key={index} title={stat.title} value={stat.value} />
+                <StatsCard key={index} title={stat.title} value={stat.value} icon={stat.icon} />
               ))}
             </div>
-            <RecentHistory />
+            <RecentHistory historyData={historyData} />
           </>
         );
       case 'booklist':
@@ -195,9 +245,9 @@ const LibrarianDashboard = () => {
       case 'addbook':
         return <AddBook />;
       case 'issuebook':
-        return <IssueBook setActiveSection={setActiveSection} />; // Updated to functional component
+        return <IssueBook setActiveSection={setActiveSection} />;
       case 'returnbook':
-        return <ReturnBook setActiveSection={setActiveSection} />; // Updated to functional component
+        return <ReturnBook setActiveSection={setActiveSection} />;
       default:
         return null;
     }
@@ -206,7 +256,10 @@ const LibrarianDashboard = () => {
   return (
     <div className="flex min-h-screen bg-[#f4f7fa]">
       <Sidebar setActiveSection={setActiveSection} activeSection={activeSection} />
-      <div className="flex-1 ml-[250px] p-8">{renderContent()}</div>
+      <div className="flex-1 ml-[250px] p-8">
+        <Header />
+        {renderContent()}
+      </div>
     </div>
   );
 };

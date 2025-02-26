@@ -109,7 +109,7 @@ const Students = () => {
                     <td className="py-2 px-4">
                       <motion.button
                         onClick={() => handleViewDetails(student)}
-                        className="px-3 py-1 bg-[#1e3a8a] text-white rounded-md hover:bg-[#1e40af] transition duration-200"
+                        className="px-3 py-1 bg-[#059669] text-white rounded-md hover:bg-[#047857] transition duration-200"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
@@ -130,7 +130,7 @@ const Students = () => {
               className={`px-4 py-2 rounded-md text-white transition duration-200 ${
                 currentPage === 1
                   ? 'bg-[#6b7280] cursor-not-allowed'
-                  : 'bg-[#1e3a8a] hover:bg-[#1e40af]'
+                  : 'bg-[#059669] hover:bg-[#047857]'
               }`}
               whileHover={{ scale: currentPage === 1 ? 1 : 1.05 }}
               whileTap={{ scale: currentPage === 1 ? 1 : 0.95 }}
@@ -146,7 +146,7 @@ const Students = () => {
               className={`px-4 py-2 rounded-md text-white transition duration-200 ${
                 currentPage === totalPages
                   ? 'bg-[#6b7280] cursor-not-allowed'
-                  : 'bg-[#1e3a8a] hover:bg-[#1e40af]'
+                  : 'bg-[#059669] hover:bg-[#047857]'
               }`}
               whileHover={{ scale: currentPage === totalPages ? 1 : 1.05 }}
               whileTap={{ scale: currentPage === totalPages ? 1 : 0.95 }}
@@ -222,7 +222,7 @@ const Students = () => {
                 )}
                 <motion.button
                   onClick={handleCloseDetails}
-                  className="mt-4 px-4 py-2 bg-[#1e3a8a] text-white rounded-md hover:bg-[#1e40af] transition duration-200"
+                  className="mt-4 px-4 py-2 bg-[#059669] text-white rounded-md hover:bg-[#047857] transition duration-200"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >

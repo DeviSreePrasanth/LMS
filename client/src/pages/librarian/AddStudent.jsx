@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom'; // For redirecting after submission
+import { useNavigate } from 'react-router-dom';
 
-const AddStudent = () => {
+const AddStudent = ({ setActiveSection }) => { // Added setActiveSection prop for consistency with dashboard navigation
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -26,40 +26,40 @@ const AddStudent = () => {
     try {
       const response = await axios.post('http://localhost:5000/api/students', formData);
       setSuccess('Student added successfully!');
-      setFormData({ name: '', email: '', studentId: '' });// Redirect to students page after 2 seconds
+      setFormData({ name: '', email: '', studentId: '' });
+      // Redirect to students section after 2 seconds (consistent with dashboard navigation)
+      setTimeout(() => setActiveSection ? setActiveSection('students') : navigate('/students'), 2000);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to add student');
     }
   };
 
+  // Librarian-specific color palette (matching AddBook)
   const palette = {
-    primary: '#2c3e50',
-    accent: '#1abc9c',
-    muted: '#7f8c8d',
-    bg: '#f4f7fa',
-    headerBg: '#1f2937',
+    primary: '#2c3e50', // Dark blue-gray for headers and text
+    accent: '#1abc9c',  // Teal for highlights
+    muted: '#7f8c8d',   // Muted gray for secondary text
+    bg: '#f4f7fa',      // Light gray background
+    headerBg: '#1f2937', // Darker gray (unused here but kept for consistency)
   };
 
   return (
     <motion.div
-      className="p-6 bg-[#f4f7fa] min-h-screen flex items-center justify-center"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      className="p-6 bg-[#f4f7fa] max-w-lg mx-auto" // Adjusted to match AddBook: reduced distance from top
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: 'easeInOut' }}
     >
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className={`text-3xl font-bold mb-6 text-center text-[#2c3e50]`}>Add New Student</h2>
-        
-        {error && (
-          <p className="text-red-500 text-center mb-4">{error}</p>
-        )}
-        {success && (
-          <p className="text-green-500 text-center mb-4">{success}</p>
-        )}
+      <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
+        <h2 className="text-3xl font-bold mb-6 text-center text-[#2c3e50]">Add New Student</h2>
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label htmlFor="name" className={`block text-[#2c3e50] font-semibold mb-2`}>
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+        {success && <p className="text-[#1abc9c] text-center mb-4">{success}</p>}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Name */}
+          <div>
+            <label htmlFor="name" className="block text-[#7f8c8d] text-sm font-medium mb-2">
               Name
             </label>
             <input
@@ -68,13 +68,14 @@ const AddStudent = () => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c]"
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa]"
               required
             />
           </div>
 
-          <div className="mb-4">
-            <label htmlFor="email" className={`block text-[#2c3e50] font-semibold mb-2`}>
+          {/* Email */}
+          <div>
+            <label htmlFor="email" className="block text-[#7f8c8d] text-sm font-medium mb-2">
               Email
             </label>
             <input
@@ -83,13 +84,14 @@ const AddStudent = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c]"
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa]"
               required
             />
           </div>
 
-          <div className="mb-6">
-            <label htmlFor="studentId" className={`block text-[#2c3e50] font-semibold mb-2`}>
+          {/* Student ID */}
+          <div>
+            <label htmlFor="studentId" className="block text-[#7f8c8d] text-sm font-medium mb-2">
               Student ID
             </label>
             <input
@@ -98,18 +100,29 @@ const AddStudent = () => {
               name="studentId"
               value={formData.studentId}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c]"
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa]"
               required
             />
           </div>
 
+          {/* Submit Button */}
           <motion.button
             type="submit"
-            className={`w-full py-2 rounded-md text-white bg-[#1e3a8a] hover:bg-[#1e40af] transition duration-200`}
+            className="w-full bg-[#059669] hover:bg-[#047857] text-white p-3 rounded-md transition duration-200"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             Add Student
+          </motion.button>
+
+          {/* Back Button */}
+          <motion.button
+            onClick={() => setActiveSection ? setActiveSection('students') : navigate('/students')}
+            className="w-full bg-gray-200 hover:bg-gray-300 text-[#2c3e50] p-3 rounded-md transition duration-200"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Back to Students
           </motion.button>
         </form>
       </div>
