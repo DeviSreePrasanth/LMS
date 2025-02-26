@@ -33,7 +33,7 @@ const Login = () => {
     e.preventDefault();
     setError('');
     try {
-      const loginResponse = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+      const loginResponse = await axios.post('https://lms-o44p.onrender.com/api/auth/login', { email, password });
       console.log('Full login response:', loginResponse.data);
 
       const { token, user } = loginResponse.data;
