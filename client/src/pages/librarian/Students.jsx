@@ -31,7 +31,6 @@ const Students = () => {
     fetchStudents();
   }, []);
 
-  // Pagination logic
   const indexOfLastStudent = currentPage * studentsPerPage;
   const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
   const currentStudents = students.slice(indexOfFirstStudent, indexOfLastStudent);
@@ -71,27 +70,27 @@ const Students = () => {
 
   return (
     <motion.div
-      className="p-6 bg-[#f4f7fa]"
+      className="p-4 sm:p-6 bg-[#f4f7fa] min-h-screen"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6, ease: 'easeInOut' }}
     >
-      <h2 className={`text-3xl font-bold mb-4 text-center text-[#2c3e50]`}>Student List</h2>
+      <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-center text-[#2c3e50]">Student List</h2>
       {error && (
-        <p className="text-red-500 text-center mb-4">Error: {error}</p>
+        <p className="text-red-500 text-center mb-4 text-sm sm:text-base">Error: {error}</p>
       )}
       {!students.length ? (
-        <p className={`text-center text-[#7f8c8d]`}>Loading...</p>
+        <p className="text-center text-[#7f8c8d] text-sm sm:text-base">Loading...</p>
       ) : (
         <>
           <div className="overflow-x-auto">
-            <table className="min-w-full border-collapse bg-white shadow-md rounded-lg overflow-hidden">
-              <thead className={`bg-[#1f2937] text-white`}>
+            <table className="min-w-full border-collapse bg-white shadow-md rounded-lg">
+              <thead className="bg-[#1f2937] text-white">
                 <tr>
-                  <th className="py-3 px-4 text-left">Name</th>
-                  <th className="py-3 px-4 text-left">Student ID</th>
-                  <th className="py-3 px-4 text-left">Email</th>
-                  <th className="py-3 px-4 text-left">Actions</th>
+                <th className="py-2 px-3 sm:px-4 text-left text-xs sm:text-sm">Student ID</th>
+                  <th className="py-2 px-3 sm:px-4 text-left text-xs sm:text-sm">Name</th>
+                  <th className="py-2 px-3 sm:px-4 text-left text-xs sm:text-sm">Email</th>
+                  <th className="py-2 px-3 sm:px-4 text-left text-xs sm:text-sm">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -103,13 +102,13 @@ const Students = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: currentStudents.indexOf(student) * 0.1 }}
                   >
-                    <td className="py-2 px-4 text-[#2c3e50]">{student.name}</td>
-                    <td className="py-2 px-4 text-[#2c3e50]">{student.studentId}</td>
-                    <td className="py-2 px-4 text-[#2c3e50]">{student.email}</td>
-                    <td className="py-2 px-4">
+                    <td className="py-2 px-3 sm:px-4 text-[#2c3e50] text-xs sm:text-sm">{student.studentId}</td>
+                    <td className="py-2 px-3 sm:px-4 text-[#2c3e50] text-xs sm:text-sm">{student.name}</td>
+                    <td className="py-2 px-3 sm:px-4 text-[#2c3e50] text-xs sm:text-sm">{student.email}</td>
+                    <td className="py-2 px-3 sm:px-4">
                       <motion.button
                         onClick={() => handleViewDetails(student)}
-                        className="px-3 py-1 bg-[#059669] text-white rounded-md hover:bg-[#047857] transition duration-200"
+                        className="px-2 sm:px-3 py-1 bg-[#059669] text-white rounded-md hover:bg-[#047857] transition duration-200 text-xs sm:text-sm"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
@@ -123,11 +122,11 @@ const Students = () => {
           </div>
 
           {/* Pagination Controls */}
-          <div className="flex justify-center mt-4 space-x-4">
+          <div className="flex justify-center mt-4 space-x-2 sm:space-x-4">
             <motion.button
               onClick={handlePreviousPage}
               disabled={currentPage === 1}
-              className={`px-4 py-2 rounded-md text-white transition duration-200 ${
+              className={`px-3 sm:px-4 py-1 sm:py-2 rounded-md text-white transition duration-200 text-xs sm:text-sm ${
                 currentPage === 1
                   ? 'bg-[#6b7280] cursor-not-allowed'
                   : 'bg-[#059669] hover:bg-[#047857]'
@@ -137,13 +136,13 @@ const Students = () => {
             >
               Previous
             </motion.button>
-            <span className="text-[#2c3e50] self-center">
+            <span className="text-[#2c3e50] self-center text-xs sm:text-sm">
               Page {currentPage} of {totalPages}
             </span>
             <motion.button
               onClick={handleNextPage}
               disabled={currentPage === totalPages}
-              className={`px-4 py-2 rounded-md text-white transition duration-200 ${
+              className={`px-3 sm:px-4 py-1 sm:py-2 rounded-md text-white transition duration-200 text-xs sm:text-sm ${
                 currentPage === totalPages
                   ? 'bg-[#6b7280] cursor-not-allowed'
                   : 'bg-[#059669] hover:bg-[#047857]'
@@ -158,35 +157,35 @@ const Students = () => {
           {/* Student Details Modal */}
           {selectedStudent && (
             <motion.div
-              className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+              className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
               <motion.div
-                className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl"
+                className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-lg sm:max-w-2xl"
                 initial={{ scale: 0.8 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.8 }}
               >
-                <h3 className="text-2xl font-bold text-[#2c3e50] mb-4">Student Details</h3>
-                <div className="mb-4">
+                <h3 className="text-xl sm:text-2xl font-bold text-[#2c3e50] mb-4">Student Details</h3>
+                <div className="mb-4 text-sm sm:text-base">
                   <p><strong>Name:</strong> {selectedStudent.name}</p>
                   <p><strong>Student ID:</strong> {selectedStudent.studentId}</p>
                   <p><strong>Email:</strong> {selectedStudent.email}</p>
                 </div>
-                <h4 className="text-xl font-semibold text-[#2c3e50] mb-2">Borrowed Books</h4>
+                <h4 className="text-lg sm:text-xl font-semibold text-[#2c3e50] mb-2">Borrowed Books</h4>
                 {selectedStudent.borrowedBooks.length > 0 ? (
                   <div className="overflow-x-auto">
                     <table className="min-w-full border-collapse bg-gray-50 rounded-lg">
                       <thead className="bg-[#1f2937] text-white">
                         <tr>
-                          <th className="py-2 px-4 text-left">Book ID</th>
-                          <th className="py-2 px-4 text-left">Title</th>
-                          <th className="py-2 px-4 text-left">Issued</th>
-                          <th className="py-2 px-4 text-left">Due</th>
-                          <th className="py-2 px-4 text-left">Status</th>
-                          <th className="py-2 px-4 text-left">Fine</th>
+                          <th className="py-2 px-3 sm:px-4 text-left text-xs sm:text-sm">Book ID</th>
+                          <th className="py-2 px-3 sm:px-4 text-left text-xs sm:text-sm">Title</th>
+                          <th className="py-2 px-3 sm:px-4 text-left text-xs sm:text-sm">Issued</th>
+                          <th className="py-2 px-3 sm:px-4 text-left text-xs sm:text-sm">Due</th>
+                          <th className="py-2 px-3 sm:px-4 text-left text-xs sm:text-sm">Status</th>
+                          <th className="py-2 px-3 sm:px-4 text-left text-xs sm:text-sm">Fine</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -195,11 +194,11 @@ const Students = () => {
                           const isOverdue = !book.returnDate && new Date(book.dueDate) < new Date();
                           return (
                             <tr key={book._id} className="border-b border-gray-200">
-                              <td className="py-2 px-4">{book.bid}</td>
-                              <td className="py-2 px-4">{book.title}</td>
-                              <td className="py-2 px-4">{new Date(book.issueDate).toLocaleDateString()}</td>
-                              <td className="py-2 px-4">{new Date(book.dueDate).toLocaleDateString()}</td>
-                              <td className="py-2 px-4">
+                              <td className="py-2 px-3 sm:px-4 text-xs sm:text-sm">{book.bid}</td>
+                              <td className="py-2 px-3 sm:px-4 text-xs sm:text-sm">{book.title}</td>
+                              <td className="py-2 px-3 sm:px-4 text-xs sm:text-sm">{new Date(book.issueDate).toLocaleDateString()}</td>
+                              <td className="py-2 px-3 sm:px-4 text-xs sm:text-sm">{new Date(book.dueDate).toLocaleDateString()}</td>
+                              <td className="py-2 px-3 sm:px-4 text-xs sm:text-sm">
                                 {book.returnDate ? (
                                   <span className="text-green-500">Returned</span>
                                 ) : isOverdue ? (
@@ -208,7 +207,7 @@ const Students = () => {
                                   <span className="text-[#1abc9c]">Active</span>
                                 )}
                               </td>
-                              <td className="py-2 px-4">
+                              <td className="py-2 px-3 sm:px-4 text-xs sm:text-sm">
                                 {fine > 0 ? `$${fine}` : '-'}
                               </td>
                             </tr>
@@ -218,11 +217,11 @@ const Students = () => {
                     </table>
                   </div>
                 ) : (
-                  <p className="text-[#7f8c8d]">No books borrowed</p>
+                  <p className="text-[#7f8c8d] text-sm sm:text-base">No books borrowed</p>
                 )}
                 <motion.button
                   onClick={handleCloseDetails}
-                  className="mt-4 px-4 py-2 bg-[#059669] text-white rounded-md hover:bg-[#047857] transition duration-200"
+                  className="mt-4 px-3 sm:px-4 py-1 sm:py-2 bg-[#059669] text-white rounded-md hover:bg-[#047857] transition duration-200 text-xs sm:text-sm"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
