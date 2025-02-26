@@ -8,9 +8,11 @@ import AddStudent from './AddStudent';
 import IssueBook from './IssueBook';
 import ReturnBook from './ReturnBook';
 import { MdSpaceDashboard } from "react-icons/md";
-import { FaListAlt,FaBook, FaUsers,FaUserPlus, FaPlus,FaUndo, FaExchangeAlt } from 'react-icons/fa';
+import { FaBook, FaUsers, FaUserPlus, FaPlus, FaUndo, FaExchangeAlt, FaBars } from 'react-icons/fa';
 
 const Sidebar = ({ setActiveSection, activeSection }) => {
+  const [isOpen, setIsOpen] = useState(false); // State to toggle sidebar on mobile
+
   const menuItems = [
     { name: 'Dashboard', section: 'dashboard', icon: MdSpaceDashboard },
     { name: 'Book List', section: 'booklist', icon: FaBook },
@@ -22,31 +24,53 @@ const Sidebar = ({ setActiveSection, activeSection }) => {
   ];
 
   return (
-    <motion.div
-      className="w-[250px] bg-[#2c3e50] text-white p-5 fixed h-full flex flex-col justify-between shadow-xl"
-      initial={{ x: '-100%' }}
-      animate={{ x: 0 }}
-      transition={{ duration: 0.5, ease: 'easeInOut' }}
-    >
-      <div>
-        <h2 className="text-2xl font-bold mb-8 text-center">Library System</h2>
-        <ul className="space-y-3">
-          {menuItems.map((item, index) => (
-            <motion.li
-              key={index}
-              className={`p-3 rounded-lg cursor-pointer transition-all duration-300 flex items-center gap-3 ${
-                activeSection === item.section ? 'bg-[#1abc9c]' : 'bg-[#34495e] hover:bg-[#1abc9c]'
-              }`}
-              whileHover={{ x: 10 }}
-              onClick={() => setActiveSection(item.section)}
-            >
-              <item.icon className="text-xl" />
-              {item.name}
-            </motion.li>
-          ))}
-        </ul>
-      </div>
-    </motion.div>
+    <>
+      {/* Hamburger Menu for Mobile */}
+      <motion.div
+        className="md:hidden p-4 bg-[#2c3e50] text-white fixed top-0 left-0 w-full z-20 shadow-md"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <FaBars
+          className="text-2xl cursor-pointer"
+          onClick={() => setIsOpen(!isOpen)}
+        />
+      </motion.div>
+
+      {/* Sidebar */}
+      <motion.div
+        className={`w-[250px] bg-[#2c3e50] text-white p-5 fixed h-full flex flex-col justify-between shadow-xl z-10
+          ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out`}
+        initial={{ x: 0 }} // Start at x: 0 for desktop
+        animate={{ x: isOpen ? 0 : '-100%' }} // Only animate on mobile
+        transition={{ duration: 0.5, ease: 'easeInOut' }}
+        // Ensure desktop doesn't animate unnecessarily
+        {...(window.innerWidth >= 768 ? { animate: { x: 0 } } : {})}
+      >
+        <div>
+          <h2 className="text-2xl font-bold mb-8 text-center">Library System</h2>
+          <ul className="space-y-3">
+            {menuItems.map((item, index) => (
+              <motion.li
+                key={index}
+                className={`p-3 rounded-lg cursor-pointer transition-all duration-300 flex items-center gap-3 ${
+                  activeSection === item.section ? 'bg-[#1abc9c]' : 'bg-[#34495e] hover:bg-[#1abc9c]'
+                }`}
+                whileHover={{ x: 10 }}
+                onClick={() => {
+                  setActiveSection(item.section);
+                  setIsOpen(false); // Close sidebar on mobile after selection
+                }}
+              >
+                <item.icon className="text-xl" />
+                {item.name}
+              </motion.li>
+            ))}
+          </ul>
+        </div>
+      </motion.div>
+    </>
   );
 };
 
@@ -71,7 +95,7 @@ const Header = () => {
 
   return (
     <motion.div
-      className="flex justify-between items-center bg-white p-6 rounded-lg shadow-md"
+      className="flex justify-between items-center bg-white p-6 rounded-lg shadow-md mt-16 md:mt-0"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8, ease: 'easeInOut' }}
@@ -130,27 +154,22 @@ const LibrarianDashboard = () => {
         const token = localStorage.getItem('token');
         const config = { headers: { Authorization: `Bearer ${token}` } };
 
-        // Fetch total number of books
         const booksResponse = await axios.get('http://localhost:5000/api/books', config);
         const totalBooks = Array.isArray(booksResponse.data) ? booksResponse.data.length : booksResponse.data.books?.length || 0;
 
-        // Fetch active loans
         const activeLoansResponse = await axios.get('http://localhost:5000/api/loans/active', config);
-        const activeLoans = Array.isArray(activeLoansResponse.data) 
-          ? activeLoansResponse.data.length 
+        const activeLoans = Array.isArray(activeLoansResponse.data)
+          ? activeLoansResponse.data.length
           : activeLoansResponse.data.issuedBooks?.length || 0;
 
-        // Fetch registered members (students)
         const studentsResponse = await axios.get('http://localhost:5000/api/students', config);
         const registeredMembers = Array.isArray(studentsResponse.data) ? studentsResponse.data.length : studentsResponse.data.students?.length || 0;
 
-        // Update stats with real data
         setStatsData([
           { title: 'Total Books', value: totalBooks.toString(), icon: FaBook },
           { title: 'Active Loans', value: activeLoans.toString(), icon: FaExchangeAlt },
           { title: 'Registered Members', value: registeredMembers.toString(), icon: FaUsers },
         ]);
-
       } catch (err) {
         console.error('Error fetching dashboard data:', err.response?.data || err.message);
       } finally {
@@ -197,9 +216,9 @@ const LibrarianDashboard = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#f4f7fa]">
+    <div className="flex min-h-screen bg-[#f4f7fa] relative">
       <Sidebar setActiveSection={setActiveSection} activeSection={activeSection} />
-      <div className="flex-1 ml-[250px] p-8">
+      <div className="flex-1 p-8 w-full md:ml-[250px]">
         <Header />
         {renderContent()}
       </div>
