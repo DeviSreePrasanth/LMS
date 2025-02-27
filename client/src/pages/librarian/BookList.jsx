@@ -160,7 +160,7 @@ const BookList = () => {
 
   return (
     <motion.div
-      className="p-4 sm:p-6 bg-[#f4f7fa] min-h-screen" // Changed padding to px-0 on mobile, sm:px-6 on larger screens
+      className="p-4 sm:p-6 bg-[#f4f7fa] min-h-screen"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6, ease: 'easeInOut' }}
@@ -171,7 +171,7 @@ const BookList = () => {
       {error && <p className="text-red-500 text-center mb-4 text-sm sm:text-base">Error: {error}</p>}
 
       {/* Search Input */}
-      <div className="mb-6 w-full max-w-md mx-auto relative px-4 sm:px-0">
+      <div className="mb-6 w-full max-w-md mx-auto relative">
         <label htmlFor="search" className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2">
           Search by Title
         </label>
@@ -190,13 +190,13 @@ const BookList = () => {
       </div>
 
       {!filteredBooks.length ? (
-        <p className="text-center text-[#7f8c8d] text-sm sm:text-base px-4 sm:px-0">
+        <p className="text-center text-[#7f8c8d] text-sm sm:text-base">
           No books match the selected filters or search
         </p>
       ) : (
         <>
-          <div className="overflow-x-auto px-4 sm:px-0">
-            <table className="min-w-full border-collapse bg-white shadow-md rounded-lg">
+          <div className="overflow-x-auto mx-auto w-full">
+            <table className="w-full max-w-full border-collapse bg-white shadow-md rounded-lg">
               <thead className="bg-[#1f2937] text-white">
                 <tr>
                   <th className="py-2 px-3 sm:px-4 text-left text-xs sm:text-sm">Book ID</th>
@@ -365,7 +365,7 @@ const BookList = () => {
               </tbody>
             </table>
           </div>
-          <div className="flex justify-center mt-4 space-x-2 sm:space-x-4 px-4 sm:px-0">
+          <div className="flex justify-center mt-4 space-x-2 sm:space-x-4">
             <motion.button
               onClick={handlePreviousPage}
               disabled={currentPage === 1}

@@ -6,9 +6,9 @@ import StudentBookList from '../student/BookList';
 import BorrowedBooks from '../student/BorrowedBooks';
 import { useNavigate } from 'react-router-dom';
 import { BiLogOut } from 'react-icons/bi';
-import { FaBook, FaClock, FaCalendar, FaBars } from 'react-icons/fa';
+import { FaBook, FaClock, FaCalendar, FaBars, FaTimes } from 'react-icons/fa'; // Added FaTimes
 
-// Sidebar Component (unchanged)
+// Sidebar Component
 const Sidebar = ({ setActiveSection, activeSection, handleLogout, isOpen, setIsOpen }) => {
   const menuItems = [
     { name: 'Dashboard', section: 'dashboard', icon: FaBook },
@@ -26,7 +26,13 @@ const Sidebar = ({ setActiveSection, activeSection, handleLogout, isOpen, setIsO
       {...(window.innerWidth >= 768 ? { animate: { x: 0 } } : {})}
     >
       <div>
-        <h2 className="text-xl sm:text-2xl font-bold mb-8 text-center">Student Portal</h2>
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-xl sm:text-2xl font-bold text-center flex-1">Student Portal</h2>
+          <FaTimes
+            className="text-2xl text-white cursor-pointer md:hidden"
+            onClick={() => setIsOpen(false)}
+          />
+        </div>
         <ul className="space-y-3">
           {menuItems.map((item, index) => (
             <motion.li
@@ -214,7 +220,7 @@ const StudentDashboard = () => {
 
   const handleLogout = () => {
     logout();
-    localStorage.removeItem('studentProfileImage'); // Clear profile image on logout
+    localStorage.removeItem('studentProfileImage');
     navigate('/');
   };
 
@@ -238,7 +244,7 @@ const StudentDashboard = () => {
     switch (activeSection) {
       case 'dashboard':
         return (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 pt-4 sm:pt-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 pt-4 sm:pt-6 px-4 md:px-6 justify-start">
             {statsData.map((stat, index) => (
               <StatsCard key={index} title={stat.title} value={stat.value} icon={stat.icon} color={stat.color} />
             ))}
@@ -262,7 +268,7 @@ const StudentDashboard = () => {
         isOpen={isOpen}
         setIsOpen={setIsOpen}
       />
-      <div className="flex-1 w-full md:ml-[250px] pt-16">
+      <div className="flex-1 w-full md:ml-[250px] pt-16 pl-4 md:pl-6">
         <Header isOpen={isOpen} setIsOpen={setIsOpen} name={studentName} />
         <br />
         {renderContent()}

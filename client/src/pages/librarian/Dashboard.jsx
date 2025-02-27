@@ -9,7 +9,7 @@ import IssueBook from './IssueBook';
 import ReturnBook from './ReturnBook';
 import { BiLogOut } from 'react-icons/bi';
 import { MdSpaceDashboard } from "react-icons/md";
-import { FaBook, FaUsers, FaUserPlus, FaPlus, FaUndo, FaExchangeAlt, FaBars } from 'react-icons/fa';
+import { FaBook, FaUsers, FaUserPlus, FaPlus, FaUndo, FaExchangeAlt, FaBars, FaTimes } from 'react-icons/fa'; // Added FaTimes for cross button
 import { useNavigate } from 'react-router-dom';
 
 const Sidebar = ({ setActiveSection, activeSection, isOpen, setIsOpen, handleLogout }) => {
@@ -33,7 +33,13 @@ const Sidebar = ({ setActiveSection, activeSection, isOpen, setIsOpen, handleLog
       {...(window.innerWidth >= 768 ? { animate: { x: 0 } } : {})}
     >
       <div>
-        <h2 className="text-2xl font-bold mb-8 text-center">Library System</h2>
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-2xl font-bold text-center flex-1">Library System</h2>
+          <FaTimes
+            className="text-2xl text-white cursor-pointer md:hidden"
+            onClick={() => setIsOpen(false)}
+          />
+        </div>
         <ul className="space-y-3">
           {menuItems.map((item, index) => (
             <motion.li
@@ -186,7 +192,7 @@ const LibrarianDashboard = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    localStorage.removeItem('profileImage'); // Optional: Clear profile image
+    localStorage.removeItem('profileImage');
     navigate('/');
   };
 
@@ -202,7 +208,7 @@ const LibrarianDashboard = () => {
     switch (activeSection) {
       case 'dashboard':
         return (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 pt-4 sm:pt-6 px-4 md:px-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 pt-4 sm:pt-6 px-4 md:px-6 justify-start">
             {statsData.map((stat, index) => (
               <StatsCard key={index} title={stat.title} value={stat.value} icon={stat.icon} />
             ))}
@@ -234,7 +240,7 @@ const LibrarianDashboard = () => {
         setIsOpen={setIsOpen} 
         handleLogout={handleLogout} 
       />
-      <div className="flex-1 w-full md:ml-[250px] pt-16 pl-4 md:pl-6"> {/* Added padding-left */}
+      <div className="flex-1 w-full md:ml-[250px] pt-16 pl-4 md:pl-6">
         <Header isOpen={isOpen} setIsOpen={setIsOpen} />
         <br />
         {renderContent()}
