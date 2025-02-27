@@ -59,45 +59,26 @@ const AddStudent = ({ setActiveSection }) => {
 
   return (
     <motion.div
-      className="min-h-screen flex items-center justify-center bg-[#f4f7fa] px-4 sm:px-6 lg:px-8"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      className="p-4 sm:p-6 bg-[#f4f7fa] min-h-screen"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: 'easeInOut' }}
     >
-      <motion.div
-        className="bg-white p-6 sm:p-8 rounded-xl shadow-lg w-full max-w-md sm:max-w-lg lg:max-w-xl"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: 'easeInOut' }}
-      >
-        <h2 className="text-2xl sm:text-3xl font-bold text-center text-[#2c3e50] mb-6">
+      <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md w-full max-w-md sm:max-w-lg mx-auto">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center text-[#2c3e50]">
           Add New Student
         </h2>
 
         {error && (
-          <motion.p
-            className="text-red-500 text-sm text-center mb-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            {error}
-          </motion.p>
+          <p className="text-red-500 text-center mb-4 text-sm sm:text-base">Error: {error}</p>
         )}
         {success && (
-          <motion.p
-            className="text-[#1abc9c] text-sm text-center mb-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            {success}
-          </motion.p>
+          <p className="text-[#1abc9c] text-center mb-4 text-sm sm:text-base">{success}</p>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-[#7f8c8d] mb-2">
+            <label htmlFor="name" className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2">
               Full Name
             </label>
             <input
@@ -106,13 +87,13 @@ const AddStudent = ({ setActiveSection }) => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa] text-sm sm:text-base"
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa] text-sm sm:text-base"
               placeholder="Enter full name"
               required
             />
           </div>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-[#7f8c8d] mb-2">
+            <label htmlFor="email" className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2">
               Email Address
             </label>
             <input
@@ -121,13 +102,13 @@ const AddStudent = ({ setActiveSection }) => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa] text-sm sm:text-base"
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa] text-sm sm:text-base"
               placeholder="Enter email"
               required
             />
           </div>
           <div>
-            <label htmlFor="studentId" className="block text-sm font-medium text-[#7f8c8d] mb-2">
+            <label htmlFor="studentId" className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2">
               Student ID
             </label>
             <input
@@ -136,13 +117,13 @@ const AddStudent = ({ setActiveSection }) => {
               name="studentId"
               value={formData.studentId}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa] text-sm sm:text-base"
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa] text-sm sm:text-base"
               placeholder="Enter student ID"
               required
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-[#7f8c8d] mb-2">
+            <label htmlFor="password" className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2">
               Password
             </label>
             <input
@@ -151,21 +132,21 @@ const AddStudent = ({ setActiveSection }) => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa] text-sm sm:text-base"
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa] text-sm sm:text-base"
               placeholder="Enter password"
               required
             />
           </div>
           <motion.button
             type="submit"
-            className="w-full bg-[#1abc9c] hover:bg-[#16a085] text-white p-3 rounded-md transition duration-300 ease-in-out font-semibold text-sm sm:text-base"
+            className="w-full bg-[#059669] hover:bg-[#047857] text-white p-2 sm:p-3 rounded-md transition duration-200 text-sm sm:text-base"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             Add Student
           </motion.button>
         </form>
-      </motion.div>
+      </div>
     </motion.div>
   );
 };

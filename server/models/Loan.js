@@ -6,11 +6,11 @@ const loanSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
-  bid: {
-    type: String,
+  bid: { // Kept as bid, assuming it’s a Number or String matching Book.bid
+    type: Number, // or String, depending on your data
     required: true,
   },
-  title: {
+  title: { // Keeping this for now, though it’s redundant with Book
     type: String,
     required: true,
   },

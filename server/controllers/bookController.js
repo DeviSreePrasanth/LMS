@@ -1,16 +1,17 @@
 const Book = require('../models/Book');
 const Loan = require('../models/Loan');
+
 const getTopBorrowedBooks = async (req, res) => {
   try {
     const topBooks = await Loan.aggregate([
-      { $group: { _id: '$bookId', borrowCount: { $sum: 1 } } },
+      { $group: { _id: '$bid', borrowCount: { $sum: 1 } } }, // Group by bid (Number)
       { $sort: { borrowCount: -1 } },
       { $limit: 5 },
       {
         $lookup: {
-          from: 'books', // Your books collection name in MongoDB
+          from: 'books', // Ensure this matches your MongoDB collection name
           localField: '_id',
-          foreignField: '_id',
+          foreignField: 'bid', // Match Loan.bid with Book.bid
           as: 'book',
         },
       },
@@ -18,17 +19,16 @@ const getTopBorrowedBooks = async (req, res) => {
       { $project: { title: '$book.title', borrowCount: 1 } },
     ]);
 
-    res.json(topBooks);
+    res.json(topBooks.length ? topBooks : []);
   } catch (error) {
-    console.error('Error fetching top borrowed books:', error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error fetching top borrowed books:', error.stack);
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
-// Add a new book
+
 const addBook = async (req, res) => {
   const { bid, title, author, category, status } = req.body;
 
-  // Validate required fields
   if (!bid || !title || !author || !category) {
     return res.status(400).json({ message: 'All fields (bid, title, author, category) are required' });
   }
@@ -44,34 +44,31 @@ const addBook = async (req, res) => {
       title,
       author,
       category,
-      status: status || 'available', // Default to 'available' if not provided
+      status: status || 'available',
     });
     const savedBook = await newBook.save();
 
     res.status(201).json({ message: 'Book added successfully', book: savedBook });
   } catch (error) {
-    console.error('Error adding book:', error);
+    console.error('Error adding book:', error.stack);
     res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 };
 
-// Get all books
 const getBooks = async (req, res) => {
   try {
     const books = await Book.find();
     res.status(200).json(books);
   } catch (error) {
-    console.error('Error fetching books:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error('Error fetching books:', error.stack);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 };
 
-// Update a book
 const updateBook = async (req, res) => {
   const { bid, title, author, category, status } = req.body;
 
   try {
-    // Check if the new bid is unique (if provided and different from current)
     if (bid) {
       const existingBook = await Book.findOne({ bid });
       if (existingBook && existingBook._id.toString() !== req.params.id) {
@@ -82,7 +79,7 @@ const updateBook = async (req, res) => {
     const updatedBook = await Book.findByIdAndUpdate(
       req.params.id,
       { bid, title, author, category, status },
-      { new: true, runValidators: true } // Ensure schema validation
+      { new: true, runValidators: true }
     );
 
     if (!updatedBook) {
@@ -91,12 +88,11 @@ const updateBook = async (req, res) => {
 
     res.status(200).json(updatedBook);
   } catch (error) {
-    console.error('Error updating book:', error);
+    console.error('Error updating book:', error.stack);
     res.status(400).json({ message: error.message });
   }
 };
 
-// Delete a book
 const deleteBook = async (req, res) => {
   try {
     const deletedBook = await Book.findByIdAndDelete(req.params.id);
@@ -105,9 +101,9 @@ const deleteBook = async (req, res) => {
     }
     res.status(200).json({ message: 'Book deleted successfully' });
   } catch (error) {
-    console.error('Error deleting book:', error);
+    console.error('Error deleting book:', error.stack);
     res.status(500).json({ message: error.message });
   }
 };
 
-module.exports = { getTopBorrowedBooks,addBook, getBooks, updateBook, deleteBook };
+module.exports = { getTopBorrowedBooks, addBook, getBooks, updateBook, deleteBook };
