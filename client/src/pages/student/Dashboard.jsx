@@ -157,26 +157,32 @@ const StudentDashboard = () => {
         const token = localStorage.getItem('token');
         if (!token) {
           setFetchError('No session token found. Please log in again.');
+          navigate('/');
           return;
         }
 
         const config = { headers: { Authorization: `Bearer ${token}` } };
 
-        const studentResponse = await axios.get(`http://localhost:5000/api/students/email/${user.email}`, config);
+        // Fetch student details
+        const studentResponse = await axios.get(`https://lms-o44p.onrender.com/api/students/email/${user.email}`, config);
         if (!studentResponse.data) {
           throw new Error('Student not found');
         }
-        setStudentName(studentResponse.data.name || studentResponse.data.fullName || user.email);
+        setStudentName(studentResponse.data.name || user.email);
         const studentId = studentResponse.data._id;
 
-        const booksResponse = await axios.get('http://localhost:5000/api/books', config);
-        const totalBooks = booksResponse.data.length;
+        // Fetch total books
+        const booksResponse = await axios.get('https://lms-o44p.onrender.com/api/books', config);
+        const totalBooks = Array.isArray(booksResponse.data) ? booksResponse.data.length : 0;
 
-        const loansResponse = await axios.get(`http://localhost:5000/api/loans?studentId=${studentId}`, config);
-        const borrowedBooks = loansResponse.data || [];
-        const activeLoans = borrowedBooks.filter((book) => !book.returnDate).length;
-        const overdueLoans = borrowedBooks.filter(
-          (book) => !book.returnDate && new Date(book.dueDate) < new Date()
+        // Fetch student's loans
+        const loansResponse = await axios.get(`https://lms-o44p.onrender.com/api/loans?studentId=${studentId}`, config);
+        const allLoans = loansResponse.data || [];
+        
+        // Calculate active and overdue loans
+        const activeLoans = allLoans.filter((loan) => !loan.returnDate).length;
+        const overdueLoans = allLoans.filter(
+          (loan) => !loan.returnDate && new Date(loan.dueDate) < new Date()
         ).length;
 
         setStatsData([
@@ -204,10 +210,11 @@ const StudentDashboard = () => {
     };
 
     fetchDashboardData();
-  }, [user, authLoading]);
+  }, [user, authLoading, navigate]);
 
   const handleLogout = () => {
     logout();
+    localStorage.removeItem('studentProfileImage'); // Clear profile image on logout
     navigate('/');
   };
 

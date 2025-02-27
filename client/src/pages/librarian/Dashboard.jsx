@@ -7,10 +7,12 @@ import Students from './Students';
 import AddStudent from './AddStudent';
 import IssueBook from './IssueBook';
 import ReturnBook from './ReturnBook';
-import { MdSpaceDashboard } from "react-icons/md";
+import { BiLogOut } from 'react-icons/bi';
+import { MdSpaceDashboard} from "react-icons/md";
 import { FaBook, FaUsers, FaUserPlus, FaPlus, FaUndo, FaExchangeAlt, FaBars } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
-const Sidebar = ({ setActiveSection, activeSection, isOpen, setIsOpen }) => {
+const Sidebar = ({ setActiveSection, activeSection, isOpen, setIsOpen, handleLogout }) => {
   const menuItems = [
     { name: 'Dashboard', section: 'dashboard', icon: MdSpaceDashboard },
     { name: 'Book List', section: 'booklist', icon: FaBook },
@@ -51,6 +53,15 @@ const Sidebar = ({ setActiveSection, activeSection, isOpen, setIsOpen }) => {
           ))}
         </ul>
       </div>
+      <motion.button
+              className="w-full p-3 bg-[#e74c3c] hover:bg-[#c0392b] rounded-lg flex items-center justify-center gap-2 shadow-md text-sm sm:text-base"
+              onClick={handleLogout}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <BiLogOut size={20} />
+              <span>Logout</span>
+            </motion.button>
     </motion.div>
   );
 };
@@ -137,27 +148,32 @@ const LibrarianDashboard = () => {
   ]);
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         const token = localStorage.getItem('token');
+        if (!token) {
+          navigate('/');
+          return;
+        }
         const config = { headers: { Authorization: `Bearer ${token}` } };
 
-        const booksResponse = await axios.get('http://localhost:5000/api/books', config);
+        const booksResponse = await axios.get('https://lms-o44p.onrender.com/api/books', config);
         const totalBooks = Array.isArray(booksResponse.data) ? booksResponse.data.length : booksResponse.data.books?.length || 0;
 
-        const activeLoansResponse = await axios.get('http://localhost:5000/api/loans/active', config);
-        const activeLoans = Array.isArray(activeLoansResponse.data)
-          ? activeLoansResponse.data.length
-          : activeLoansResponse.data.issuedBooks?.length || 0;
+        const activeLoansResponse = await axios.get('https://lms-o44p.onrender.com/api/loans/active', config);
+        const activeLoansCount = 
+          (activeLoansResponse.data.loans?.length || 0) + 
+          (activeLoansResponse.data.issuedBooks?.length || 0);
 
-        const studentsResponse = await axios.get('http://localhost:5000/api/students', config);
+        const studentsResponse = await axios.get('https://lms-o44p.onrender.com/api/students', config);
         const registeredMembers = Array.isArray(studentsResponse.data) ? studentsResponse.data.length : studentsResponse.data.students?.length || 0;
 
         setStatsData([
           { title: 'Total Books', value: totalBooks.toString(), icon: FaBook },
-          { title: 'Active Loans', value: activeLoans.toString(), icon: FaExchangeAlt },
+          { title: 'Active Loans', value: activeLoansCount.toString(), icon: FaExchangeAlt },
           { title: 'Registered Members', value: registeredMembers.toString(), icon: FaUsers },
         ]);
       } catch (err) {
@@ -168,7 +184,13 @@ const LibrarianDashboard = () => {
     };
 
     fetchDashboardData();
-  }, []);
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('profileImage'); // Optional: Clear profile image
+    navigate('/');
+  };
 
   const renderContent = () => {
     if (loading) {
@@ -207,9 +229,16 @@ const LibrarianDashboard = () => {
 
   return (
     <div className="flex min-h-screen bg-[#f4f7fa] relative">
-      <Sidebar setActiveSection={setActiveSection} activeSection={activeSection} isOpen={isOpen} setIsOpen={setIsOpen} />
+      <Sidebar 
+        setActiveSection={setActiveSection} 
+        activeSection={activeSection} 
+        isOpen={isOpen} 
+        setIsOpen={setIsOpen} 
+        handleLogout={handleLogout} 
+      />
       <div className="flex-1 w-full md:ml-[250px] pt-16">
-        <Header isOpen={isOpen} setIsOpen={setIsOpen} /><br></br>
+        <Header isOpen={isOpen} setIsOpen={setIsOpen} />
+        <br />
         {renderContent()}
       </div>
     </div>
