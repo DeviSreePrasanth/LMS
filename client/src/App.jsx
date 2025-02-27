@@ -10,7 +10,6 @@ import StudentBookList from './pages/student/BookList';
 import StudentDashboard from './pages/student/Dashboard';
 import LibrarianDashboard from './pages/librarian/Dashboard';
 import { AuthProvider } from './context/AuthContext';
-import Unauthorized from './pages/student/Unauthorized';
 import BorrowedBooks from './pages/student/BorrowedBooks';
 
 const App = () => {
@@ -30,7 +29,6 @@ const App = () => {
           <Route path="/student/dashboard" element={<StudentDashboard />} />
           <Route path="/student/booklist" element={<StudentBookList />} />
           <Route path="/student/details" element={ <BorrowedBooks/>} />
-          <Route path="/unauthorized" element={<Unauthorized />} />
         </Routes>
       </Router>
     </AuthProvider>
