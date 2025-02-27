@@ -153,47 +153,54 @@ const StatsCard = ({ title, value, icon: Icon }) => (
   </motion.div>
 );
 
-// Enhanced RecentActivity component
+// Updated RecentActivity with new bottom and side effects
 const RecentActivity = ({ activities }) => (
   <motion.div
-    className="bg-white p-6 rounded-xl shadow-lg mt-6 w-full max-w-3xl mx-auto border border-gray-100"
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
+    className="bg-white p-6 rounded-xl mt-6 w-full max-w-xl border border-gray-100 relative overflow-hidden"
+    initial={{ opacity: 0, x: -20 }}
+    animate={{ opacity: 1, x: 0 }}
     transition={{ duration: 0.6, ease: 'easeOut' }}
   >
-    <h3 className="text-xl font-semibold text-[#2c3e50] mb-4">Recent Activity</h3>
-    <ul className="space-y-4 max-h-80 overflow-y-auto custom-scrollbar">
-      {activities.map((activity, index) => (
+    {/* Side gradient effect */}
+    <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-[#1abc9c] to-[#16a085] opacity-75" />
+    {/* Bottom gradient effect */}
+    <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-[#1abc9c] to-[#3498db] opacity-75" />
+    
+    <h3 className="text-xl font-semibold text-[#2c3e50] mb-4 pb-2 relative z-10">Recent Activity</h3>
+    <ul className="space-y-3 max-h-96 overflow-y-auto custom-scrollbar relative z-10">
+      {activities.slice(0, 5).map((activity, index) => (
         <motion.li
           key={index}
-          className="flex items-start gap-3 p-4 bg-[#f4f7fa] rounded-lg hover:bg-[#e0e7ff] transition-all duration-300 border-l-4 border-[#1abc9c]"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
+          className="flex items-start gap-3 p-3 bg-[#f8fafc] rounded-md hover:bg-[#eef2ff] transition-all duration-300 border border-gray-100"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: index * 0.1 }}
-          whileHover={{ scale: 1.02 }}
+          whileHover={{ scale: 1.01, boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}
         >
-          <FaClock className="text-[#1abc9c] text-lg mt-1 flex-shrink-0" />
+          <FaClock className="text-[#1abc9c] text-base mt-1 flex-shrink-0" />
           <div className="flex-1">
-            <p className="text-sm text-[#2c3e50] font-medium">
+            <p className="text-sm text-[#2c3e50] font-medium leading-tight">
               {activity.action}
-              {activity.studentName && <span className="text-[#1abc9c] ml-1">to {activity.studentName}</span>}
+              {activity.studentName && (
+                <span className="text-[#1abc9c] ml-1 font-normal">to {activity.studentName}</span>
+              )}
             </p>
-            <p className="text-xs text-[#7f8c8d] mt-1">{new Date(activity.timestamp).toLocaleString()}</p>
+            <p className="text-xs text-[#6b7280] mt-1 font-light">{new Date(activity.timestamp).toLocaleString()}</p>
           </div>
         </motion.li>
       ))}
     </ul>
     <style jsx>{`
       .custom-scrollbar::-webkit-scrollbar {
-        width: 8px;
+        width: 6px;
       }
       .custom-scrollbar::-webkit-scrollbar-track {
-        background: #f4f7fa;
-        border-radius: 4px;
+        background: #f8fafc;
+        border-radius: 3px;
       }
       .custom-scrollbar::-webkit-scrollbar-thumb {
         background: #1abc9c;
-        border-radius: 4px;
+        border-radius: 3px;
       }
       .custom-scrollbar::-webkit-scrollbar-thumb:hover {
         background: #16a085;
@@ -202,22 +209,39 @@ const RecentActivity = ({ activities }) => (
   </motion.div>
 );
 
-// Enhanced BooksByCategory component
-const BooksByCategory = ({ categories }) => {
+// Updated BooksByCategory with labels for top 10 categories
+const BooksByCategory = ({ categories, booksData }) => {
+  const sortedCategories = Object.entries(categories)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 10);
+  const labels = sortedCategories.map(([label]) => label);
+  const values = sortedCategories.map(([, value]) => value);
+
   const data = {
-    labels: Object.keys(categories),
+    labels: labels,
     datasets: [
       {
-        data: Object.values(categories),
+        data: values,
         backgroundColor: [
-          '#1abc9c', '#3498db', '#e74c3c', '#f1c40f', '#9b59b6',
-          '#34495e', '#2ecc71', '#e67e22', '#95a5a6', '#d35400',
+          '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD',
+          '#D4A5A5', '#9B59B6', '#3498DB', '#E67E22', '#2ECC71',
         ],
         borderWidth: 2,
         borderColor: '#ffffff',
-        hoverOffset: 15,
+        hoverOffset: 20,
+        hoverBackgroundColor: [
+          '#FF8787', '#6BE8DF', '#63C8E5', '#AEE5CB', '#FFF5C9',
+          '#E5BFBF', '#B377D0', '#5DADE2', '#F39C41', '#52E495',
+        ],
       },
     ],
+  };
+
+  const getCategoryDetails = (category) => {
+    const booksInCategory = booksData.filter(book => (book.category || 'Uncategorized') === category);
+    const totalBooks = booksInCategory.length;
+    const sampleBooks = booksInCategory.slice(0, 3).map(book => book.title).join(', ');
+    return `Total Books: ${totalBooks}\nSample Titles: ${sampleBooks}${totalBooks > 3 ? '...' : ''}`;
   };
 
   const options = {
@@ -225,24 +249,32 @@ const BooksByCategory = ({ categories }) => {
     maintainAspectRatio: false,
     plugins: {
       legend: {
+        display: true, // Show labels
         position: 'right',
         labels: {
           font: {
-            size: 14,
-            family: "'Poppins', sans-serif",
+            size: 12,
+            family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
           },
-          padding: 20,
+          padding: 15,
           usePointStyle: true,
           pointStyle: 'circle',
+          boxWidth: 8,
         },
       },
       tooltip: {
-        backgroundColor: 'rgba(44, 62, 80, 0.9)',
-        titleFont: { size: 16 },
+        backgroundColor: 'rgba(44, 62, 80, 0.95)',
+        titleFont: { size: 16, weight: 'bold' },
         bodyFont: { size: 14 },
         padding: 12,
+        cornerRadius: 6,
+        boxPadding: 4,
         callbacks: {
-          label: (context) => `${context.label}: ${context.raw} books`,
+          title: (tooltipItems) => tooltipItems[0].label,
+          label: (context) => {
+            const category = context.label;
+            return getCategoryDetails(category).split('\n');
+          },
         },
       },
     },
@@ -256,19 +288,19 @@ const BooksByCategory = ({ categories }) => {
 
   return (
     <motion.div
-      className="bg-white p-6 rounded-xl shadow-lg mt-6 w-full max-w-4xl mx-auto border border-gray-100 overflow-hidden"
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
+      className="bg-white p-6 rounded-xl shadow-md mt-6 w-full max-w-xl border border-gray-100 overflow-hidden"
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.8, ease: 'easeOut' }}
       whileHover={{ scale: 1.02, boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}
     >
       <motion.h3
-        className="text-2xl font-semibold text-[#2c3e50] mb-6 bg-gradient-to-r from-[#2c3e50] to-[#1abc9c] text-transparent bg-clip-text"
+        className="text-xl font-semibold text-[#2c3e50] mb-6 bg-gradient-to-r from-[#2c3e50] to-[#1abc9c] text-transparent bg-clip-text border-b border-gray-200 pb-2"
         initial={{ x: -20 }}
         animate={{ x: 0 }}
         transition={{ duration: 0.5 }}
       >
-        Books by Category
+        Top 10 Book Categories
       </motion.h3>
       <div className="relative h-80 w-full flex items-center justify-center">
         <motion.div
@@ -282,7 +314,7 @@ const BooksByCategory = ({ categories }) => {
   );
 };
 
-// Updated LibrarianDashboard component
+// Updated LibrarianDashboard component (unchanged except passing booksData)
 const LibrarianDashboard = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [statsData, setStatsData] = useState([
@@ -292,6 +324,7 @@ const LibrarianDashboard = () => {
   ]);
   const [recentActivities, setRecentActivities] = useState([]);
   const [categories, setCategories] = useState({});
+  const [booksData, setBooksData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -307,9 +340,10 @@ const LibrarianDashboard = () => {
         }
         const config = { headers: { Authorization: `Bearer ${token}` } };
 
-        // Fetch stats data
         const booksResponse = await axios.get('https://lms-o44p.onrender.com/api/books', config);
-        const totalBooks = Array.isArray(booksResponse.data) ? booksResponse.data.length : booksResponse.data.books?.length || 0;
+        const books = Array.isArray(booksResponse.data) ? booksResponse.data : booksResponse.data.books || [];
+        setBooksData(books);
+        const totalBooks = books.length;
 
         const activeLoansResponse = await axios.get('https://lms-o44p.onrender.com/api/loans/active', config);
         const activeLoansCount = activeLoansResponse.data.loans?.length || 0;
@@ -323,12 +357,10 @@ const LibrarianDashboard = () => {
           { title: 'Registered Members', value: registeredMembers.toString(), icon: FaUsers },
         ]);
 
-        // Fetch recent activities
         const activitiesResponse = await axios.get('https://lms-o44p.onrender.com/api/activities/recent', config);
         setRecentActivities(activitiesResponse.data.slice(0, 5));
 
-        // Derive books by category
-        const categoryData = booksResponse.data.reduce((acc, book) => {
+        const categoryData = books.reduce((acc, book) => {
           const category = book.category || 'Uncategorized';
           acc[category] = (acc[category] || 0) + 1;
           return acc;
@@ -340,19 +372,37 @@ const LibrarianDashboard = () => {
         console.error('Error fetching dashboard data:', err.response?.data || err.message);
         setError('Failed to load dashboard data. Please try again later.');
         
-        // Updated mock data with student names
         setRecentActivities([
           { action: "Book 'The Great Gatsby' issued", studentName: "John Doe", timestamp: new Date() },
           { action: "Book '1984' returned", studentName: "Jane Smith", timestamp: new Date(Date.now() - 3600000) },
           { action: "New student 'Alice Brown' added", timestamp: new Date(Date.now() - 7200000) },
+          { action: "Book 'To Kill a Mockingbird' issued", studentName: "Bob Wilson", timestamp: new Date(Date.now() - 10800000) },
+          { action: "Book 'Pride and Prejudice' returned", studentName: "Emma Davis", timestamp: new Date(Date.now() - 14400000) },
         ]);
         setCategories({
           Fiction: 50,
           Nonfiction: 30,
           Science: 20,
           History: 15,
-          Uncategorized: 10,
+          Biography: 10,
+          Fantasy: 8,
+          Mystery: 7,
+          Romance: 6,
+          Thriller: 5,
+          Adventure: 4,
         });
+        setBooksData([
+          { title: "The Great Gatsby", category: "Fiction" },
+          { title: "1984", category: "Fiction" },
+          { title: "To Kill a Mockingbird", category: "Fiction" },
+          { title: "Sapiens", category: "Nonfiction" },
+          { title: "A Brief History of Time", category: "Science" },
+          { title: "The Hobbit", category: "Fantasy" },
+          { title: "The Da Vinci Code", category: "Mystery" },
+          { title: "Pride and Prejudice", category: "Romance" },
+          { title: "The Bourne Identity", category: "Thriller" },
+          { title: "Treasure Island", category: "Adventure" },
+        ]);
       } finally {
         setLoading(false);
       }
@@ -395,9 +445,13 @@ const LibrarianDashboard = () => {
                 <StatsCard key={index} title={stat.title} value={stat.value} icon={stat.icon} />
               ))}
             </div>
-            <div className="grid grid-cols-1 gap-6 w-full max-w-7xl mt-6">
-              <RecentActivity activities={recentActivities} />
-              <BooksByCategory categories={categories} />
+            <div className="flex flex-col md:flex-row gap-6 w-full max-w-7xl mt-6 px-3 md:px-6">
+              <div className="flex-1">
+                <RecentActivity activities={recentActivities} />
+              </div>
+              <div className="flex-1">
+                <BooksByCategory categories={categories} booksData={booksData} />
+              </div>
             </div>
           </div>
         );
