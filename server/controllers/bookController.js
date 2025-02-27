@@ -1,5 +1,29 @@
 const Book = require('../models/Book');
+const Loan = require('../models/Loan');
+const getTopBorrowedBooks = async (req, res) => {
+  try {
+    const topBooks = await Loan.aggregate([
+      { $group: { _id: '$bookId', borrowCount: { $sum: 1 } } },
+      { $sort: { borrowCount: -1 } },
+      { $limit: 5 },
+      {
+        $lookup: {
+          from: 'books', // Your books collection name in MongoDB
+          localField: '_id',
+          foreignField: '_id',
+          as: 'book',
+        },
+      },
+      { $unwind: '$book' },
+      { $project: { title: '$book.title', borrowCount: 1 } },
+    ]);
 
+    res.json(topBooks);
+  } catch (error) {
+    console.error('Error fetching top borrowed books:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 // Add a new book
 const addBook = async (req, res) => {
   const { bid, title, author, category, status } = req.body;
@@ -86,4 +110,4 @@ const deleteBook = async (req, res) => {
   }
 };
 
-module.exports = { addBook, getBooks, updateBook, deleteBook };
+module.exports = { getTopBorrowedBooks,addBook, getBooks, updateBook, deleteBook };

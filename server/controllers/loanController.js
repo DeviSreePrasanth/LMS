@@ -1,7 +1,24 @@
 const Loan = require('../models/Loan');
 const User = require('../models/User');
 const Book = require('../models/Book');
+const getRecentActivities = async (req, res) => {
+  try {
+    const recentLoans = await Loan.find()
+      .sort({ createdAt: -1 }) // Sort by most recent
+      .limit(5)
+      .populate('bookId', 'title'); // Populate book title
 
+    const activities = recentLoans.map(loan => ({
+      action: `Book '${loan.bookId.title}' ${loan.returned ? 'returned' : 'issued'}`,
+      timestamp: loan.createdAt,
+    }));
+
+    res.json(activities);
+  } catch (error) {
+    console.error('Error fetching recent activities:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 // Issue a book
 const issueBook = async (req, res) => {
   const { studentId, bid, title: providedTitle, dueDate } = req.body;
@@ -87,4 +104,4 @@ const returnBook = async (req, res) => {
   }
 };
 
-module.exports = { issueBook, getActiveLoans, returnBook };
+module.exports = { getRecentActivities,issueBook, getActiveLoans, returnBook };

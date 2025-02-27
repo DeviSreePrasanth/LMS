@@ -9,9 +9,15 @@ import IssueBook from './IssueBook';
 import ReturnBook from './ReturnBook';
 import { BiLogOut } from 'react-icons/bi';
 import { MdSpaceDashboard } from "react-icons/md";
-import { FaBook, FaUsers, FaUserPlus, FaPlus, FaUndo, FaExchangeAlt, FaBars, FaTimes } from 'react-icons/fa';
+import { FaBook, FaUsers, FaUserPlus, FaPlus, FaUndo, FaExchangeAlt, FaBars, FaTimes, FaClock } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 
+// Register ChartJS components
+ChartJS.register(ArcElement, Tooltip, Legend);
+
+// Sidebar remains unchanged
 const Sidebar = ({ setActiveSection, activeSection, isOpen, setIsOpen, handleLogout }) => {
   const menuItems = [
     { name: 'Dashboard', section: 'dashboard', icon: MdSpaceDashboard },
@@ -72,6 +78,7 @@ const Sidebar = ({ setActiveSection, activeSection, isOpen, setIsOpen, handleLog
   );
 };
 
+// Header remains unchanged
 const Header = ({ isOpen, setIsOpen }) => {
   const [profileImage, setProfileImage] = useState(
     localStorage.getItem('profileImage') || 'https://via.placeholder.com/40'
@@ -128,6 +135,7 @@ const Header = ({ isOpen, setIsOpen }) => {
   );
 };
 
+// StatsCard remains unchanged
 const StatsCard = ({ title, value, icon: Icon }) => (
   <motion.div
     className="bg-white p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1 w-full"
@@ -145,6 +153,116 @@ const StatsCard = ({ title, value, icon: Icon }) => (
   </motion.div>
 );
 
+// RecentActivity remains unchanged
+const RecentActivity = ({ activities }) => (
+  <motion.div
+    className="bg-white p-4 sm:p-6 rounded-lg shadow-md mt-6 w-full max-w-3xl mx-auto"
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.6, ease: 'easeInOut' }}
+  >
+    <h3 className="text-xl font-semibold text-[#2c3e50] mb-4">Recent Activity</h3>
+    <ul className="space-y-4 max-h-64 overflow-y-auto">
+      {activities.map((activity, index) => (
+        <motion.li
+          key={index}
+          className="flex items-center gap-3 p-3 bg-[#f4f7fa] rounded-md hover:bg-[#e0e7ff] transition-all duration-300"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3, delay: index * 0.1 }}
+        >
+          <FaClock className="text-[#1abc9c] text-lg" />
+          <div>
+            <p className="text-sm text-[#2c3e50] font-medium">{activity.action}</p>
+            <p className="text-xs text-[#7f8c8d]">{new Date(activity.timestamp).toLocaleString()}</p>
+          </div>
+        </motion.li>
+      ))}
+    </ul>
+  </motion.div>
+);
+
+// TopBorrowedBooks remains unchanged
+const TopBorrowedBooks = ({ books }) => (
+  <motion.div
+    className="bg-white p-4 sm:p-6 rounded-lg shadow-md mt-6 w-full max-w-3xl mx-auto"
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.6, ease: 'easeInOut' }}
+  >
+    <h3 className="text-xl font-semibold text-[#2c3e50] mb-4">Top Borrowed Books</h3>
+    <ul className="space-y-4">
+      {books.map((book, index) => (
+        <motion.li
+          key={index}
+          className="flex items-center gap-3 p-3 bg-[#f4f7fa] rounded-md hover:bg-[#e0e7ff] transition-all duration-300"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3, delay: index * 0.1 }}
+        >
+          <FaBook className="text-[#1abc9c] text-lg" />
+          <div className="flex-1">
+            <p className="text-sm text-[#2c3e50] font-medium">{book.title}</p>
+            <p className="text-xs text-[#7f8c8d]">Borrowed {book.borrowCount} times</p>
+          </div>
+          <span className="text-xs font-semibold text-[#1abc9c]">{`#${index + 1}`}</span>
+        </motion.li>
+      ))}
+    </ul>
+  </motion.div>
+);
+
+// BooksByCategory remains unchanged
+const BooksByCategory = ({ categories }) => {
+  const data = {
+    labels: Object.keys(categories),
+    datasets: [
+      {
+        data: Object.values(categories),
+        backgroundColor: [
+          '#1abc9c', '#3498db', '#e74c3c', '#f1c40f', '#9b59b6',
+          '#34495e', '#2ecc71', '#e67e22', '#95a5a6', '#d35400',
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          font: {
+            size: 14,
+          },
+        },
+      },
+      tooltip: {
+        callbacks: {
+          label: (context) => `${context.label}: ${context.raw} books`,
+        },
+      },
+    },
+  };
+
+  return (
+    <motion.div
+      className="bg-white p-4 sm:p-6 rounded-lg shadow-md mt-6 w-full max-w-3xl mx-auto"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: 'easeInOut' }}
+    >
+      <h3 className="text-xl font-semibold text-[#2c3e50] mb-4">Books by Category</h3>
+      <div className="relative h-64">
+        <Pie data={data} options={options} />
+      </div>
+    </motion.div>
+  );
+};
+
+// Updated LibrarianDashboard
 const LibrarianDashboard = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [statsData, setStatsData] = useState([
@@ -152,7 +270,11 @@ const LibrarianDashboard = () => {
     { title: 'Active Loans', value: '0', icon: FaExchangeAlt },
     { title: 'Registered Members', value: '0', icon: FaUsers },
   ]);
+  const [recentActivities, setRecentActivities] = useState([]);
+  const [topBooks, setTopBooks] = useState([]);
+  const [categories, setCategories] = useState({});
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null); // Added for error handling
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -166,6 +288,7 @@ const LibrarianDashboard = () => {
         }
         const config = { headers: { Authorization: `Bearer ${token}` } };
 
+        // Fetch stats data
         const booksResponse = await axios.get('https://lms-o44p.onrender.com/api/books', config);
         const totalBooks = Array.isArray(booksResponse.data) ? booksResponse.data.length : booksResponse.data.books?.length || 0;
 
@@ -180,14 +303,55 @@ const LibrarianDashboard = () => {
           { title: 'Active Loans', value: activeLoansCount.toString(), icon: FaExchangeAlt },
           { title: 'Registered Members', value: registeredMembers.toString(), icon: FaUsers },
         ]);
+
+        // Fetch recent activities from the new endpoint
+        const activitiesResponse = await axios.get('https://lms-o44p.onrender.com/api/activities/recent', config);
+        setRecentActivities(activitiesResponse.data.slice(0, 5)); // Limit to 5
+
+        // Fetch top borrowed books from the new endpoint
+        const topBooksResponse = await axios.get('https://lms-o44p.onrender.com/api/books/top-borrowed', config);
+        setTopBooks(topBooksResponse.data.slice(0, 5)); // Limit to 5
+
+        // Derive books by category from books response
+        const categoryData = booksResponse.data.reduce((acc, book) => {
+          const category = book.category || 'Uncategorized';
+          acc[category] = (acc[category] || 0) + 1;
+          return acc;
+        }, {});
+        setCategories(categoryData);
+
+        setError(null); // Clear any previous errors
       } catch (err) {
         console.error('Error fetching dashboard data:', err.response?.data || err.message);
+        setError('Failed to load dashboard data. Please try again later.');
+        
+        // Fallback mock data if API fails
+        setRecentActivities([
+          { action: "Book 'The Great Gatsby' issued", timestamp: new Date() },
+          { action: "Book '1984' returned", timestamp: new Date(Date.now() - 3600000) },
+          { action: "New student 'John Doe' added", timestamp: new Date(Date.now() - 7200000) },
+        ]);
+        setTopBooks([
+          { title: 'The Great Gatsby', borrowCount: 15 },
+          { title: '1984', borrowCount: 12 },
+          { title: 'To Kill a Mockingbird', borrowCount: 10 },
+        ]);
+        setCategories({
+          Fiction: 50,
+          Nonfiction: 30,
+          Science: 20,
+          History: 15,
+          Uncategorized: 10,
+        });
       } finally {
         setLoading(false);
       }
     };
 
     fetchDashboardData();
+    // Poll for real-time updates every 30 seconds (optional)
+    const interval = setInterval(fetchDashboardData, 30000);
+    return () => clearInterval(interval);
   }, [navigate]);
 
   const handleLogout = () => {
@@ -205,13 +369,28 @@ const LibrarianDashboard = () => {
       );
     }
 
+    if (error) {
+      return (
+        <div className="flex items-center justify-center min-h-[calc(100vh-64px)]">
+          <p className="text-[#e74c3c] text-xl font-semibold">{error}</p>
+        </div>
+      );
+    }
+
     switch (activeSection) {
       case 'dashboard':
         return (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-6 pt-4 sm:pt-6 px-3 md:px-6 justify-start">
-            {statsData.map((stat, index) => (
-              <StatsCard key={index} title={stat.title} value={stat.value} icon={stat.icon} />
-            ))}
+          <div className="flex flex-col items-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-6 pt-4 sm:pt-6 px-3 md:px-6 justify-start w-full max-w-7xl">
+              {statsData.map((stat, index) => (
+                <StatsCard key={index} title={stat.title} value={stat.value} icon={stat.icon} />
+              ))}
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-7xl mt-6">
+              <RecentActivity activities={recentActivities} />
+              <TopBorrowedBooks books={topBooks} />
+            </div>
+            <BooksByCategory categories={categories} />
           </div>
         );
       case 'booklist':
