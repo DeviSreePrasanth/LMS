@@ -3,7 +3,7 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
-const AddStudent = ({ setActiveSection }) => { // Added setActiveSection prop for consistency with dashboard navigation
+const AddStudent = ({ setActiveSection }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -24,28 +24,26 @@ const AddStudent = ({ setActiveSection }) => { // Added setActiveSection prop fo
     setSuccess(null);
 
     try {
-      const response = await axios.post('https://lms-o44p.onrender.com/api/students', formData);
+      await axios.post('https://lms-o44p.onrender.com/api/students', formData);
       setSuccess('Student added successfully!');
       setFormData({ name: '', email: '', studentId: '' });
-      // Redirect to students section after 2 seconds (consistent with dashboard navigation)
       setTimeout(() => setActiveSection ? setActiveSection('students') : navigate('/students'), 2000);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to add student');
     }
   };
 
-  // Librarian-specific color palette (matching AddBook)
   const palette = {
-    primary: '#2c3e50', // Dark blue-gray for headers and text
-    accent: '#1abc9c',  // Teal for highlights
-    muted: '#7f8c8d',   // Muted gray for secondary text
-    bg: '#f4f7fa',      // Light gray background
-    headerBg: '#1f2937', // Darker gray (unused here but kept for consistency)
+    primary: '#2c3e50',
+    accent: '#1abc9c',
+    muted: '#7f8c8d',
+    bg: '#f4f7fa',
+    headerBg: '#1f2937',
   };
 
   return (
     <motion.div
-      className="p-6 bg-[#f4f7fa] max-w-lg mx-auto" // Adjusted to match AddBook: reduced distance from top
+      className="p-6 bg-[#f4f7fa] max-w-lg mx-auto"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: 'easeInOut' }}
@@ -57,10 +55,9 @@ const AddStudent = ({ setActiveSection }) => { // Added setActiveSection prop fo
         {success && <p className="text-[#1abc9c] text-center mb-4">{success}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Name */}
           <div>
             <label htmlFor="name" className="block text-[#7f8c8d] text-sm font-medium mb-2">
-              Name
+              Full Name
             </label>
             <input
               type="text"
@@ -72,11 +69,9 @@ const AddStudent = ({ setActiveSection }) => { // Added setActiveSection prop fo
               required
             />
           </div>
-
-          {/* Email */}
           <div>
             <label htmlFor="email" className="block text-[#7f8c8d] text-sm font-medium mb-2">
-              Email
+              Email Address
             </label>
             <input
               type="email"
@@ -88,8 +83,6 @@ const AddStudent = ({ setActiveSection }) => { // Added setActiveSection prop fo
               required
             />
           </div>
-
-          {/* Student ID */}
           <div>
             <label htmlFor="studentId" className="block text-[#7f8c8d] text-sm font-medium mb-2">
               Student ID
@@ -104,11 +97,9 @@ const AddStudent = ({ setActiveSection }) => { // Added setActiveSection prop fo
               required
             />
           </div>
-
-          {/* Submit Button */}
           <motion.button
             type="submit"
-            className="w-full bg-[#059669] hover:bg-[#047857] text-white p-3 rounded-md transition duration-200"
+            className="w-full bg-[#1abc9c] hover:bg-[#16a085] text-white p-3 rounded-md transition duration-200"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
