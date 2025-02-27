@@ -17,7 +17,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 // Register ChartJS components
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-// Sidebar remains unchanged
+// Sidebar component (unchanged)
 const Sidebar = ({ setActiveSection, activeSection, isOpen, setIsOpen, handleLogout }) => {
   const menuItems = [
     { name: 'Dashboard', section: 'dashboard', icon: MdSpaceDashboard },
@@ -78,7 +78,7 @@ const Sidebar = ({ setActiveSection, activeSection, isOpen, setIsOpen, handleLog
   );
 };
 
-// Header remains unchanged
+// Header component (unchanged)
 const Header = ({ isOpen, setIsOpen }) => {
   const [profileImage, setProfileImage] = useState(
     localStorage.getItem('profileImage') || 'https://via.placeholder.com/40'
@@ -135,7 +135,7 @@ const Header = ({ isOpen, setIsOpen }) => {
   );
 };
 
-// StatsCard remains unchanged
+// StatsCard component (unchanged)
 const StatsCard = ({ title, value, icon: Icon }) => (
   <motion.div
     className="bg-white p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1 w-full"
@@ -153,66 +153,56 @@ const StatsCard = ({ title, value, icon: Icon }) => (
   </motion.div>
 );
 
-// RecentActivity remains unchanged
+// Enhanced RecentActivity component
 const RecentActivity = ({ activities }) => (
   <motion.div
-    className="bg-white p-4 sm:p-6 rounded-lg shadow-md mt-6 w-full max-w-3xl mx-auto"
+    className="bg-white p-6 rounded-xl shadow-lg mt-6 w-full max-w-3xl mx-auto border border-gray-100"
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6, ease: 'easeInOut' }}
+    transition={{ duration: 0.6, ease: 'easeOut' }}
   >
     <h3 className="text-xl font-semibold text-[#2c3e50] mb-4">Recent Activity</h3>
-    <ul className="space-y-4 max-h-64 overflow-y-auto">
+    <ul className="space-y-4 max-h-80 overflow-y-auto custom-scrollbar">
       {activities.map((activity, index) => (
         <motion.li
           key={index}
-          className="flex items-center gap-3 p-3 bg-[#f4f7fa] rounded-md hover:bg-[#e0e7ff] transition-all duration-300"
+          className="flex items-start gap-3 p-4 bg-[#f4f7fa] rounded-lg hover:bg-[#e0e7ff] transition-all duration-300 border-l-4 border-[#1abc9c]"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3, delay: index * 0.1 }}
+          whileHover={{ scale: 1.02 }}
         >
-          <FaClock className="text-[#1abc9c] text-lg" />
-          <div>
-            <p className="text-sm text-[#2c3e50] font-medium">{activity.action}</p>
-            <p className="text-xs text-[#7f8c8d]">{new Date(activity.timestamp).toLocaleString()}</p>
-          </div>
-        </motion.li>
-      ))}
-    </ul>
-  </motion.div>
-);
-
-// TopBorrowedBooks remains unchanged
-const TopBorrowedBooks = ({ books }) => (
-  <motion.div
-    className="bg-white p-4 sm:p-6 rounded-lg shadow-md mt-6 w-full max-w-3xl mx-auto"
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6, ease: 'easeInOut' }}
-  >
-    <h3 className="text-xl font-semibold text-[#2c3e50] mb-4">Top Borrowed Books</h3>
-    <ul className="space-y-4">
-      {books.map((book, index) => (
-        <motion.li
-          key={index}
-          className="flex items-center gap-3 p-3 bg-[#f4f7fa] rounded-md hover:bg-[#e0e7ff] transition-all duration-300"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.3, delay: index * 0.1 }}
-        >
-          <FaBook className="text-[#1abc9c] text-lg" />
+          <FaClock className="text-[#1abc9c] text-lg mt-1 flex-shrink-0" />
           <div className="flex-1">
-            <p className="text-sm text-[#2c3e50] font-medium">{book.title}</p>
-            <p className="text-xs text-[#7f8c8d]">Borrowed {book.borrowCount} times</p>
+            <p className="text-sm text-[#2c3e50] font-medium">
+              {activity.action}
+              {activity.studentName && <span className="text-[#1abc9c] ml-1">to {activity.studentName}</span>}
+            </p>
+            <p className="text-xs text-[#7f8c8d] mt-1">{new Date(activity.timestamp).toLocaleString()}</p>
           </div>
-          <span className="text-xs font-semibold text-[#1abc9c]">{`#${index + 1}`}</span>
         </motion.li>
       ))}
     </ul>
+    <style jsx>{`
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 8px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: #f4f7fa;
+        border-radius: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #1abc9c;
+        border-radius: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #16a085;
+      }
+    `}</style>
   </motion.div>
 );
 
-// BooksByCategory remains unchanged
+// Enhanced BooksByCategory component
 const BooksByCategory = ({ categories }) => {
   const data = {
     labels: Object.keys(categories),
@@ -223,46 +213,76 @@ const BooksByCategory = ({ categories }) => {
           '#1abc9c', '#3498db', '#e74c3c', '#f1c40f', '#9b59b6',
           '#34495e', '#2ecc71', '#e67e22', '#95a5a6', '#d35400',
         ],
-        borderWidth: 1,
+        borderWidth: 2,
+        borderColor: '#ffffff',
+        hoverOffset: 15,
       },
     ],
   };
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'top',
+        position: 'right',
         labels: {
           font: {
             size: 14,
+            family: "'Poppins', sans-serif",
           },
+          padding: 20,
+          usePointStyle: true,
+          pointStyle: 'circle',
         },
       },
       tooltip: {
+        backgroundColor: 'rgba(44, 62, 80, 0.9)',
+        titleFont: { size: 16 },
+        bodyFont: { size: 14 },
+        padding: 12,
         callbacks: {
           label: (context) => `${context.label}: ${context.raw} books`,
         },
       },
     },
+    animation: {
+      animateScale: true,
+      animateRotate: true,
+      duration: 1500,
+      easing: 'easeOutBounce',
+    },
   };
 
   return (
     <motion.div
-      className="bg-white p-4 sm:p-6 rounded-lg shadow-md mt-6 w-full max-w-3xl mx-auto"
-      initial={{ opacity: 0, y: 20 }}
+      className="bg-white p-6 rounded-xl shadow-lg mt-6 w-full max-w-4xl mx-auto border border-gray-100 overflow-hidden"
+      initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: 'easeInOut' }}
+      transition={{ duration: 0.8, ease: 'easeOut' }}
+      whileHover={{ scale: 1.02, boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}
     >
-      <h3 className="text-xl font-semibold text-[#2c3e50] mb-4">Books by Category</h3>
-      <div className="relative h-64">
+      <motion.h3
+        className="text-2xl font-semibold text-[#2c3e50] mb-6 bg-gradient-to-r from-[#2c3e50] to-[#1abc9c] text-transparent bg-clip-text"
+        initial={{ x: -20 }}
+        animate={{ x: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        Books by Category
+      </motion.h3>
+      <div className="relative h-80 w-full flex items-center justify-center">
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-br from-[#f4f7fa] to-[#ffffff] rounded-full opacity-50"
+          animate={{ scale: [1, 1.05, 1] }}
+          transition={{ duration: 4, repeat: Infinity }}
+        />
         <Pie data={data} options={options} />
       </div>
     </motion.div>
   );
 };
 
-// Updated LibrarianDashboard
+// Updated LibrarianDashboard component
 const LibrarianDashboard = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [statsData, setStatsData] = useState([
@@ -271,10 +291,9 @@ const LibrarianDashboard = () => {
     { title: 'Registered Members', value: '0', icon: FaUsers },
   ]);
   const [recentActivities, setRecentActivities] = useState([]);
-  const [topBooks, setTopBooks] = useState([]);
   const [categories, setCategories] = useState({});
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null); // Added for error handling
+  const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -304,15 +323,11 @@ const LibrarianDashboard = () => {
           { title: 'Registered Members', value: registeredMembers.toString(), icon: FaUsers },
         ]);
 
-        // Fetch recent activities from the new endpoint
+        // Fetch recent activities
         const activitiesResponse = await axios.get('https://lms-o44p.onrender.com/api/activities/recent', config);
-        setRecentActivities(activitiesResponse.data.slice(0, 5)); // Limit to 5
+        setRecentActivities(activitiesResponse.data.slice(0, 5));
 
-        // Fetch top borrowed books from the new endpoint
-        const topBooksResponse = await axios.get('https://lms-o44p.onrender.com/api/books/top-borrowed', config);
-        setTopBooks(topBooksResponse.data.slice(0, 5)); // Limit to 5
-
-        // Derive books by category from books response
+        // Derive books by category
         const categoryData = booksResponse.data.reduce((acc, book) => {
           const category = book.category || 'Uncategorized';
           acc[category] = (acc[category] || 0) + 1;
@@ -320,21 +335,16 @@ const LibrarianDashboard = () => {
         }, {});
         setCategories(categoryData);
 
-        setError(null); // Clear any previous errors
+        setError(null);
       } catch (err) {
         console.error('Error fetching dashboard data:', err.response?.data || err.message);
         setError('Failed to load dashboard data. Please try again later.');
         
-        // Fallback mock data if API fails
+        // Updated mock data with student names
         setRecentActivities([
-          { action: "Book 'The Great Gatsby' issued", timestamp: new Date() },
-          { action: "Book '1984' returned", timestamp: new Date(Date.now() - 3600000) },
-          { action: "New student 'John Doe' added", timestamp: new Date(Date.now() - 7200000) },
-        ]);
-        setTopBooks([
-          { title: 'The Great Gatsby', borrowCount: 15 },
-          { title: '1984', borrowCount: 12 },
-          { title: 'To Kill a Mockingbird', borrowCount: 10 },
+          { action: "Book 'The Great Gatsby' issued", studentName: "John Doe", timestamp: new Date() },
+          { action: "Book '1984' returned", studentName: "Jane Smith", timestamp: new Date(Date.now() - 3600000) },
+          { action: "New student 'Alice Brown' added", timestamp: new Date(Date.now() - 7200000) },
         ]);
         setCategories({
           Fiction: 50,
@@ -349,7 +359,6 @@ const LibrarianDashboard = () => {
     };
 
     fetchDashboardData();
-    // Poll for real-time updates every 30 seconds (optional)
     const interval = setInterval(fetchDashboardData, 30000);
     return () => clearInterval(interval);
   }, [navigate]);
@@ -381,16 +390,15 @@ const LibrarianDashboard = () => {
       case 'dashboard':
         return (
           <div className="flex flex-col items-center">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-6 pt-4 sm:pt-6 px-3 md:px-6 justify-start w-full max-w-7xl">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 pt-6 px-3 md:px-6 w-full max-w-7xl">
               {statsData.map((stat, index) => (
                 <StatsCard key={index} title={stat.title} value={stat.value} icon={stat.icon} />
               ))}
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-7xl mt-6">
+            <div className="grid grid-cols-1 gap-6 w-full max-w-7xl mt-6">
               <RecentActivity activities={recentActivities} />
-              <TopBorrowedBooks books={topBooks} />
+              <BooksByCategory categories={categories} />
             </div>
-            <BooksByCategory categories={categories} />
           </div>
         );
       case 'booklist':
