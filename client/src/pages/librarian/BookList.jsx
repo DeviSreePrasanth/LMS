@@ -195,14 +195,14 @@ const BookList = () => {
         </p>
       ) : (
         <>
-          <div className="overflow-x-auto mx-auto w-full">
-            <table className="w-full max-w-full border-collapse bg-white shadow-md rounded-lg">
+          <div className="overflow-x-auto w-full text-left sm:mx-auto">
+            <table className="w-full border-collapse bg-white shadow-md rounded-lg">
               <thead className="bg-[#1f2937] text-white">
                 <tr>
-                  <th className="py-2 px-3 sm:px-4 text-left text-xs sm:text-sm">Book ID</th>
-                  <th className="py-2 px-3 sm:px-4 text-left text-xs sm:text-sm">Title</th>
-                  <th className="py-2 px-3 sm:px-4 text-left text-xs sm:text-sm">Author</th>
-                  <th className="py-2 px-3 sm:px-4 text-left text-xs sm:text-sm">
+                  <th className="py-2 px-2 sm:px-4 text-left text-xs sm:text-sm">Book ID</th>
+                  <th className="py-2 px-2 sm:px-4 text-left text-xs sm:text-sm">Title</th>
+                  <th className="py-2 px-2 sm:px-4 text-left text-xs sm:text-sm">Author</th>
+                  <th className="py-2 px-2 sm:px-4 text-left text-xs sm:text-sm">
                     Category
                     <select
                       name="category"
@@ -218,7 +218,7 @@ const BookList = () => {
                       ))}
                     </select>
                   </th>
-                  <th className="py-2 px-3 sm:px-4 text-center text-xs sm:text-sm">
+                  <th className="py-2 px-2 sm:px-4 text-center text-xs sm:text-sm">
                     Status
                     <select
                       name="status"
@@ -231,7 +231,7 @@ const BookList = () => {
                       <option value="issued">Issued</option>
                     </select>
                   </th>
-                  <th className="py-2 px-3 sm:px-4 text-center text-xs sm:text-sm">Actions</th>
+                  <th className="py-2 px-2 sm:px-4 text-center text-xs sm:text-sm">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -243,7 +243,7 @@ const BookList = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: currentBooks.indexOf(book) * 0.1 }}
                   >
-                    <td className="py-2 px-3 sm:px-4 text-[#2c3e50] text-xs sm:text-sm">
+                    <td className="py-2 px-2 sm:px-4 text-[#2c3e50] text-xs sm:text-sm">
                       {editingBook === book._id ? (
                         <input
                           type="number"
@@ -257,7 +257,7 @@ const BookList = () => {
                         book.bid
                       )}
                     </td>
-                    <td className="py-2 px-3 sm:px-4 text-[#2c3e50] text-xs sm:text-sm">
+                    <td className="py-2 px-2 sm:px-4 text-[#2c3e50] text-xs sm:text-sm">
                       {editingBook === book._id ? (
                         <input
                           type="text"
@@ -270,7 +270,7 @@ const BookList = () => {
                         book.title
                       )}
                     </td>
-                    <td className="py-2 px-3 sm:px-4 text-[#2c3e50] text-xs sm:text-sm">
+                    <td className="py-2 px-2 sm:px-4 text-[#2c3e50] text-xs sm:text-sm">
                       {editingBook === book._id ? (
                         <input
                           type="text"
@@ -283,7 +283,7 @@ const BookList = () => {
                         book.author
                       )}
                     </td>
-                    <td className="py-2 px-3 sm:px-4 text-[#2c3e50] text-xs sm:text-sm">
+                    <td className="py-2 px-2 sm:px-4 text-[#2c3e50] text-xs sm:text-sm">
                       {editingBook === book._id ? (
                         <input
                           type="text"
@@ -296,7 +296,7 @@ const BookList = () => {
                         book.category
                       )}
                     </td>
-                    <td className="py-2 px-3 sm:px-4 text-center text-xs sm:text-sm">
+                    <td className="py-2 px-2 sm:px-4 text-center text-xs sm:text-sm">
                       {editingBook === book._id ? (
                         <select
                           name="status"
@@ -317,7 +317,7 @@ const BookList = () => {
                         </span>
                       )}
                     </td>
-                    <td className="py-2 px-3 sm:px-4 text-center">
+                    <td className="py-2 px-2 sm:px-4 text-center">
                       <div className="flex justify-center space-x-2">
                         {editingBook === book._id ? (
                           <>

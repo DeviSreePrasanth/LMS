@@ -6,7 +6,7 @@ import StudentBookList from '../student/BookList';
 import BorrowedBooks from '../student/BorrowedBooks';
 import { useNavigate } from 'react-router-dom';
 import { BiLogOut } from 'react-icons/bi';
-import { FaBook, FaClock, FaCalendar, FaBars, FaTimes } from 'react-icons/fa'; // Added FaTimes
+import { FaBook, FaClock, FaCalendar, FaBars, FaTimes } from 'react-icons/fa';
 
 // Sidebar Component
 const Sidebar = ({ setActiveSection, activeSection, handleLogout, isOpen, setIsOpen }) => {
@@ -122,10 +122,10 @@ const Header = ({ isOpen, setIsOpen, name }) => {
   );
 };
 
-// StatsCard Component (unchanged)
+// StatsCard Component (updated with w-full)
 const StatsCard = ({ title, value, icon: Icon, color }) => (
   <motion.div
-    className="bg-white p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1"
+    className="bg-white p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1 w-full"
     initial={{ y: 50, opacity: 0 }}
     animate={{ y: 0, opacity: 1 }}
     transition={{ duration: 0.6, ease: 'easeInOut' }}
@@ -244,7 +244,7 @@ const StudentDashboard = () => {
     switch (activeSection) {
       case 'dashboard':
         return (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 pt-4 sm:pt-6 px-4 md:px-6 justify-start">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-6 pt-4 sm:pt-6 px-3 md:px-6 justify-start">
             {statsData.map((stat, index) => (
               <StatsCard key={index} title={stat.title} value={stat.value} icon={stat.icon} color={stat.color} />
             ))}
@@ -268,7 +268,7 @@ const StudentDashboard = () => {
         isOpen={isOpen}
         setIsOpen={setIsOpen}
       />
-      <div className="flex-1 w-full md:ml-[250px] pt-16 pl-4 md:pl-6">
+      <div className="flex-1 w-full md:ml-[250px] pt-16 pl-0 md:pl-6">
         <Header isOpen={isOpen} setIsOpen={setIsOpen} name={studentName} />
         <br />
         {renderContent()}
