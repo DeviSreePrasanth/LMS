@@ -1,5 +1,4 @@
 const Loan = require('../models/Loan');
-const IssuedBook = require('../models/IssuedBook');
 const User = require('../models/User');
 const Book = require('../models/Book');
 
@@ -30,21 +29,16 @@ const issueBook = async (req, res) => {
     }
 
     const existingLoan = await Loan.findOne({ bid, returnDate: null });
-    const existingIssuedBook = await IssuedBook.findOne({ bid, returnDate: null });
-    if (existingLoan || existingIssuedBook) {
+    if (existingLoan) {
       return res.status(400).json({ message: 'Book is already issued' });
     }
 
     const loan = new Loan({ studentId, bid, title, dueDate });
     const savedLoan = await loan.save();
 
-    const issuedBook = new IssuedBook({ studentId, bid, title, dueDate });
-    const savedIssuedBook = await issuedBook.save();
-
     res.status(201).json({
       message: 'Book issued successfully',
       loan: savedLoan,
-      issuedBook: savedIssuedBook,
     });
   } catch (err) {
     console.error('Error issuing book:', err.stack);
@@ -55,20 +49,12 @@ const issueBook = async (req, res) => {
 // Get all active loans
 const getActiveLoans = async (req, res) => {
   try {
-    // Debug: Log the ref values
-    console.log('Loan Model Ref:', Loan.schema.paths.studentId.options.ref);
-    console.log('IssuedBook Model Ref:', IssuedBook.schema.paths.studentId.options.ref);
-
     const loans = await Loan.find({ returnDate: null })
-      .populate('studentId', 'name email studentId')
-      .lean();
-    const issuedBooks = await IssuedBook.find({ returnDate: null })
       .populate('studentId', 'name email studentId')
       .lean();
 
     res.status(200).json({
       loans,
-      issuedBooks,
     });
   } catch (err) {
     console.error('Error fetching active loans:', err.stack);
@@ -82,40 +68,19 @@ const returnBook = async (req, res) => {
   const { returnDate } = req.body;
 
   try {
-    let loan = await Loan.findById(id);
-    let issuedBook = null;
-
+    const loan = await Loan.findById(id);
     if (!loan) {
-      issuedBook = await IssuedBook.findById(id);
-      if (!issuedBook) {
-        return res.status(404).json({ message: 'Loan or issued book record not found' });
-      }
+      return res.status(404).json({ message: 'Loan record not found' });
     }
 
-    const record = loan || issuedBook;
-
-    if (record.returnDate) {
+    if (loan.returnDate) {
       return res.status(400).json({ message: 'Book already returned' });
     }
 
-    record.returnDate = returnDate || new Date();
-    const updatedRecord = await record.save();
+    loan.returnDate = returnDate || new Date();
+    const updatedLoan = await loan.save();
 
-    if (loan) {
-      const relatedIssuedBook = await IssuedBook.findOne({ bid: record.bid, returnDate: null });
-      if (relatedIssuedBook) {
-        relatedIssuedBook.returnDate = record.returnDate;
-        await relatedIssuedBook.save();
-      }
-    } else if (issuedBook) {
-      const relatedLoan = await Loan.findOne({ bid: record.bid, returnDate: null });
-      if (relatedLoan) {
-        relatedLoan.returnDate = record.returnDate;
-        await relatedLoan.save();
-      }
-    }
-
-    res.status(200).json({ message: 'Book returned successfully', record: updatedRecord });
+    res.status(200).json({ message: 'Book returned successfully', record: updatedLoan });
   } catch (err) {
     console.error('Error returning book:', err.stack);
     res.status(500).json({ message: 'Server error', error: err.message });

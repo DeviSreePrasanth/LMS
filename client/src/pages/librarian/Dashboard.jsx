@@ -8,7 +8,7 @@ import AddStudent from './AddStudent';
 import IssueBook from './IssueBook';
 import ReturnBook from './ReturnBook';
 import { BiLogOut } from 'react-icons/bi';
-import { MdSpaceDashboard} from "react-icons/md";
+import { MdSpaceDashboard } from "react-icons/md";
 import { FaBook, FaUsers, FaUserPlus, FaPlus, FaUndo, FaExchangeAlt, FaBars } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
@@ -54,14 +54,14 @@ const Sidebar = ({ setActiveSection, activeSection, isOpen, setIsOpen, handleLog
         </ul>
       </div>
       <motion.button
-              className="w-full p-3 bg-[#e74c3c] hover:bg-[#c0392b] rounded-lg flex items-center justify-center gap-2 shadow-md text-sm sm:text-base"
-              onClick={handleLogout}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <BiLogOut size={20} />
-              <span>Logout</span>
-            </motion.button>
+        className="w-full p-3 bg-[#e74c3c] hover:bg-[#c0392b] rounded-lg flex items-center justify-center gap-2 shadow-md text-sm sm:text-base"
+        onClick={handleLogout}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <BiLogOut size={20} />
+        <span>Logout</span>
+      </motion.button>
     </motion.div>
   );
 };
@@ -164,9 +164,7 @@ const LibrarianDashboard = () => {
         const totalBooks = Array.isArray(booksResponse.data) ? booksResponse.data.length : booksResponse.data.books?.length || 0;
 
         const activeLoansResponse = await axios.get('https://lms-o44p.onrender.com/api/loans/active', config);
-        const activeLoansCount = 
-          (activeLoansResponse.data.loans?.length || 0) + 
-          (activeLoansResponse.data.issuedBooks?.length || 0);
+        const activeLoansCount = activeLoansResponse.data.loans?.length || 0;
 
         const studentsResponse = await axios.get('https://lms-o44p.onrender.com/api/students', config);
         const registeredMembers = Array.isArray(studentsResponse.data) ? studentsResponse.data.length : studentsResponse.data.students?.length || 0;
@@ -204,7 +202,7 @@ const LibrarianDashboard = () => {
     switch (activeSection) {
       case 'dashboard':
         return (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 pt-4 sm:pt-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 pt-4 sm:pt-6 px-4 md:px-6">
             {statsData.map((stat, index) => (
               <StatsCard key={index} title={stat.title} value={stat.value} icon={stat.icon} />
             ))}
@@ -236,7 +234,7 @@ const LibrarianDashboard = () => {
         setIsOpen={setIsOpen} 
         handleLogout={handleLogout} 
       />
-      <div className="flex-1 w-full md:ml-[250px] pt-16">
+      <div className="flex-1 w-full md:ml-[250px] pt-16 pl-4 md:pl-6"> {/* Added padding-left */}
         <Header isOpen={isOpen} setIsOpen={setIsOpen} />
         <br />
         {renderContent()}

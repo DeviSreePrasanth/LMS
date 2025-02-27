@@ -107,7 +107,7 @@ const StudentBookList = () => {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full border-collapse bg-white shadow-md rounded-lg">
+        <table className="min-w-full border-collapse bg-white shadow-md rounded-lg"> {/* Added rounded-lg */}
           <thead className="bg-[#1f2937] text-white">
             <tr>
               <th className="py-2 px-3 sm:px-4 text-left text-xs sm:text-sm">Book ID</th>
