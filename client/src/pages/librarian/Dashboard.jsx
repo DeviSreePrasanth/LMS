@@ -339,13 +339,13 @@ const LibrarianDashboard = () => {
         }
         const config = { headers: { Authorization: `Bearer ${token}` } };
 
-        const booksResponse = await axios.get('https://lms-o44p.onrender.com/api/books', config);
+        const booksResponse = await axios.get('https://lms-production-c635.up.railway.app/api/books', config);
         const totalBooks = Array.isArray(booksResponse.data) ? booksResponse.data.length : booksResponse.data.books?.length || 0;
 
-        const activeLoansResponse = await axios.get('https://lms-o44p.onrender.com/api/loans/active', config);
+        const activeLoansResponse = await axios.get('https://lms-production-c635.up.railway.app/api/loans/active', config);
         const activeLoansCount = activeLoansResponse.data.loans?.length || 0;
 
-        const studentsResponse = await axios.get('https://lms-o44p.onrender.com/api/students', config);
+        const studentsResponse = await axios.get('https://lms-production-c635.up.railway.app/api/students', config);
         const registeredMembers = Array.isArray(studentsResponse.data) ? studentsResponse.data.length : studentsResponse.data.students?.length || 0;
 
         setStatsData([
@@ -354,10 +354,10 @@ const LibrarianDashboard = () => {
           { title: 'Registered Members', value: registeredMembers.toString(), icon: FaUsers },
         ]);
 
-        const activitiesResponse = await axios.get('https://lms-o44p.onrender.com/api/activities/recent', config);
+        const activitiesResponse = await axios.get('https://lms-production-c635.up.railway.app/api/activities/recent', config);
         setRecentActivities(activitiesResponse.data.slice(0, 5));
 
-        const topBooksResponse = await axios.get('https://lms-o44p.onrender.com/api/books/top-borrowed', config);
+        const topBooksResponse = await axios.get('https://lms-production-c635.up.railway.app/api/books/top-borrowed', config);
         setTopBooks(topBooksResponse.data.slice(0, 5));
 
         const categoryData = booksResponse.data.reduce((acc, book) => {

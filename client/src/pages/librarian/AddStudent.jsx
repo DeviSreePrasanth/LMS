@@ -28,7 +28,7 @@ const AddStudent = ({ setActiveSection }) => {
     setSuccess(null);
 
     try {
-      const response = await axios.post('https://lms-o44p.onrender.com/api/auth/register', formData);
+      const response = await axios.post('https://lms-production-c635.up.railway.app/api/auth/register', formData);
       setSuccess('Student added successfully! Redirecting...');
       setFormData({ name: '', email: '', studentId: '', password: '', role: 'student' });
 

@@ -34,7 +34,7 @@ const Login = () => {
     e.preventDefault();
     setError('');
     try {
-      const loginResponse = await axios.post('https://lms-o44p.onrender.com/api/auth/login', {
+      const loginResponse = await axios.post('https://lms-production-c635.up.railway.app/api/auth/login', {
         email,
         password,
         studentId, // Send studentId instead of registrationNumber

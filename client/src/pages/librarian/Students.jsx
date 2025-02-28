@@ -12,12 +12,12 @@ const Students = () => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const studentsResponse = await axios.get('https://lms-o44p.onrender.com/api/students');
+        const studentsResponse = await axios.get('https://lms-production-c635.up.railway.app/api/students');
         const studentsData = studentsResponse.data;
 
         const studentsWithLoans = await Promise.all(
           studentsData.map(async (student) => {
-            const loansResponse = await axios.get(`https://lms-o44p.onrender.com/api/loans?studentId=${student._id}`);
+            const loansResponse = await axios.get(`https://lms-production-c635.up.railway.app/api/loans?studentId=${student._id}`);
             return { ...student, borrowedBooks: loansResponse.data };
           })
         );

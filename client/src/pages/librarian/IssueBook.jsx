@@ -19,10 +19,10 @@ const IssueBook = ({ setActiveSection }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const studentsResponse = await axios.get('https://lms-o44p.onrender.com/api/students');
+        const studentsResponse = await axios.get('https://lms-production-c635.up.railway.app/api/students');
         setStudents(studentsResponse.data);
 
-        const booksResponse = await axios.get('https://lms-o44p.onrender.com/api/books');
+        const booksResponse = await axios.get('https://lms-production-c635.up.railway.app/api/books');
         setBooks(booksResponse.data);
       } catch (err) {
         setError('Failed to fetch students or books');
@@ -68,7 +68,7 @@ const IssueBook = ({ setActiveSection }) => {
     console.log('Submitting issue book data:', submitData);
 
     try {
-      const response = await axios.post('https://lms-o44p.onrender.com/api/loans', submitData);
+      const response = await axios.post('https://lms-production-c635.up.railway.app/api/loans', submitData);
       setSuccess('Book issued successfully!');
       setFormData({ studentName: '', studentId: '', bookName: '', bid: '', dueDate: '' });
       setTimeout(() => setActiveSection('students'), 2000);

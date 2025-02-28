@@ -17,7 +17,7 @@ const BookList = () => {
     const fetchBooks = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('https://lms-o44p.onrender.com/api/books', {
+        const response = await axios.get('https://lms-production-c635.up.railway.app/api/books', {
           headers: { Authorization: `Bearer ${token}` },
         });
         const sortedBooks = response.data.sort((a, b) => a.bid - b.bid);
@@ -68,7 +68,7 @@ const BookList = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.delete(`https://lms-o44p.onrender.com/api/books/${bookId}`, {
+      const response = await axios.delete(`https://lms-production-c635.up.railway.app/api/books/${bookId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.status !== 200) {
@@ -109,7 +109,7 @@ const BookList = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.put(
-        `https://lms-o44p.onrender.com/api/books/${editingBook}`,
+        `https://lms-production-c635.up.railway.app/api/books/${editingBook}`,
         editData,
         {
           headers: {

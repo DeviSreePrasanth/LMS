@@ -1,39 +1,75 @@
 {
-    "rewrites": [
-      {
-        "source": "/api/restaurants",
-        "destination": "https://restaurant-production-06c2.up.railway.app/api/restaurants"
-      },
-      {
-        "source": "/api/restaurants/:id",
-        "destination": "https://restaurant-production-06c2.up.railway.app/api/restaurants/:id"
-      },
-      {
-        "source": "/api/restaurants/location",
-        "destination": "https://restaurant-production-06c2.up.railway.app/api/restaurants/location?lat=${latitude}&lng=${longitude}&radius=${radius}"
-      },
-      {
-        "source": "/(.*)",
-        "destination": "/"
-      }
-    ],
-    "headers": [
-      {
-        "source": "/(.*)",
-        "headers": [
-          {
-            "key": "Access-Control-Allow-Origin",
-            "value": "*"
-          },
-          {
-            "key": "Access-Control-Allow-Methods",
-            "value": "GET, POST, PUT, DELETE, OPTIONS"
-          },
-          {
-            "key": "Access-Control-Allow-Headers",
-            "value": "X-Requested-With, Content-Type, Accept"
-          }
-        ]
-      }
-    ]
+  "rewrites": [
+    {
+      "source": "/api/auth/login",
+      "destination": "https://lms-production-c635.up.railway.app/api/auth/login"
+    },
+    {
+      "source": "/api/auth/register",
+      "destination": "https://lms-production-c635.up.railway.app/api/auth/register"
+    },
+    {
+      "source": "/api/books",
+      "destination": "https://lms-production-c635.up.railway.app/api/books"
+    },
+    {
+      "source": "/api/books/:id",
+      "destination": "https://lms-production-c635.up.railway.app/api/books/:id"
+    },
+    {
+      "source": "/api/books/top-borrowed",
+      "destination": "https://lms-production-c635.up.railway.app/api/books/top-borrowed"
+    },
+    {
+      "source": "/api/loans",
+      "destination": "https://lms-production-c635.up.railway.app/api/loans"
+    },
+    {
+      "source": "/api/loans/active",
+      "destination": "https://lms-production-c635.up.railway.app/api/loans/active"
+    },
+    {
+      "source": "/api/loans/return/:id",
+      "destination": "https://lms-production-c635.up.railway.app/api/loans/return/:id"
+    },
+    {
+      "source": "/api/activities/recent",
+      "destination": "https://lms-production-c635.up.railway.app/api/activities/recent"
+    },
+    {
+      "source": "/api/students",
+      "destination": "https://lms-production-c635.up.railway.app/api/students"
+    },
+    {
+      "source": "/api/students/:id",
+      "destination": "https://lms-production-c635.up.railway.app/api/students/:id"
+    },
+    {
+      "source": "/api/students/email/:email",
+      "destination": "https://lms-production-c635.up.railway.app/api/students/email/:email"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "X-Requested-With, Content-Type, Accept"
+        }
+      ]
+    }
+  ]
 }

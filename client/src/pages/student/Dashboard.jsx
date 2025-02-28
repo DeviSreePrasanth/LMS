@@ -170,7 +170,7 @@ const StudentDashboard = () => {
         const config = { headers: { Authorization: `Bearer ${token}` } };
 
         // Fetch student details
-        const studentResponse = await axios.get(`https://lms-o44p.onrender.com/api/students/email/${user.email}`, config);
+        const studentResponse = await axios.get(`https://lms-production-c635.up.railway.app/api/students/email/${user.email}`, config);
         if (!studentResponse.data) {
           throw new Error('Student not found');
         }
@@ -178,11 +178,11 @@ const StudentDashboard = () => {
         const studentId = studentResponse.data._id;
 
         // Fetch total books
-        const booksResponse = await axios.get('https://lms-o44p.onrender.com/api/books', config);
+        const booksResponse = await axios.get('https://lms-production-c635.up.railway.app/api/books', config);
         const totalBooks = Array.isArray(booksResponse.data) ? booksResponse.data.length : 0;
 
         // Fetch student's loans
-        const loansResponse = await axios.get(`https://lms-o44p.onrender.com/api/loans?studentId=${studentId}`, config);
+        const loansResponse = await axios.get(`https://lms-production-c635.up.railway.app/api/loans?studentId=${studentId}`, config);
         const allLoans = loansResponse.data || [];
         
         // Calculate active and overdue loans

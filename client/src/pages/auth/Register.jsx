@@ -18,7 +18,7 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://lms-o44p.onrender.com/api/auth/register', {
+      const response = await axios.post('https://lms-production-c635.up.railway.app/api/auth/register', {
         name,
         email,
         password,

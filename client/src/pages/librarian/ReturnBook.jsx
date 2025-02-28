@@ -30,12 +30,12 @@ const ReturnBook = ({ setActiveSection }) => {
           return;
         }
 
-        const studentsResponse = await axios.get('https://lms-o44p.onrender.com/api/students', {
+        const studentsResponse = await axios.get('https://lms-production-c635.up.railway.app/api/students', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setStudents(studentsResponse.data);
 
-        const activeLoansResponse = await axios.get('https://lms-o44p.onrender.com/api/loans/active', {
+        const activeLoansResponse = await axios.get('https://lms-production-c635.up.railway.app/api/loans/active', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setActiveLoans({
@@ -105,7 +105,7 @@ const ReturnBook = ({ setActiveSection }) => {
       }
 
       const response = await axios.put(
-        `https://lms-o44p.onrender.com/api/loans/return/${formData.issuedBookId}`,
+        `https://lms-production-c635.up.railway.app/api/loans/return/${formData.issuedBookId}`,
         submitData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -121,7 +121,7 @@ const ReturnBook = ({ setActiveSection }) => {
         returnDate: new Date().toISOString().split('T')[0],
       });
 
-      const updatedResponse = await axios.get('https://lms-o44p.onrender.com/api/loans/active', {
+      const updatedResponse = await axios.get('https://lms-production-c635.up.railway.app/api/loans/active', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setActiveLoans({
