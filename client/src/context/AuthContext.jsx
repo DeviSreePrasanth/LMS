@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
 
   const verifyToken = useCallback(async (accessToken) => {
     try {
-      const response = await axios.get('http://localhost:5000/api/auth/verify', {
+      const response = await axios.get('https://lms-production-c635.up.railway.app/api/auth/verify', {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       setToken(accessToken);
@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
       const storedRefreshToken = localStorage.getItem('refreshToken');
       if (!storedRefreshToken) throw new Error('No refresh token available');
 
-      const response = await axios.post('http://localhost:5000/api/auth/refresh', {
+      const response = await axios.post('https://lms-production-c635.up.railway.app/api/auth/refresh', {
         refreshToken: storedRefreshToken,
       });
       const { token: newToken, refreshToken: newRefreshToken } = response.data;
