@@ -1,0 +1,39 @@
+{
+    "rewrites": [
+      {
+        "source": "/api/restaurants",
+        "destination": "https://restaurant-production-06c2.up.railway.app/api/restaurants"
+      },
+      {
+        "source": "/api/restaurants/:id",
+        "destination": "https://restaurant-production-06c2.up.railway.app/api/restaurants/:id"
+      },
+      {
+        "source": "/api/restaurants/location",
+        "destination": "https://restaurant-production-06c2.up.railway.app/api/restaurants/location?lat=${latitude}&lng=${longitude}&radius=${radius}"
+      },
+      {
+        "source": "/(.*)",
+        "destination": "/"
+      }
+    ],
+    "headers": [
+      {
+        "source": "/(.*)",
+        "headers": [
+          {
+            "key": "Access-Control-Allow-Origin",
+            "value": "*"
+          },
+          {
+            "key": "Access-Control-Allow-Methods",
+            "value": "GET, POST, PUT, DELETE, OPTIONS"
+          },
+          {
+            "key": "Access-Control-Allow-Headers",
+            "value": "X-Requested-With, Content-Type, Accept"
+          }
+        ]
+      }
+    ]
+}
