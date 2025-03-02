@@ -2,51 +2,51 @@
   "rewrites": [
     {
       "source": "/api/auth/login",
-      "destination": "https://lms-production-c635.up.railway.app/api/auth/login"
+      "destination": "https://lms-o44p.onrender.com/auth/login"
     },
     {
       "source": "/api/auth/register",
-      "destination": "https://lms-production-c635.up.railway.app/api/auth/register"
+      "destination": "https://lms-o44p.onrender.com/auth/register"
     },
     {
       "source": "/api/books",
-      "destination": "https://lms-production-c635.up.railway.app/api/books"
+      "destination": "https://lms-o44p.onrender.com/books"
     },
     {
       "source": "/api/books/:id",
-      "destination": "https://lms-production-c635.up.railway.app/api/books/:id"
+      "destination": "https://lms-o44p.onrender.com/books/:id"
     },
     {
       "source": "/api/books/top-borrowed",
-      "destination": "https://lms-production-c635.up.railway.app/api/books/top-borrowed"
+      "destination": "https://lms-o44p.onrender.com/books/top-borrowed"
     },
     {
       "source": "/api/loans",
-      "destination": "https://lms-production-c635.up.railway.app/api/loans"
+      "destination": "https://lms-o44p.onrender.com/loans"
     },
     {
       "source": "/api/loans/active",
-      "destination": "https://lms-production-c635.up.railway.app/api/loans/active"
+      "destination": "https://lms-o44p.onrender.com/loans/active"
     },
     {
       "source": "/api/loans/return/:id",
-      "destination": "https://lms-production-c635.up.railway.app/api/loans/return/:id"
+      "destination": "https://lms-o44p.onrender.com/loans/return/:id"
     },
     {
       "source": "/api/activities/recent",
-      "destination": "https://lms-production-c635.up.railway.app/api/activities/recent"
+      "destination": "https://lms-o44p.onrender.com/activities/recent"
     },
     {
       "source": "/api/students",
-      "destination": "https://lms-production-c635.up.railway.app/api/students"
+      "destination": "https://lms-o44p.onrender.com/students"
     },
     {
       "source": "/api/students/:id",
-      "destination": "https://lms-production-c635.up.railway.app/api/students/:id"
+      "destination": "https://lms-o44p.onrender.com/students/:id"
     },
     {
       "source": "/api/students/email/:email",
-      "destination": "https://lms-production-c635.up.railway.app/api/students/email/:email"
+      "destination": "https://lms-o44p.onrender.com/students/email/:email"
     },
     {
       "source": "/(.*)",

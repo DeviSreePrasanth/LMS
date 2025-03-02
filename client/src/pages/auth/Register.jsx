@@ -1,30 +1,33 @@
-import React, { useState, useContext } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { AuthContext } from '../../context/AuthContext';
-import axios from 'axios';
-import { motion } from 'framer-motion';
+import React, { useState, useContext } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
+import axios from "axios";
+import { motion } from "framer-motion";
 
 const Register = () => {
   const { login } = useContext(AuthContext);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [studentId, setStudentId] = useState(''); // Changed from registrationNumber to studentId
-  const [role] = useState('student'); // Default role as 'student'
-  const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [studentId, setStudentId] = useState(""); // Changed from registrationNumber to studentId
+  const [role] = useState("student"); // Default role as 'student'
+  const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://lms-production-c635.up.railway.app/api/auth/register', {
-        name,
-        email,
-        password,
-        studentId, // Updated to studentId in payload
-        role,
-      });
+      const response = await axios.post(
+        "https://lms-o44p.onrender.com/api/auth/register",
+        {
+          name,
+          email,
+          password,
+          studentId, // Updated to studentId in payload
+          role,
+        }
+      );
 
       if (response.data.token) {
         // Pass token and user data to login function
@@ -34,26 +37,30 @@ const Register = () => {
           role: response.data.user.role,
           studentId: response.data.user.studentId,
         });
-        setSuccessMessage('Registration successful! Redirecting to dashboard...');
-        setError('');
-        setTimeout(() => navigate('/student/dashboard'), 1000);
+        setSuccessMessage(
+          "Registration successful! Redirecting to dashboard..."
+        );
+        setError("");
+        setTimeout(() => navigate("/student/dashboard"), 1000);
       } else {
-        setError('Registration failed. Please try again.');
-        setSuccessMessage('');
+        setError("Registration failed. Please try again.");
+        setSuccessMessage("");
       }
     } catch (err) {
-      console.error('Registration Error:', err.response?.data || err.message);
-      setError(err.response?.data?.message || 'Registration failed. Please try again.');
-      setSuccessMessage('');
+      console.error("Registration Error:", err.response?.data || err.message);
+      setError(
+        err.response?.data?.message || "Registration failed. Please try again."
+      );
+      setSuccessMessage("");
     }
   };
 
   const palette = {
-    primary: '#2c3e50',
-    accent: '#1abc9c',
-    muted: '#7f8c8d',
-    bg: '#f4f7fa',
-    headerBg: '#1f2937',
+    primary: "#2c3e50",
+    accent: "#1abc9c",
+    muted: "#7f8c8d",
+    bg: "#f4f7fa",
+    headerBg: "#1f2937",
   };
 
   return (
@@ -62,9 +69,11 @@ const Register = () => {
         className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: 'easeInOut' }}
+        transition={{ duration: 0.6, ease: "easeInOut" }}
       >
-        <h2 className="text-3xl font-bold text-center text-[#2c3e50] mb-6">Register</h2>
+        <h2 className="text-3xl font-bold text-center text-[#2c3e50] mb-6">
+          Register
+        </h2>
         {successMessage && (
           <motion.p
             className="text-[#1abc9c] text-sm text-center mb-4"
@@ -87,7 +96,10 @@ const Register = () => {
         )}
         <form onSubmit={handleRegister} className="space-y-6">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-[#7f8c8d] mb-2">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-[#7f8c8d] mb-2"
+            >
               Full Name
             </label>
             <input
@@ -101,7 +113,10 @@ const Register = () => {
             />
           </div>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-[#7f8c8d] mb-2">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-[#7f8c8d] mb-2"
+            >
               Email Address
             </label>
             <input
@@ -115,7 +130,10 @@ const Register = () => {
             />
           </div>
           <div>
-            <label htmlFor="studentId" className="block text-sm font-medium text-[#7f8c8d] mb-2">
+            <label
+              htmlFor="studentId"
+              className="block text-sm font-medium text-[#7f8c8d] mb-2"
+            >
               Student ID
             </label>
             <input
@@ -129,7 +147,10 @@ const Register = () => {
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-[#7f8c8d] mb-2">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-[#7f8c8d] mb-2"
+            >
               Password
             </label>
             <input
@@ -152,8 +173,11 @@ const Register = () => {
           </motion.button>
         </form>
         <p className="text-center text-[#7f8c8d] mt-4">
-          Already have an account?{' '}
-          <Link to="/" className="text-[#1abc9c] hover:text-[#16a085] font-semibold transition duration-200">
+          Already have an account?{" "}
+          <Link
+            to="/"
+            className="text-[#1abc9c] hover:text-[#16a085] font-semibold transition duration-200"
+          >
             Sign in here
           </Link>
         </p>

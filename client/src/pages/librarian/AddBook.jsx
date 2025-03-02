@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { motion } from 'framer-motion';
+import React, { useState } from "react";
+import axios from "axios";
+import { motion } from "framer-motion";
 
 const AddBook = () => {
   const [formData, setFormData] = useState({
-    bid: '',
-    title: '',
-    author: '',
-    category: '',
-    status: 'available', // Default status
+    bid: "",
+    title: "",
+    author: "",
+    category: "",
+    status: "available", // Default status
   });
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -17,7 +17,7 @@ const AddBook = () => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: name === 'bid' ? parseInt(value, 10) || '' : value,
+      [name]: name === "bid" ? parseInt(value, 10) || "" : value,
     });
   };
 
@@ -26,42 +26,48 @@ const AddBook = () => {
 
     const { bid, title, author, category } = formData;
     if (!bid || !title || !author || !category) {
-      setError('All fields (BID, Title, Author, Category) are required');
+      setError("All fields (BID, Title, Author, Category) are required");
       return;
     }
 
     try {
-      const response = await axios.post('https://lms-production-c635.up.railway.app/api/books', formData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await axios.post(
+        "https://lms-o44p.onrender.com/api/books",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.status !== 201) {
-        throw new Error('Failed to add book');
+        throw new Error("Failed to add book");
       }
 
-      setSuccess('Book added successfully!');
+      setSuccess("Book added successfully!");
       setError(null);
       setFormData({
-        bid: '',
-        title: '',
-        author: '',
-        category: '',
-        status: 'available',
+        bid: "",
+        title: "",
+        author: "",
+        category: "",
+        status: "available",
       });
     } catch (err) {
-      setError(err.response?.data?.message || 'Error adding book: ' + err.message);
+      setError(
+        err.response?.data?.message || "Error adding book: " + err.message
+      );
       setSuccess(null);
     }
   };
 
   const palette = {
-    primary: '#2c3e50',
-    accent: '#1abc9c',
-    muted: '#7f8c8d',
-    bg: '#f4f7fa',
-    headerBg: '#1f2937',
+    primary: "#2c3e50",
+    accent: "#1abc9c",
+    muted: "#7f8c8d",
+    bg: "#f4f7fa",
+    headerBg: "#1f2937",
   };
 
   return (
@@ -69,19 +75,28 @@ const AddBook = () => {
       className="p-4 sm:p-6 bg-[#f4f7fa] min-h-screen"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: 'easeInOut' }}
+      transition={{ duration: 0.6, ease: "easeInOut" }}
     >
       <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md w-full max-w-md sm:max-w-lg mx-auto">
-        <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center text-[#2c3e50]">Add New Book</h2>
+        <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center text-[#2c3e50]">
+          Add New Book
+        </h2>
         {error && (
-          <p className="text-red-500 text-center mb-4 text-sm sm:text-base">Error: {error}</p>
+          <p className="text-red-500 text-center mb-4 text-sm sm:text-base">
+            Error: {error}
+          </p>
         )}
         {success && (
-          <p className="text-[#1abc9c] text-center mb-4 text-sm sm:text-base">{success}</p>
+          <p className="text-[#1abc9c] text-center mb-4 text-sm sm:text-base">
+            {success}
+          </p>
         )}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="bid" className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2">
+            <label
+              htmlFor="bid"
+              className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2"
+            >
               Book ID
             </label>
             <input
@@ -96,7 +111,10 @@ const AddBook = () => {
             />
           </div>
           <div>
-            <label htmlFor="title" className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2">
+            <label
+              htmlFor="title"
+              className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2"
+            >
               Title
             </label>
             <input
@@ -111,7 +129,10 @@ const AddBook = () => {
             />
           </div>
           <div>
-            <label htmlFor="author" className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2">
+            <label
+              htmlFor="author"
+              className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2"
+            >
               Author
             </label>
             <input
@@ -126,7 +147,10 @@ const AddBook = () => {
             />
           </div>
           <div>
-            <label htmlFor="category" className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2">
+            <label
+              htmlFor="category"
+              className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2"
+            >
               Category
             </label>
             <input
@@ -141,7 +165,10 @@ const AddBook = () => {
             />
           </div>
           <div>
-            <label htmlFor="status" className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2">
+            <label
+              htmlFor="status"
+              className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2"
+            >
               Status
             </label>
             <select

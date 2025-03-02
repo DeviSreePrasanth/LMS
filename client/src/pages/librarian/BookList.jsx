@@ -1,30 +1,45 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { motion } from 'framer-motion';
-import { FaSearch } from 'react-icons/fa';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { motion } from "framer-motion";
+import { FaSearch } from "react-icons/fa";
 
 const BookList = () => {
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [error, setError] = useState(null);
   const [editingBook, setEditingBook] = useState(null);
-  const [editData, setEditData] = useState({ bid: '', title: '', author: '', category: '', status: '' });
+  const [editData, setEditData] = useState({
+    bid: "",
+    title: "",
+    author: "",
+    category: "",
+    status: "",
+  });
   const [currentPage, setCurrentPage] = useState(1);
-  const [filters, setFilters] = useState({ status: '', category: '', search: '' });
+  const [filters, setFilters] = useState({
+    status: "",
+    category: "",
+    search: "",
+  });
   const booksPerPage = 10;
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('https://lms-production-c635.up.railway.app/api/books', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+          "https://lms-o44p.onrender.com/api/books",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         const sortedBooks = response.data.sort((a, b) => a.bid - b.bid);
         setBooks(sortedBooks);
         setFilteredBooks(sortedBooks);
       } catch (err) {
-        setError(err.response?.data?.msg || err.message || 'Failed to fetch books');
+        setError(
+          err.response?.data?.msg || err.message || "Failed to fetch books"
+        );
       }
     };
 
@@ -38,7 +53,10 @@ const BookList = () => {
         result = result.filter((book) => book.status === filters.status);
       }
       if (filters.category) {
-        result = result.filter((book) => book.category.toLowerCase() === filters.category.toLowerCase());
+        result = result.filter(
+          (book) =>
+            book.category.toLowerCase() === filters.category.toLowerCase()
+        );
       }
       if (filters.search) {
         result = result.filter((book) =>
@@ -59,26 +77,33 @@ const BookList = () => {
 
   const handleDelete = async (bookId) => {
     if (!bookId) {
-      setError('Invalid book ID for deletion.');
+      setError("Invalid book ID for deletion.");
       return;
     }
 
-    const confirmDelete = window.confirm('Are you sure you want to delete this book?');
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this book?"
+    );
     if (!confirmDelete) return;
 
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.delete(`https://lms-production-c635.up.railway.app/api/books/${bookId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const token = localStorage.getItem("token");
+      const response = await axios.delete(
+        `https://lms-o44p.onrender.com/api/books/${bookId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       if (response.status !== 200) {
-        throw new Error('Failed to delete book');
+        throw new Error("Failed to delete book");
       }
 
       setBooks((prevBooks) => prevBooks.filter((book) => book._id !== bookId));
       setError(null);
     } catch (err) {
-      setError(err.response?.data?.msg || `Error deleting book: ${err.message}`);
+      setError(
+        err.response?.data?.msg || `Error deleting book: ${err.message}`
+      );
     }
   };
 
@@ -102,25 +127,25 @@ const BookList = () => {
     e.preventDefault();
 
     if (!editingBook || !editData) {
-      setError('Incomplete edit data.');
+      setError("Incomplete edit data.");
       return;
     }
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       const response = await axios.put(
-        `https://lms-production-c635.up.railway.app/api/books/${editingBook}`,
+        `https://lms-o44p.onrender.com/api/books/${editingBook}`,
         editData,
         {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         }
       );
 
       if (response.status !== 200) {
-        throw new Error('Failed to update book');
+        throw new Error("Failed to update book");
       }
 
       const updatedBook = response.data;
@@ -131,7 +156,9 @@ const BookList = () => {
       setEditData({});
       setError(null);
     } catch (err) {
-      setError(err.response?.data?.msg || `Error updating book: ${err.message}`);
+      setError(
+        err.response?.data?.msg || `Error updating book: ${err.message}`
+      );
     }
   };
 
@@ -148,14 +175,16 @@ const BookList = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
-  const uniqueCategories = [...new Set(books.map((book) => book.category.toLowerCase()))];
+  const uniqueCategories = [
+    ...new Set(books.map((book) => book.category.toLowerCase())),
+  ];
 
   const palette = {
-    primary: '#2c3e50',
-    accent: '#1abc9c',
-    muted: '#7f8c8d',
-    bg: '#f4f7fa',
-    headerBg: '#1f2937',
+    primary: "#2c3e50",
+    accent: "#1abc9c",
+    muted: "#7f8c8d",
+    bg: "#f4f7fa",
+    headerBg: "#1f2937",
   };
 
   return (
@@ -163,16 +192,23 @@ const BookList = () => {
       className="p-4 sm:p-6 bg-[#f4f7fa] min-h-screen"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.6, ease: 'easeInOut' }}
+      transition={{ duration: 0.6, ease: "easeInOut" }}
     >
       <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-center text-[#2c3e50]">
         Book List
       </h2>
-      {error && <p className="text-red-500 text-center mb-4 text-sm sm:text-base">Error: {error}</p>}
+      {error && (
+        <p className="text-red-500 text-center mb-4 text-sm sm:text-base">
+          Error: {error}
+        </p>
+      )}
 
       {/* Search Input */}
       <div className="mb-6 w-full max-w-md mx-auto relative">
-        <label htmlFor="search" className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2">
+        <label
+          htmlFor="search"
+          className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2"
+        >
           Search by Title
         </label>
         <div className="relative">
@@ -199,9 +235,15 @@ const BookList = () => {
             <table className="w-full border-collapse bg-white shadow-md rounded-lg">
               <thead className="bg-[#1f2937] text-white">
                 <tr>
-                  <th className="py-2 px-2 sm:px-4 text-left text-xs sm:text-sm">Book ID</th>
-                  <th className="py-2 px-2 sm:px-4 text-left text-xs sm:text-sm">Title</th>
-                  <th className="py-2 px-2 sm:px-4 text-left text-xs sm:text-sm">Author</th>
+                  <th className="py-2 px-2 sm:px-4 text-left text-xs sm:text-sm">
+                    Book ID
+                  </th>
+                  <th className="py-2 px-2 sm:px-4 text-left text-xs sm:text-sm">
+                    Title
+                  </th>
+                  <th className="py-2 px-2 sm:px-4 text-left text-xs sm:text-sm">
+                    Author
+                  </th>
                   <th className="py-2 px-2 sm:px-4 text-left text-xs sm:text-sm">
                     Category
                     <select
@@ -231,7 +273,9 @@ const BookList = () => {
                       <option value="issued">Issued</option>
                     </select>
                   </th>
-                  <th className="py-2 px-2 sm:px-4 text-center text-xs sm:text-sm">Actions</th>
+                  <th className="py-2 px-2 sm:px-4 text-center text-xs sm:text-sm">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -241,7 +285,10 @@ const BookList = () => {
                     className="hover:bg-gray-100 border-b border-gray-200 transition duration-300 ease-in-out"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: currentBooks.indexOf(book) * 0.1 }}
+                    transition={{
+                      duration: 0.3,
+                      delay: currentBooks.indexOf(book) * 0.1,
+                    }}
                   >
                     <td className="py-2 px-2 sm:px-4 text-[#2c3e50] text-xs sm:text-sm">
                       {editingBook === book._id ? (
@@ -310,7 +357,9 @@ const BookList = () => {
                       ) : (
                         <span
                           className={`${
-                            book.status === 'available' ? 'text-[#1abc9c]' : 'text-red-500'
+                            book.status === "available"
+                              ? "text-[#1abc9c]"
+                              : "text-red-500"
                           } font-semibold`}
                         >
                           {book.status}
@@ -371,8 +420,8 @@ const BookList = () => {
               disabled={currentPage === 1}
               className={`px-3 sm:px-4 py-1 sm:py-2 rounded-md text-white transition duration-200 text-xs sm:text-sm ${
                 currentPage === 1
-                  ? 'bg-[#7f8c8d] cursor-not-allowed'
-                  : 'bg-[#2c3e50] hover:bg-[#34495e]'
+                  ? "bg-[#7f8c8d] cursor-not-allowed"
+                  : "bg-[#2c3e50] hover:bg-[#34495e]"
               }`}
               whileHover={{ scale: currentPage === 1 ? 1 : 1.05 }}
               whileTap={{ scale: currentPage === 1 ? 1 : 0.95 }}
@@ -387,8 +436,8 @@ const BookList = () => {
               disabled={currentPage === totalPages}
               className={`px-3 sm:px-4 py-1 sm:py-2 rounded-md text-white transition duration-200 text-xs sm:text-sm ${
                 currentPage === totalPages
-                  ? 'bg-[#7f8c8d] cursor-not-allowed'
-                  : 'bg-[#2c3e50] hover:bg-[#34495e]'
+                  ? "bg-[#7f8c8d] cursor-not-allowed"
+                  : "bg-[#2c3e50] hover:bg-[#34495e]"
               }`}
               whileHover={{ scale: currentPage === totalPages ? 1 : 1.05 }}
               whileTap={{ scale: currentPage === totalPages ? 1 : 0.95 }}

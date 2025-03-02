@@ -1,17 +1,17 @@
-import React, { useState, useContext } from 'react';
-import axios from 'axios';
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../context/AuthContext';
+import React, { useState, useContext } from "react";
+import axios from "axios";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
 const AddStudent = ({ setActiveSection }) => {
   const { login } = useContext(AuthContext);
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    studentId: '',
-    password: '',
-    role: 'student',
+    name: "",
+    email: "",
+    studentId: "",
+    password: "",
+    role: "student",
   });
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -28,9 +28,18 @@ const AddStudent = ({ setActiveSection }) => {
     setSuccess(null);
 
     try {
-      const response = await axios.post('https://lms-production-c635.up.railway.app/api/auth/register', formData);
-      setSuccess('Student added successfully! Redirecting...');
-      setFormData({ name: '', email: '', studentId: '', password: '', role: 'student' });
+      const response = await axios.post(
+        "https://lms-o44p.onrender.com/api/auth/register",
+        formData
+      );
+      setSuccess("Student added successfully! Redirecting...");
+      setFormData({
+        name: "",
+        email: "",
+        studentId: "",
+        password: "",
+        role: "student",
+      });
 
       if (response.data.token) {
         login(response.data.token, {
@@ -41,20 +50,26 @@ const AddStudent = ({ setActiveSection }) => {
         });
       }
 
-      setTimeout(() => setActiveSection ? setActiveSection('students') : navigate('/students'), 1000);
+      setTimeout(
+        () =>
+          setActiveSection
+            ? setActiveSection("students")
+            : navigate("/students"),
+        1000
+      );
     } catch (err) {
-      console.error('Add Student Error:', err.response?.data || err.message);
-      setError(err.response?.data?.message || 'Failed to add student');
+      console.error("Add Student Error:", err.response?.data || err.message);
+      setError(err.response?.data?.message || "Failed to add student");
       setSuccess(null);
     }
   };
 
   const palette = {
-    primary: '#2c3e50',
-    accent: '#1abc9c',
-    muted: '#7f8c8d',
-    bg: '#f4f7fa',
-    headerBg: '#1f2937',
+    primary: "#2c3e50",
+    accent: "#1abc9c",
+    muted: "#7f8c8d",
+    bg: "#f4f7fa",
+    headerBg: "#1f2937",
   };
 
   return (
@@ -62,7 +77,7 @@ const AddStudent = ({ setActiveSection }) => {
       className="p-4 sm:p-6 bg-[#f4f7fa] min-h-screen"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: 'easeInOut' }}
+      transition={{ duration: 0.6, ease: "easeInOut" }}
     >
       <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md w-full max-w-md sm:max-w-lg mx-auto">
         <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center text-[#2c3e50]">
@@ -70,15 +85,22 @@ const AddStudent = ({ setActiveSection }) => {
         </h2>
 
         {error && (
-          <p className="text-red-500 text-center mb-4 text-sm sm:text-base">Error: {error}</p>
+          <p className="text-red-500 text-center mb-4 text-sm sm:text-base">
+            Error: {error}
+          </p>
         )}
         {success && (
-          <p className="text-[#1abc9c] text-center mb-4 text-sm sm:text-base">{success}</p>
+          <p className="text-[#1abc9c] text-center mb-4 text-sm sm:text-base">
+            {success}
+          </p>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="name" className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2">
+            <label
+              htmlFor="name"
+              className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2"
+            >
               Full Name
             </label>
             <input
@@ -93,7 +115,10 @@ const AddStudent = ({ setActiveSection }) => {
             />
           </div>
           <div>
-            <label htmlFor="email" className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2">
+            <label
+              htmlFor="email"
+              className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2"
+            >
               Email Address
             </label>
             <input
@@ -108,7 +133,10 @@ const AddStudent = ({ setActiveSection }) => {
             />
           </div>
           <div>
-            <label htmlFor="studentId" className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2">
+            <label
+              htmlFor="studentId"
+              className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2"
+            >
               Student ID
             </label>
             <input
@@ -123,7 +151,10 @@ const AddStudent = ({ setActiveSection }) => {
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2">
+            <label
+              htmlFor="password"
+              className="block text-[#7f8c8d] text-sm sm:text-base font-medium mb-2"
+            >
               Password
             </label>
             <input
