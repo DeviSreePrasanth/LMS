@@ -14,13 +14,28 @@ const app = express();
 // Connect to MongoDB
 connectDB();
 
-// Configure CORS for Vercel frontend only
+// Allowed origins list
+const allowedOrigins = [
+  'https://lms-ten-cyan.vercel.app',
+  'https://lms-1-zxtb.onrender.com'
+];
+
+// CORS Configuration
 app.use(cors({
-  origin: 'https://lms-ten-cyan.vercel.app', // Only allow Vercel origin
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed HTTP methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
-  credentials: true // Optional: for cookies or auth tokens
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 }));
+
+// Handle preflight requests
+app.options('*', cors());
 
 // Parse JSON bodies
 app.use(express.json());
@@ -31,10 +46,10 @@ app.use('/api/books', bookRoutes);
 app.use('/api', userRoutes);
 app.use('/api', loanRoutes);
 
-// Optional: Basic error handling
+// Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ message: 'Something went wrong!' });
+  res.status(500).json({ message: err.message || 'Something went wrong!' });
 });
 
 const PORT = process.env.PORT || 5000;
