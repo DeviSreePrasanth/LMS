@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 // Get all students (users with role 'student')
 const getAllStudents = async (req, res) => {
   try {
-    const students = await User.find({ role: 'student' }).select('-password'); // Exclude password
+    const students = await User.find({ role: 'student' }).select('-password'); // Include profileImage by default
     res.status(200).json(students);
   } catch (error) {
     console.error('Error fetching students:', error.message);
@@ -20,7 +20,7 @@ const getStudentById = async (req, res) => {
     if (!student) {
       return res.status(404).json({ message: 'Student not found' });
     }
-    const loans = await Loan.find({ studentId: student._id }).populate('studentId', 'name email studentId');
+    const loans = await Loan.find({ studentId: student._id }).populate('studentId', 'name email studentId profileImage');
     res.status(200).json({ ...student.toObject(), loanHistory: loans });
   } catch (error) {
     console.error('Error fetching student by ID:', error.message);
@@ -30,7 +30,7 @@ const getStudentById = async (req, res) => {
 
 // Get all loans (active and history) for a student by studentId (User._id)
 const getStudentLoans = async (req, res) => {
-  const { studentId } = req.query; // Expecting User._id
+  const { studentId } = req.query;
   try {
     if (!studentId) {
       return res.status(400).json({ message: 'studentId query parameter is required' });
@@ -39,7 +39,7 @@ const getStudentLoans = async (req, res) => {
     if (!student) {
       return res.status(404).json({ message: 'Student not found' });
     }
-    const loans = await Loan.find({ studentId }).populate('studentId', 'name email studentId');
+    const loans = await Loan.find({ studentId }).populate('studentId', 'name email studentId profileImage');
     res.status(200).json(loans);
   } catch (error) {
     console.error('Error fetching student loans:', error.message);
@@ -49,29 +49,27 @@ const getStudentLoans = async (req, res) => {
 
 // Add a new student (create a User with role 'student')
 const addStudent = async (req, res) => {
-  const { name, email, studentId, password } = req.body;
+  const { name, email, studentId, password, profileImage } = req.body; // Added profileImage
   try {
-    // Validate required fields
     if (!name || !email || !studentId || !password) {
       return res.status(400).json({ message: 'Name, email, studentId, and password are required' });
     }
 
-    // Check for existing user
     const existingStudent = await User.findOne({ $or: [{ email }, { studentId }] });
     if (existingStudent) {
       return res.status(400).json({ message: 'Student with this email or studentId already exists' });
     }
 
-    // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const newStudent = new User({
       name,
       email,
-      studentId, // Store the studentId field
+      studentId,
       password: hashedPassword,
-      role: 'student', // Force role to 'student'
+      role: 'student',
+      profileImage: profileImage || null, // Optional profileImage on creation
     });
     await newStudent.save();
 
@@ -81,6 +79,7 @@ const addStudent = async (req, res) => {
       email: newStudent.email,
       studentId: newStudent.studentId,
       role: newStudent.role,
+      profileImage: newStudent.profileImage,
     });
   } catch (error) {
     console.error('Error adding student:', error.message);
@@ -103,10 +102,31 @@ const getStudentByEmail = async (req, res) => {
   }
 };
 
+// New: Update student profile (e.g., profileImage)
+const updateStudentProfile = async (req, res) => {
+  const { email } = req.params;
+  const { profileImage } = req.body;
+  try {
+    const student = await User.findOneAndUpdate(
+      { email, role: 'student' },
+      { profileImage },
+      { new: true, runValidators: true }
+    ).select('-password');
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+    res.status(200).json(student);
+  } catch (error) {
+    console.error('Error updating student profile:', error.message);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 module.exports = {
   getAllStudents,
   getStudentById,
   getStudentLoans,
   addStudent,
   getStudentByEmail,
+  updateStudentProfile, // Export new function
 };

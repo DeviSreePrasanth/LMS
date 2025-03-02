@@ -6,6 +6,7 @@ const {
   getStudentLoans,
   addStudent,
   getStudentByEmail,
+  updateStudentProfile, // Import new function
 } = require('../controllers/userController');
 
 // Routes for students (users with role 'student')
@@ -14,5 +15,6 @@ router.get('/students/:id', getStudentById); // Get a single student by ID with 
 router.get('/loans', getStudentLoans); // Get loans for a student by studentId (User._id)
 router.post('/students', addStudent); // Add a new student
 router.get('/students/email/:email', getStudentByEmail); // Get student by email
+router.put('/students/email/:email', updateStudentProfile); // Update student profile (e.g., profileImage)
 
 module.exports = router;

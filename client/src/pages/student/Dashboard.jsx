@@ -75,38 +75,46 @@ const Sidebar = ({
   );
 };
 
-// Updated Header Component with Cloudinary
-const Header = ({ isOpen, setIsOpen, name }) => {
-  const [profileImage, setProfileImage] = useState(
-    localStorage.getItem("studentProfileImage") || "https://via.placeholder.com/40"
-  );
+// Updated Header Component
+const Header = ({ isOpen, setIsOpen, name, profileImage, setProfileImage }) => {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef(null);
+  const { user } = useContext(AuthContext);
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setIsUploading(true);
+    if (!file || !user) return;
 
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", "student_profile"); // Replace with your upload preset
-      formData.append("cloud_name", "your_cloud_name"); // Replace with your Cloud Name
+    setIsUploading(true);
 
-      try {
-        const response = await axios.post(
-          "https://api.cloudinary.com/v1_1/your_cloud_name/image/upload", // Replace with your Cloud Name
-          formData
-        );
-        const imageUrl = response.data.secure_url;
-        setProfileImage(imageUrl);
-        localStorage.setItem("studentProfileImage", imageUrl); // Store URL in localStorage
-      } catch (error) {
-        console.error("Error uploading image:", error);
-        alert("Failed to upload image. Please try again.");
-      } finally {
-        setIsUploading(false);
-      }
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "student_profile"); // Replace with your upload preset
+    formData.append("cloud_name", "your_cloud_name"); // Replace with your Cloud Name
+
+    try {
+      // Upload to Cloudinary
+      const cloudinaryResponse = await axios.post(
+        "https://api.cloudinary.com/v1_1/your_cloud_name/image/upload", // Replace with your Cloud Name
+        formData
+      );
+      const imageUrl = cloudinaryResponse.data.secure_url;
+
+      // Update backend with the new image URL
+      const token = localStorage.getItem("token");
+      await axios.put(
+        `https://lms-o44p.onrender.com/api/students/email/${user.email}`,
+        { profileImage: imageUrl },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      // Update local state
+      setProfileImage(imageUrl);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      alert("Failed to upload image. Please check your network or credentials.");
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -132,7 +140,7 @@ const Header = ({ isOpen, setIsOpen, name }) => {
             Welcome, {name || "Student"}
           </span>
           <motion.img
-            src={profileImage}
+            src={profileImage || "https://via.placeholder.com/40"}
             alt="Profile"
             className="w-10 h-10 sm:w-12 sm:h-12 rounded-full cursor-pointer border-2 border-[#34495e]"
             whileHover={{ scale: 1.1 }}
@@ -172,7 +180,7 @@ const StatsCard = ({ title, value, icon: Icon, color }) => (
   </motion.div>
 );
 
-// Updated StudentDashboard Component (unchanged except Header usage)
+// Updated StudentDashboard Component
 const StudentDashboard = () => {
   const {
     user,
@@ -183,16 +191,12 @@ const StudentDashboard = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [statsData, setStatsData] = useState([
     { title: "Total Books", value: "0", icon: FaBook, color: "text-[#1abc9c]" },
-    {
-      title: "My Loans",
-      value: "0",
-      icon: FaCalendar,
-      color: "text-[#16a085]",
-    },
+    { title: "My Loans", value: "0", icon: FaCalendar, color: "text-[#16a085]" },
     { title: "Overdue", value: "0", icon: FaClock, color: "text-[#e74c3c]" },
   ]);
   const [isOpen, setIsOpen] = useState(false);
   const [studentName, setStudentName] = useState("");
+  const [profileImage, setProfileImage] = useState(null); // New state for profile image
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(null);
   const navigate = useNavigate();
@@ -211,6 +215,7 @@ const StudentDashboard = () => {
 
         const config = { headers: { Authorization: `Bearer ${token}` } };
 
+        // Fetch student details including profile image
         const studentResponse = await axios.get(
           `https://lms-o44p.onrender.com/api/students/email/${user.email}`,
           config
@@ -219,8 +224,10 @@ const StudentDashboard = () => {
           throw new Error("Student not found");
         }
         setStudentName(studentResponse.data.name || user.email);
+        setProfileImage(studentResponse.data.profileImage || null); // Set profile image from backend
         const studentId = studentResponse.data._id;
 
+        // Fetch total books
         const booksResponse = await axios.get(
           "https://lms-o44p.onrender.com/api/books",
           config
@@ -229,43 +236,27 @@ const StudentDashboard = () => {
           ? booksResponse.data.length
           : 0;
 
+        // Fetch student's loans
         const loansResponse = await axios.get(
           `https://lms-o44p.onrender.com/api/loans?studentId=${studentId}`,
           config
         );
         const allLoans = loansResponse.data || [];
 
+        // Calculate active and overdue loans
         const activeLoans = allLoans.filter((loan) => !loan.returnDate).length;
         const overdueLoans = allLoans.filter(
           (loan) => !loan.returnDate && new Date(loan.dueDate) < new Date()
         ).length;
 
         setStatsData([
-          {
-            title: "Total Books",
-            value: totalBooks.toString(),
-            icon: FaBook,
-            color: "text-[#1abc9c]",
-          },
-          {
-            title: "My Loans",
-            value: activeLoans.toString(),
-            icon: FaCalendar,
-            color: "text-[#16a085]",
-          },
-          {
-            title: "Overdue",
-            value: overdueLoans.toString(),
-            icon: FaClock,
-            color: "text-[#e74c3c]",
-          },
+          { title: "Total Books", value: totalBooks.toString(), icon: FaBook, color: "text-[#1abc9c]" },
+          { title: "My Loans", value: activeLoans.toString(), icon: FaCalendar, color: "text-[#16a085]" },
+          { title: "Overdue", value: overdueLoans.toString(), icon: FaClock, color: "text-[#e74c3c]" },
         ]);
         setFetchError(null);
       } catch (err) {
-        console.error(
-          "Error fetching dashboard data:",
-          err.response?.data || err.message
-        );
+        console.error("Error fetching dashboard data:", err.response?.data || err.message);
         setFetchError(
           err.response?.status === 404
             ? "Student profile not found. Contact your librarian."
@@ -273,24 +264,9 @@ const StudentDashboard = () => {
         );
         setStudentName(user.email);
         setStatsData([
-          {
-            title: "Total Books",
-            value: "N/A",
-            icon: FaBook,
-            color: "text-[#1abc9c]",
-          },
-          {
-            title: "My Loans",
-            value: "0",
-            icon: FaCalendar,
-            color: "text-[#16a085]",
-          },
-          {
-            title: "Overdue",
-            value: "0",
-            icon: FaClock,
-            color: "text-[#e74c3c]",
-          },
+          { title: "Total Books", value: "N/A", icon: FaBook, color: "text-[#1abc9c]" },
+          { title: "My Loans", value: "0", icon: FaCalendar, color: "text-[#16a085]" },
+          { title: "Overdue", value: "0", icon: FaClock, color: "text-[#e74c3c]" },
         ]);
       } finally {
         setLoading(false);
@@ -302,7 +278,6 @@ const StudentDashboard = () => {
 
   const handleLogout = () => {
     logout();
-    localStorage.removeItem("studentProfileImage");
     navigate("/");
   };
 
@@ -357,7 +332,13 @@ const StudentDashboard = () => {
         setIsOpen={setIsOpen}
       />
       <div className="flex-1 w-full md:ml-[250px] pt-16 pl-0 md:pl-6">
-        <Header isOpen={isOpen} setIsOpen={setIsOpen} name={studentName} />
+        <Header
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          name={studentName}
+          profileImage={profileImage}
+          setProfileImage={setProfileImage}
+        />
         <br />
         {renderContent()}
       </div>
