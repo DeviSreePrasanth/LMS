@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { BiLogOut } from "react-icons/bi";
 import { FaBook, FaClock, FaCalendar, FaBars, FaTimes } from "react-icons/fa";
 
-// Sidebar Component
+// Sidebar Component (unchanged)
 const Sidebar = ({
   setActiveSection,
   activeSection,
@@ -75,24 +75,38 @@ const Sidebar = ({
   );
 };
 
-// Header Component (unchanged)
+// Updated Header Component with Cloudinary
 const Header = ({ isOpen, setIsOpen, name }) => {
   const [profileImage, setProfileImage] = useState(
-    localStorage.getItem("studentProfileImage") ||
-      "https://via.placeholder.com/40"
+    localStorage.getItem("studentProfileImage") || "https://via.placeholder.com/40"
   );
+  const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef(null);
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const imageData = reader.result;
-        setProfileImage(imageData);
-        localStorage.setItem("studentProfileImage", imageData);
-      };
-      reader.readAsDataURL(file);
+      setIsUploading(true);
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "student_profile"); // Replace with your upload preset
+      formData.append("cloud_name", "your_cloud_name"); // Replace with your Cloud Name
+
+      try {
+        const response = await axios.post(
+          "https://api.cloudinary.com/v1_1/your_cloud_name/image/upload", // Replace with your Cloud Name
+          formData
+        );
+        const imageUrl = response.data.secure_url;
+        setProfileImage(imageUrl);
+        localStorage.setItem("studentProfileImage", imageUrl); // Store URL in localStorage
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        alert("Failed to upload image. Please try again.");
+      } finally {
+        setIsUploading(false);
+      }
     }
   };
 
@@ -131,13 +145,16 @@ const Header = ({ isOpen, setIsOpen, name }) => {
             onChange={handleImageUpload}
             className="hidden"
           />
+          {isUploading && (
+            <span className="text-[#2c3e50] text-sm">Uploading...</span>
+          )}
         </div>
       </div>
     </motion.div>
   );
 };
 
-// StatsCard Component (updated with w-full)
+// StatsCard Component (unchanged)
 const StatsCard = ({ title, value, icon: Icon, color }) => (
   <motion.div
     className="bg-white p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1 w-full"
@@ -155,7 +172,7 @@ const StatsCard = ({ title, value, icon: Icon, color }) => (
   </motion.div>
 );
 
-// Updated StudentDashboard Component
+// Updated StudentDashboard Component (unchanged except Header usage)
 const StudentDashboard = () => {
   const {
     user,
@@ -194,7 +211,6 @@ const StudentDashboard = () => {
 
         const config = { headers: { Authorization: `Bearer ${token}` } };
 
-        // Fetch student details
         const studentResponse = await axios.get(
           `https://lms-o44p.onrender.com/api/students/email/${user.email}`,
           config
@@ -205,7 +221,6 @@ const StudentDashboard = () => {
         setStudentName(studentResponse.data.name || user.email);
         const studentId = studentResponse.data._id;
 
-        // Fetch total books
         const booksResponse = await axios.get(
           "https://lms-o44p.onrender.com/api/books",
           config
@@ -214,14 +229,12 @@ const StudentDashboard = () => {
           ? booksResponse.data.length
           : 0;
 
-        // Fetch student's loans
         const loansResponse = await axios.get(
           `https://lms-o44p.onrender.com/api/loans?studentId=${studentId}`,
           config
         );
         const allLoans = loansResponse.data || [];
 
-        // Calculate active and overdue loans
         const activeLoans = allLoans.filter((loan) => !loan.returnDate).length;
         const overdueLoans = allLoans.filter(
           (loan) => !loan.returnDate && new Date(loan.dueDate) < new Date()
@@ -258,7 +271,7 @@ const StudentDashboard = () => {
             ? "Student profile not found. Contact your librarian."
             : "Failed to load dashboard data. Please try refreshing."
         );
-        setStudentName(user.email); // Fallback to email
+        setStudentName(user.email);
         setStatsData([
           {
             title: "Total Books",
