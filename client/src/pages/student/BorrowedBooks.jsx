@@ -44,11 +44,14 @@ const BorrowedBooks = () => {
   }, [user]);
 
   const calculateFine = (dueDate) => {
-    const due = new Date(dueDate);
     const today = new Date();
-    if (due >= today) return 0;
-    const daysOverdue = Math.floor((today - due) / (1000 * 60 * 60 * 24));
-    return daysOverdue * 1; // $1 per day
+    const due = new Date(dueDate);
+    const overdueDays = Math.max(
+      0,
+      Math.floor((today - due) / (1000 * 60 * 60 * 24))
+    );
+    const finePerDay = 5; // $5 per day overdue
+    return overdueDays > 0 ? overdueDays * finePerDay : 0;
   };
 
   const palette = {
