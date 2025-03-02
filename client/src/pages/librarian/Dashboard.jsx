@@ -296,28 +296,46 @@ const BooksByCategory = ({ categories }) => {
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false,
+    maintainAspectRatio: false, // Allows custom sizing
+    aspectRatio: 1, // Maintains a 1:1 aspect ratio for the chart (circular shape)
     plugins: {
       legend: {
-        position: window.innerWidth < 768 ? "bottom" : "right", // Move legend to bottom on mobile
+        position: window.innerWidth < 768 ? "bottom" : "right", // Legend below on mobile, right on desktop
         labels: {
           font: {
-            size: window.innerWidth < 640 ? 12 : 14, // Smaller font on mobile
+            size: window.innerWidth < 640 ? 10 : window.innerWidth < 1024 ? 12 : 14, // Smaller font on mobile, medium on tablet, larger on desktop
             family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
           },
-          padding: window.innerWidth < 640 ? 10 : 20, // Reduced padding on mobile
+          padding: window.innerWidth < 640 ? 8 : window.innerWidth < 1024 ? 12 : 20, // Reduced padding on mobile, medium on tablet, larger on desktop
           usePointStyle: true,
           pointStyle: "circle",
-          boxWidth: window.innerWidth < 640 ? 8 : 10, // Smaller legend boxes on mobile
+          boxWidth: window.innerWidth < 640 ? 6 : window.innerWidth < 1024 ? 8 : 10, // Smaller legend boxes on mobile, medium on tablet, larger on desktop
           color: "#2c3e50",
+          generateLabels: (chart) => {
+            return chart.data.labels.map((label, index) => ({
+              text: label.length > 15 ? `${label.slice(0, 15)}...` : label, // Truncate long labels
+              fillStyle: chart.data.datasets[0].backgroundColor[index],
+              strokeStyle: "#ffffff",
+              lineWidth: 1,
+              hidden: chart.getDataVisibility(index) === false,
+              index: index,
+            }));
+          },
         },
       },
       tooltip: {
         backgroundColor: "rgba(44, 62, 80, 0.9)",
-        titleFont: { size: window.innerWidth < 640 ? 14 : 16, weight: "bold", color: "#ffffff" },
-        bodyFont: { size: window.innerWidth < 640 ? 12 : 14, color: "#ffffff" },
-        padding: window.innerWidth < 640 ? 8 : 12, // Smaller padding on mobile
-        cornerRadius: 8,
+        titleFont: {
+          size: window.innerWidth < 640 ? 12 : window.innerWidth < 1024 ? 14 : 16, // Smaller on mobile, medium on tablet, larger on desktop
+          weight: "bold",
+          color: "#ffffff",
+        },
+        bodyFont: {
+          size: window.innerWidth < 640 ? 10 : window.innerWidth < 1024 ? 12 : 14, // Smaller on mobile, medium on tablet, larger on desktop
+          color: "#ffffff",
+        },
+        padding: window.innerWidth < 640 ? 6 : window.innerWidth < 1024 ? 8 : 12, // Smaller padding on mobile, medium on tablet, larger on desktop
+        cornerRadius: 6,
         boxPadding: 4,
         callbacks: {
           label: (context) => `${context.label}: ${context.raw} books`,
@@ -329,6 +347,14 @@ const BooksByCategory = ({ categories }) => {
       animateRotate: true,
       duration: 1200,
       easing: "easeOutCubic",
+    },
+    layout: {
+      padding: {
+        top: 20,
+        bottom: 20,
+        left: 20,
+        right: 20,
+      },
     },
   };
 
@@ -343,7 +369,7 @@ const BooksByCategory = ({ categories }) => {
       <h3 className="text-lg sm:text-xl font-semibold text-[#2c3e50] mb-4 sm:mb-6 bg-gradient-to-r from-[#2c3e50] to-[#1abc9c] text-transparent bg-clip-text">
         Top 10 Categories
       </h3>
-      <div className="relative w-full h-64 sm:h-72 md:h-80 flex items-center justify-center">
+      <div className="relative w-full h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px] flex items-center justify-center">
         <motion.div
           className="absolute inset-0 bg-gradient-to-br from-[#f4f7fa] to-[#e6f0ff] rounded-full opacity-40"
           animate={{ scale: [1, 1.03, 1] }}
