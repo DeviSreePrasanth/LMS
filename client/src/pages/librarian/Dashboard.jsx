@@ -249,6 +249,7 @@ const TopBorrowedBooks = ({ books }) => (
 );
 
 // Updated BooksByCategory to show top 10 categories with enhanced CSS
+// Updated BooksByCategory with responsive Pie chart
 const BooksByCategory = ({ categories }) => {
   // Sort categories by count and take top 10
   const sortedCategories = Object.entries(categories)
@@ -298,24 +299,24 @@ const BooksByCategory = ({ categories }) => {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: "right",
+        position: window.innerWidth < 768 ? "bottom" : "right", // Move legend to bottom on mobile
         labels: {
           font: {
-            size: 14,
+            size: window.innerWidth < 640 ? 12 : 14, // Smaller font on mobile
             family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
           },
-          padding: 20,
+          padding: window.innerWidth < 640 ? 10 : 20, // Reduced padding on mobile
           usePointStyle: true,
           pointStyle: "circle",
-          boxWidth: 10,
+          boxWidth: window.innerWidth < 640 ? 8 : 10, // Smaller legend boxes on mobile
           color: "#2c3e50",
         },
       },
       tooltip: {
         backgroundColor: "rgba(44, 62, 80, 0.9)",
-        titleFont: { size: 16, weight: "bold", color: "#ffffff" },
-        bodyFont: { size: 14, color: "#ffffff" },
-        padding: 12,
+        titleFont: { size: window.innerWidth < 640 ? 14 : 16, weight: "bold", color: "#ffffff" },
+        bodyFont: { size: window.innerWidth < 640 ? 12 : 14, color: "#ffffff" },
+        padding: window.innerWidth < 640 ? 8 : 12, // Smaller padding on mobile
         cornerRadius: 8,
         boxPadding: 4,
         callbacks: {
@@ -333,16 +334,16 @@ const BooksByCategory = ({ categories }) => {
 
   return (
     <motion.div
-      className="bg-white p-6 rounded-xl mt-6 w-full max-w-3xl mx-auto border border-gray-200"
+      className="bg-white p-4 sm:p-6 rounded-xl mt-6 w-full max-w-3xl mx-auto border border-gray-200"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
       whileHover={{ scale: 1.02 }}
     >
-      <h3 className="text-xl font-semibold text-[#2c3e50] mb-6 bg-gradient-to-r from-[#2c3e50] to-[#1abc9c] text-transparent bg-clip-text">
+      <h3 className="text-lg sm:text-xl font-semibold text-[#2c3e50] mb-4 sm:mb-6 bg-gradient-to-r from-[#2c3e50] to-[#1abc9c] text-transparent bg-clip-text">
         Top 10 Categories
       </h3>
-      <div className="relative h-72 w-full flex items-center justify-center">
+      <div className="relative w-full h-64 sm:h-72 md:h-80 flex items-center justify-center">
         <motion.div
           className="absolute inset-0 bg-gradient-to-br from-[#f4f7fa] to-[#e6f0ff] rounded-full opacity-40"
           animate={{ scale: [1, 1.03, 1] }}
