@@ -511,7 +511,7 @@ const LibrarianDashboard = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("profileImage");
-    navigate("/");
+    navigate("/login");
   };
 
   const renderContent = () => {

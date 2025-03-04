@@ -2,13 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
-// Letter-by-letter animation component
-const animateLetters = (text, showAll) => {
+// Letter-by-letter animation component with optional spacing
+const animateLetters = (text, showAll, addSpacing = false) => {
   return text.split('').map((letter, index) => (
     <span
       key={index}
       className={`inline-block ${showAll ? 'opacity-100' : 'opacity-0'} animate-fadeIn`}
-      style={{ animationDelay: `${index * 100}ms` }}
+      style={{
+        animationDelay: `${index * 100}ms`,
+        marginRight: addSpacing && letter !== ' ' ? '4px' : '0px', // Add spacing between letters, not spaces
+      }}
     >
       {letter}
     </span>
@@ -26,7 +29,7 @@ const ArrivalIntro = () => {
 
     const redirectTimer = setTimeout(() => {
       navigate("/login");
-    }, 9000); // Redirect after 3 seconds
+    }, 3000); // Redirect after 3 seconds
 
     return () => {
       clearTimeout(timer);
@@ -48,17 +51,40 @@ const ArrivalIntro = () => {
   };
 
   return (
-    <div className="bg-black w-screen h-screen flex items-center justify-center relative overflow-hidden">
-      {/* Professional Background UI */}
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#1A1A1A] via-[#2C2C2C] to-[#1A1A1A]">
+      {/* Background UI combining Login and lines */}
       <div className="absolute inset-0">
-        {/* Subtle Gradient Overlay */}
+        {/* Animated background particles from Login */}
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute bg-[#00D4FF] rounded-full opacity-20"
+            style={{
+              width: Math.random() * 10 + 5,
+              height: Math.random() * 10 + 5,
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -50, 0],
+              opacity: [0.2, 0.5, 0.2],
+            }}
+            transition={{
+              duration: Math.random() * 5 + 5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+
+        {/* Glowing orb effect from Login */}
         <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-gray-800/20 to-gray-900/20"
-          animate={{ opacity: [0.2, 0.4, 0.2] }}
+          className="absolute top-[-200px] left-[-200px] w-[400px] h-[400px] bg-[#00D4FF] rounded-full blur-3xl opacity-20"
+          animate={{ opacity: [0.2, 0.3, 0.2] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         />
 
-        {/* Animated Lines for Professional Touch */}
+        {/* Animated Lines from previous ArrivalIntro */}
         <motion.div
           className="absolute top-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent"
           animate={{ x: [-1000, 1000] }}
@@ -72,7 +98,7 @@ const ArrivalIntro = () => {
       </div>
 
       {/* Text Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center text-center">
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen text-center">
         <motion.p
           className="text-yellow-400 text-6xl font-bold"
           style={{ fontFamily: "'Inter', sans-serif" }}
@@ -87,7 +113,7 @@ const ArrivalIntro = () => {
           className="text-cyan-300 text-xl mt-4 font-medium"
           style={{ fontFamily: "'Inter', sans-serif" }}
         >
-          {animateLetters('Library Management System', showAll)}
+          {animateLetters('Library Management System', showAll, true)}
         </p>
       </div>
 

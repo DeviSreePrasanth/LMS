@@ -320,7 +320,7 @@ const Register = () => {
             >
               Already have an account?{" "}
               <Link
-                to="/"
+                to="/login"
                 className="text-[#00D4FF] hover:text-[#FF007A] font-medium transition-all duration-200 relative group"
               >
                 Sign in

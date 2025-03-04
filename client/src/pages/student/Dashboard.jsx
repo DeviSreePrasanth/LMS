@@ -278,7 +278,7 @@ const StudentDashboard = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/");
+    navigate("/login");
   };
 
   const renderContent = () => {
