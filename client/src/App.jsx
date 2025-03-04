@@ -11,13 +11,15 @@ import StudentDashboard from './pages/student/Dashboard';
 import LibrarianDashboard from './pages/librarian/Dashboard';
 import { AuthProvider } from './context/AuthContext';
 import BorrowedBooks from './pages/student/BorrowedBooks';
+import ArrivalIntro from './pages/ArrivalIntro';
 
 const App = () => {
   return (
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<ArrivalIntro/>}/>
+          <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           {/* Librarian Routes */}
           <Route path="/librarian/dashboard" element={<LibrarianDashboard />} />

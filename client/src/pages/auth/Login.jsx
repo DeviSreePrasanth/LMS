@@ -131,21 +131,13 @@ const Login = () => {
         transition={{ duration: 1 }}
       >
         <motion.div
-          className="rounded-2xl shadow-2xl w-full max-w-4xl flex flex-col md:flex-row overflow-hidden border border-[#00D4FF]/50 md:bg-none bg-cover bg-center"
-          style={{
-            backgroundImage: `url(${lib})`,
-          }}
+          className="rounded-2xl shadow-2xl w-full max-w-4xl flex flex-col md:flex-row overflow-hidden border border-[#00D4FF]/50 md:bg-none"
           initial={{ scale: 0.8, rotate: -5 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ duration: 0.8, type: "spring" }}
         >
           {/* Left Half - Library Image with Wave Separator (Only in Desktop) */}
-          <motion.div
-            className="hidden md:block relative w-full md:w-1/2"
-            initial={{ opacity: 0, x: -100 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
+          <div className="hidden md:block relative w-full md:w-1/2">
             <img
               src={lib}
               alt="Library Interior"
@@ -175,12 +167,11 @@ const Login = () => {
                 />
               </svg>
             </div>
-          </motion.div>
+          </div>
 
-          {/* Form Section (Full Width on Mobile with Background Image, Solid Background on Desktop) */}
-          <div className="relative w-full p-8 md:p-8 md:w-1/2 md:bg-[#2C2C2C]/90 md:backdrop-blur-md">
-            {/* Gradient Overlay for Mobile Background Image */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A]/90 to-[#2C2C2C]/50 md:hidden" />
+          {/* Form Section (Full Width on Mobile without Background Image, Solid Background on Desktop) */}
+          <div className="relative w-full p-8 md:p-8 md:w-1/2 md:bg-[#2C2C2C]/90 md:backdrop-blur-md bg-[#2C2C2C]/90">
+            {/* Gradient Overlay removed for mobile */}
             <motion.h2
               className="relative text-3xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-[#00D4FF] to-[#FF007A] mb-6"
               initial={{ y: -50 }}
