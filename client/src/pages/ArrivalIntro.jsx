@@ -16,69 +16,76 @@ const animateLetters = (text, showAll) => {
 };
 
 const ArrivalIntro = () => {
-  const navigate = useNavigate();
   const [showAll, setShowAll] = useState(false);
+  const navigate = useNavigate();
 
-  // Automatically navigate to the login page after 5 seconds and show animation after 2 seconds
   useEffect(() => {
-    const showTimer = setTimeout(() => {
+    const timer = setTimeout(() => {
       setShowAll(true);
-    }, 2000); // Start animation after 2 seconds
+    }, 100); // Start animation almost immediately
 
     const redirectTimer = setTimeout(() => {
       navigate("/login");
-    }, 5000); // 5000ms = 5 seconds
+    }, 9000); // Redirect after 3 seconds
 
     return () => {
-      clearTimeout(showTimer);
+      clearTimeout(timer);
       clearTimeout(redirectTimer);
-    }; // Cleanup timers on component unmount
+    };
   }, [navigate]);
 
+  // Animation variants for text transition from left to right (for LMS only)
+  const textVariants = {
+    hidden: { opacity: 0, x: -100 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+      },
+    },
+  };
+
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#1A1A1A] via-[#2C2C2C] to-[#1A1A1A]">
-      {/* Animated background particles */}
+    <div className="bg-black w-screen h-screen flex items-center justify-center relative overflow-hidden">
+      {/* Professional Background UI */}
       <div className="absolute inset-0">
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute bg-[#00D4FF] rounded-full opacity-20"
-            style={{
-              width: Math.random() * 10 + 5,
-              height: Math.random() * 10 + 5,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, -50, 0],
-              opacity: [0.2, 0.5, 0.2],
-            }}
-            transition={{
-              duration: Math.random() * 5 + 5,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
+        {/* Subtle Gradient Overlay */}
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-r from-gray-800/20 to-gray-900/20"
+          animate={{ opacity: [0.2, 0.4, 0.2] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        />
+
+        {/* Animated Lines for Professional Touch */}
+        <motion.div
+          className="absolute top-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent"
+          animate={{ x: [-1000, 1000] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-yellow-500/50 to-transparent"
+          animate={{ x: [1000, -1000] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+        />
       </div>
 
-      {/* Glowing orb effect */}
-      <div className="absolute top-[-200px] left-[-200px] w-[400px] h-[400px] bg-[#00D4FF] rounded-full blur-3xl opacity-20 animate-pulse" />
-
-      {/* Intro Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
-        {/* LMS Text with Letter-by-Letter Animation */}
-        <h1
-          className="text-6xl md:text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#00D4FF] to-[#FF007A]"
-          style={{ textShadow: "0 0 10px #00D4FF, 0 0 20px #FF007A" }}
+      {/* Text Content */}
+      <div className="relative z-10 flex flex-col items-center justify-center text-center">
+        <motion.p
+          className="text-yellow-400 text-6xl font-bold"
+          style={{ fontFamily: "'Inter', sans-serif" }}
+          variants={textVariants}
+          initial="hidden"
+          animate={showAll ? "visible" : "hidden"}
         >
-          {animateLetters('LMS', showAll)}
-        </h1>
+          LMS
+        </motion.p>
 
-        {/* Library Management System Text with Letter-by-Letter Animation */}
         <p
-          className="text-xl md:text-2xl text-[#FFFFFF] mt-4"
-          style={{ textShadow: "0 0 5px #00D4FF" }}
+          className="text-cyan-300 text-xl mt-4 font-medium"
+          style={{ fontFamily: "'Inter', sans-serif" }}
         >
           {animateLetters('Library Management System', showAll)}
         </p>
