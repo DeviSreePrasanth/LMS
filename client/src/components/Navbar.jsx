@@ -1,10 +1,8 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
-
   return (
     <nav className="bg-blue-600 p-4">
       <div className="flex justify-between items-center">
@@ -15,8 +13,7 @@ const Navbar = () => {
               <span className="text-white mr-4">{user.name}</span>
               <button
                 onClick={logout}
-                className="bg-red-600 text-white px-4 py-2 rounded"
-              >
+                className="bg-red-600 text-white px-4 py-2 rounded">
                 Logout
               </button>
             </>
