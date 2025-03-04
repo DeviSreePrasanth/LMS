@@ -131,14 +131,17 @@ const Login = () => {
         transition={{ duration: 1 }}
       >
         <motion.div
-          className="bg-[#2C2C2C]/90 backdrop-blur-md rounded-2xl shadow-2xl w-full max-w-4xl flex flex-col md:flex-row overflow-hidden border border-[#00D4FF]/50"
+          className="rounded-2xl shadow-2xl w-full max-w-4xl flex flex-col md:flex-row overflow-hidden border border-[#00D4FF]/50 md:bg-none bg-cover bg-center"
+          style={{
+            backgroundImage: `url(${lib})`,
+          }}
           initial={{ scale: 0.8, rotate: -5 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ duration: 0.8, type: "spring" }}
         >
-          {/* Left Half - Library Image with Wave Separator */}
+          {/* Left Half - Library Image with Wave Separator (Only in Desktop) */}
           <motion.div
-            className="relative w-full md:w-1/2"
+            className="hidden md:block relative w-full md:w-1/2"
             initial={{ opacity: 0, x: -100 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -174,10 +177,12 @@ const Login = () => {
             </div>
           </motion.div>
 
-          {/* Right Half - Form */}
-          <div className="w-full md:w-1/2 p-8 relative">
+          {/* Form Section (Full Width on Mobile with Background Image, Solid Background on Desktop) */}
+          <div className="relative w-full p-8 md:p-8 md:w-1/2 md:bg-[#2C2C2C]/90 md:backdrop-blur-md">
+            {/* Gradient Overlay for Mobile Background Image */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A]/90 to-[#2C2C2C]/50 md:hidden" />
             <motion.h2
-              className="text-3xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-[#00D4FF] to-[#FF007A] mb-6"
+              className="relative text-3xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-[#00D4FF] to-[#FF007A] mb-6"
               initial={{ y: -50 }}
               animate={{ y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
@@ -188,7 +193,7 @@ const Login = () => {
             <AnimatePresence>
               {error && (
                 <motion.div
-                  className="bg-[#FF007A]/20 border-l-4 border-[#FF007A] text-[#FF007A] p-3 mb-4 rounded-r-lg"
+                  className="relative bg-[#FF007A]/20 border-l-4 border-[#FF007A] text-[#FF007A] p-3 mb-4 rounded-r-lg"
                   initial={{ x: 100, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   exit={{ x: -100, opacity: 0 }}
@@ -207,8 +212,8 @@ const Login = () => {
                 transition={{ delay: 0.2 }}
               >
                 <label
-                  className="block text-sm font-medium text-[#FFFFFF] mb-2"
-                  style={{ textShadow: "0 0 5px #00D4FF" }}
+                  className="relative block text-sm font-medium text-[#FFFFFF] mb-2"
+                  style={{ textShadow: "0 0 10px #00D4FF" }}
                 >
                   Email Address
                 </label>
@@ -217,7 +222,7 @@ const Login = () => {
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full p-3 bg-[#333333] border border-[#00D4FF] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00D4FF] focus:border-transparent transition-all duration-300 text-[#FFFFFF] hover:bg-[#444444]"
+                  className="relative w-full p-3 bg-[#333333] border border-[#00D4FF] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00D4FF] focus:border-transparent transition-all duration-300 text-[#FFFFFF] hover:bg-[#444444]"
                   placeholder="Enter your email"
                   required
                   disabled={isLoading}
@@ -231,8 +236,8 @@ const Login = () => {
                 transition={{ delay: 0.3 }}
               >
                 <label
-                  className="block text-sm font-medium text-[#FFFFFF] mb-2"
-                  style={{ textShadow: "0 0 5px #00D4FF" }}
+                  className="relative block text-sm font-medium text-[#FFFFFF] mb-2"
+                  style={{ textShadow: "0 0 10px #00D4FF" }}
                 >
                   Student ID (Students Only)
                 </label>
@@ -241,7 +246,7 @@ const Login = () => {
                   id="studentId"
                   value={studentId}
                   onChange={(e) => setStudentId(e.target.value)}
-                  className="w-full p-3 bg-[#333333] border border-[#00D4FF] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00D4FF] focus:border-transparent transition-all duration-300 text-[#FFFFFF] hover:bg-[#444444]"
+                  className="relative w-full p-3 bg-[#333333] border border-[#00D4FF] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00D4FF] focus:border-transparent transition-all duration-300 text-[#FFFFFF] hover:bg-[#444444]"
                   placeholder="Enter your student ID"
                   disabled={isLoading}
                 />
@@ -254,8 +259,8 @@ const Login = () => {
                 transition={{ delay: 0.4 }}
               >
                 <label
-                  className="block text-sm font-medium text-[#FFFFFF] mb-2"
-                  style={{ textShadow: "0 0 5px #00D4FF" }}
+                  className="relative block text-sm font-medium text-[#FFFFFF] mb-2"
+                  style={{ textShadow: "0 0 10px #00D4FF" }}
                 >
                   Password
                 </label>
@@ -264,7 +269,7 @@ const Login = () => {
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full p-3 bg-[#333333] border border-[#00D4FF] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00D4FF] focus:border-transparent transition-all duration-300 text-[#FFFFFF] hover:bg-[#444444]"
+                  className="relative w-full p-3 bg-[#333333] border border-[#00D4FF] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00D4FF] focus:border-transparent transition-all duration-300 text-[#FFFFFF] hover:bg-[#444444]"
                   placeholder="Enter your password"
                   required
                   disabled={isLoading}
@@ -273,7 +278,7 @@ const Login = () => {
 
               <button
                 type="submit"
-                className="w-full bg-[#00D4FF] text-[#FFFFFF] p-3 rounded-lg font-semibold flex items-center justify-center shadow-lg hover:bg-[#FF007A] transition-all duration-300"
+                className="relative w-full bg-[#00D4FF] text-[#FFFFFF] p-3 rounded-lg font-semibold flex items-center justify-center shadow-lg hover:bg-[#FF007A] transition-all duration-300"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -307,7 +312,7 @@ const Login = () => {
             </form>
 
             <motion.p
-              className="text-center text-[#FFFFFF] mt-4 text-sm"
+              className="relative text-center text-[#FFFFFF] mt-4 text-sm"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}

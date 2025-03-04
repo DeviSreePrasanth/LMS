@@ -106,9 +106,9 @@ const Register = () => {
           animate={{ scale: 1, rotate: 0 }}
           transition={{ duration: 0.8, type: "spring" }}
         >
-          {/* Left Half - Library Image with Wave Separator */}
+          {/* Left Half - Library Image with Wave Separator (Hidden on Mobile) */}
           <motion.div
-            className="relative w-full md:w-1/2"
+            className="hidden md:block relative w-full md:w-1/2"
             initial={{ opacity: 0, x: -100 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -144,8 +144,8 @@ const Register = () => {
             </div>
           </motion.div>
 
-          {/* Right Half - Form */}
-          <div className="w-full md:w-1/2 p-8 relative">
+          {/* Right Half - Form (Full Width on Mobile) */}
+          <div className="w-full p-8 relative">
             <motion.h2
               className="text-3xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-[#00D4FF] to-[#FF007A] mb-6"
               initial={{ y: -50 }}
@@ -189,7 +189,7 @@ const Register = () => {
               >
                 <label
                   className="block text-sm font-medium text-[#FFFFFF] mb-2"
-                  style={{ textShadow: "0 0 3px #00D4FF" }}
+                  style={{ textShadow: "0 0 10px #00D4FF" }}
                 >
                   Your Name
                 </label>
@@ -213,7 +213,7 @@ const Register = () => {
               >
                 <label
                   className="block text-sm font-medium text-[#FFFFFF] mb-2"
-                  style={{ textShadow: "0 0 3px #00D4FF" }}
+                  style={{ textShadow: "0 0 10px #00D4FF" }}
                 >
                   Email Address
                 </label>
@@ -237,7 +237,7 @@ const Register = () => {
               >
                 <label
                   className="block text-sm font-medium text-[#FFFFFF] mb-2"
-                  style={{ textShadow: "0 0 3px #00D4FF" }}
+                  style={{ textShadow: "0 0 10px #00D4FF" }}
                 >
                   Student ID
                 </label>
@@ -261,7 +261,7 @@ const Register = () => {
               >
                 <label
                   className="block text-sm font-medium text-[#FFFFFF] mb-2"
-                  style={{ textShadow: "0 0 3px #00D4FF" }}
+                  style={{ textShadow: "0 0 10px #00D4FF" }}
                 >
                   Password
                 </label>
