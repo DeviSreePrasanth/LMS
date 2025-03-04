@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
+import lib from './lib.jpg';
 
 // Function to decode JWT token (unchanged)
 const decodeToken = (token) => {
@@ -28,14 +29,14 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [studentId, setStudentId] = useState("");
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // New loading state
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
-    setIsLoading(true); // Start loading
-    
+    setIsLoading(true);
+
     try {
       const loginResponse = await axios.post(
         "https://lms-o44p.onrender.com/api/auth/login",
@@ -45,7 +46,7 @@ const Login = () => {
           studentId,
         }
       );
-      
+
       const { token, user } = loginResponse.data;
       if (!token || !user) {
         throw new Error("Invalid server response: missing token or user data");
@@ -67,7 +68,6 @@ const Login = () => {
         throw new Error("Student ID is required for students");
       }
 
-      // Success animation before navigation
       switch (user.role) {
         case "student":
           navigate("/student/dashboard");
@@ -84,184 +84,245 @@ const Login = () => {
         err.response?.data?.message || "Invalid credentials or server error"
       );
     } finally {
-      setIsLoading(false); // Stop loading
+      setIsLoading(false);
     }
   };
 
-  const palette = {
-    primary: "#2c3e50",
-    accent: "#1abc9c",
-    muted: "#7f8c8d",
-    bg: "#f4f7fa",
-    headerBg: "#1f2937",
-  };
-
-  // Button variants for animation
-  const buttonVariants = {
-    initial: { scale: 1 },
-    hover: { scale: 1.05 },
-    tap: { scale: 0.95 },
-    loading: { 
-      scale: [1, 1.05, 1],
-      transition: { 
-        repeat: Infinity,
-        duration: 0.8 
-      }
-    }
+  // Input animation variants
+  const inputVariants = {
+    initial: { y: 20, opacity: 0 },
+    animate: { y: 0, opacity: 1 },
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f4f7fa] px-4">
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#1A1A1A] via-[#2C2C2C] to-[#1A1A1A]">
+      {/* Animated background particles */}
+      <div className="absolute inset-0">
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute bg-[#00D4FF] rounded-full opacity-20"
+            style={{
+              width: Math.random() * 10 + 5,
+              height: Math.random() * 10 + 5,
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -50, 0],
+              opacity: [0.2, 0.5, 0.2],
+            }}
+            transition={{
+              duration: Math.random() * 5 + 5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Glowing orb effect */}
+      <div className="absolute top-[-200px] left-[-200px] w-[400px] h-[400px] bg-[#00D4FF] rounded-full blur-3xl opacity-20 animate-pulse" />
+
       <motion.div
-        className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md relative overflow-hidden"
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6, ease: "easeInOut" }}
+        className="relative z-10 flex items-center justify-center min-h-screen px-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
       >
-        {/* Login animation background */}
         <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-[#1abc9c] to-[#16a085] opacity-0"
-          initial={false}
-          animate={isLoading ? { opacity: 0.2 } : { opacity: 0 }}
-          transition={{ duration: 0.3 }}
-        />
-
-        <h2 className="text-3xl font-bold text-center text-[#2c3e50] mb-6 relative z-10">
-          Login
-        </h2>
-
-        <AnimatePresence>
-          {error && (
-            <motion.p
-              className="text-red-500 text-sm text-center mb-4 relative z-10"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-            >
-              {error}
-            </motion.p>
-          )}
-        </AnimatePresence>
-
-        <form onSubmit={handleLogin} className="space-y-6 relative z-10">
+          className="bg-[#2C2C2C]/90 backdrop-blur-md rounded-2xl shadow-2xl w-full max-w-4xl flex flex-col md:flex-row overflow-hidden border border-[#00D4FF]/50"
+          initial={{ scale: 0.8, rotate: -5 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ duration: 0.8, type: "spring" }}
+        >
+          {/* Left Half - Library Image with Wave Separator */}
           <motion.div
-            initial={{ x: -20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.1 }}
+            className="relative w-full md:w-1/2"
+            initial={{ opacity: 0, x: -100 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-[#7f8c8d] mb-2"
-            >
-              Email Address
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa]"
-              placeholder="Enter your email"
-              required
-              disabled={isLoading}
+            <img
+              src={lib}
+              alt="Library Interior"
+              className="w-full h-full object-cover"
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A]/70 to-transparent flex items-end p-6">
+              <motion.p
+                className="text-[#FFFFFF] text-lg font-semibold"
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.5, duration: 0.6 }}
+              >
+                Welcome Back to Your Library
+              </motion.p>
+            </div>
+            {/* Wave Separator */}
+            <div className="absolute bottom-0 md:bottom-auto md:right-0 w-full h-24 md:w-24 md:h-full">
+              <svg
+                className="w-full h-full md:rotate-90"
+                viewBox="0 0 1440 320"
+                preserveAspectRatio="none"
+              >
+                <path
+                  fill="#2C2C2C"
+                  fillOpacity="1"
+                  d="M0,224L48,213.3C96,203,192,181,288,176C384,171,480,181,576,197.3C672,213,768,235,864,229.3C960,224,1056,192,1152,181.3C1248,171,1344,181,1392,186.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+                />
+              </svg>
+            </div>
           </motion.div>
 
-          <motion.div
-            initial={{ x: -20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            <label
-              htmlFor="studentId"
-              className="block text-sm font-medium text-[#7f8c8d] mb-2"
+          {/* Right Half - Form */}
+          <div className="w-full md:w-1/2 p-8 relative">
+            <motion.h2
+              className="text-3xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-[#00D4FF] to-[#FF007A] mb-6"
+              initial={{ y: -50 }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
             >
-              Student ID (Students Only)
-            </label>
-            <input
-              type="text"
-              id="studentId"
-              value={studentId}
-              onChange={(e) => setStudentId(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa]"
-              placeholder="Enter your student ID"
-              disabled={isLoading}
-            />
-          </motion.div>
+              Sign In
+            </motion.h2>
 
-          <motion.div
-            initial={{ x: -20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-[#7f8c8d] mb-2"
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 text-[#2c3e50] bg-[#f4f7fa]"
-              placeholder="Enter your password"
-              required
-              disabled={isLoading}
-            />
-          </motion.div>
-
-          <motion.button
-            type="submit"
-            className="w-full bg-[#1abc9c] text-white p-3 rounded-md transition duration-300 ease-in-out font-semibold flex items-center justify-center"
-            variants={buttonVariants}
-            initial="initial"
-            whileHover={!isLoading && "hover"}
-            whileTap={!isLoading && "tap"}
-            animate={isLoading ? "loading" : "initial"}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <svg
-                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
+            <AnimatePresence>
+              {error && (
+                <motion.div
+                  className="bg-[#FF007A]/20 border-l-4 border-[#FF007A] text-[#FF007A] p-3 mb-4 rounded-r-lg"
+                  initial={{ x: 100, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -100, opacity: 0 }}
+                  transition={{ duration: 0.4 }}
                 >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  />
-                </svg>
-                Signing In...
-              </>
-            ) : (
-              "Sign In"
-            )}
-          </motion.button>
-        </form>
+                  <p>{error}</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-        <p className="text-center text-[#7f8c8d] mt-4 relative z-10">
-          Don’t have an account?{" "}
-          <Link
-            to="/register"
-            className="text-[#1abc9c] hover:text-[#16a085] font-semibold transition duration-200"
-          >
-            Register here
-          </Link>
-        </p>
+            <form onSubmit={handleLogin} className="space-y-5">
+              <motion.div
+                variants={inputVariants}
+                initial="initial"
+                animate="animate"
+                transition={{ delay: 0.2 }}
+              >
+                <label
+                  className="block text-sm font-medium text-[#FFFFFF] mb-2"
+                  style={{ textShadow: "0 0 5px #00D4FF" }}
+                >
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full p-3 bg-[#333333] border border-[#00D4FF] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00D4FF] focus:border-transparent transition-all duration-300 text-[#FFFFFF] hover:bg-[#444444]"
+                  placeholder="Enter your email"
+                  required
+                  disabled={isLoading}
+                />
+              </motion.div>
+
+              <motion.div
+                variants={inputVariants}
+                initial="initial"
+                animate="animate"
+                transition={{ delay: 0.3 }}
+              >
+                <label
+                  className="block text-sm font-medium text-[#FFFFFF] mb-2"
+                  style={{ textShadow: "0 0 5px #00D4FF" }}
+                >
+                  Student ID (Students Only)
+                </label>
+                <input
+                  type="text"
+                  id="studentId"
+                  value={studentId}
+                  onChange={(e) => setStudentId(e.target.value)}
+                  className="w-full p-3 bg-[#333333] border border-[#00D4FF] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00D4FF] focus:border-transparent transition-all duration-300 text-[#FFFFFF] hover:bg-[#444444]"
+                  placeholder="Enter your student ID"
+                  disabled={isLoading}
+                />
+              </motion.div>
+
+              <motion.div
+                variants={inputVariants}
+                initial="initial"
+                animate="animate"
+                transition={{ delay: 0.4 }}
+              >
+                <label
+                  className="block text-sm font-medium text-[#FFFFFF] mb-2"
+                  style={{ textShadow: "0 0 5px #00D4FF" }}
+                >
+                  Password
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full p-3 bg-[#333333] border border-[#00D4FF] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00D4FF] focus:border-transparent transition-all duration-300 text-[#FFFFFF] hover:bg-[#444444]"
+                  placeholder="Enter your password"
+                  required
+                  disabled={isLoading}
+                />
+              </motion.div>
+
+              <button
+                type="submit"
+                className="w-full bg-[#00D4FF] text-[#FFFFFF] p-3 rounded-lg font-semibold flex items-center justify-center shadow-lg hover:bg-[#FF007A] transition-all duration-300"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <svg
+                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-[#FFFFFF]"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      />
+                    </svg>
+                    Signing In...
+                  </>
+                ) : (
+                  "Sign In"
+                )}
+              </button>
+            </form>
+
+            <motion.p
+              className="text-center text-[#FFFFFF] mt-4 text-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+            >
+              Don’t have an account?{" "}
+              <Link
+                to="/register"
+                className="text-[#00D4FF] hover:text-[#FF007A] font-medium transition-all duration-200 relative group"
+              >
+                Register here
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#00D4FF] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
+              </Link>
+            </motion.p>
+          </div>
+        </motion.div>
       </motion.div>
     </div>
   );
