@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import libb from './libb.jpg'; // Using same image as Login
+import libb from './libb.jpg';
 
 const Register = () => {
   const { login } = useContext(AuthContext);
