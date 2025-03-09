@@ -103,8 +103,6 @@ const StudentBookList = () => {
           Error: {error}
         </p>
       )}
-
-      {/* Search Input */}
       <div className="mb-6 w-full max-w-md mx-auto relative">
         <label
           htmlFor="search"
@@ -129,7 +127,6 @@ const StudentBookList = () => {
       <div className="overflow-x-auto">
         <table className="min-w-full border-collapse bg-white shadow-md rounded-lg">
           {" "}
-          {/* Added rounded-lg */}
           <thead className="bg-[#1f2937] text-white">
             <tr>
               <th className="py-2 px-3 sm:px-4 text-left text-xs sm:text-sm">
