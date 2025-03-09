@@ -8,7 +8,6 @@ const BorrowedBooks = () => {
   const [studentData, setStudentData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   useEffect(() => {
     const fetchStudentData = async () => {
       if (!user || !user.email) {
@@ -16,7 +15,6 @@ const BorrowedBooks = () => {
         setLoading(false);
         return;
       }
-
       try {
         const token = localStorage.getItem('token');
         const studentResponse = await axios.get(`https://lms-o44p.onrender.com/api/students/email/${user.email}`, {
@@ -39,7 +37,6 @@ const BorrowedBooks = () => {
         setLoading(false);
       }
     };
-
     fetchStudentData();
   }, [user]);
 
@@ -50,7 +47,7 @@ const BorrowedBooks = () => {
       0,
       Math.floor((today - due) / (1000 * 60 * 60 * 24))
     );
-    const finePerDay = 5; // $5 per day overdue
+    const finePerDay = 5;
     return overdueDays > 0 ? overdueDays * finePerDay : 0;
   };
 
@@ -61,7 +58,6 @@ const BorrowedBooks = () => {
     muted: '#7f8c8d',
     bg: '#f4f7fa',
   };
-
   if (loading) {
     return (
       <div className="flex-1 p-4 sm:p-8">
@@ -77,7 +73,6 @@ const BorrowedBooks = () => {
       </div>
     );
   }
-
   if (error) {
     return (
       <div className="flex-1 p-4 sm:p-8">
@@ -93,7 +88,6 @@ const BorrowedBooks = () => {
       </div>
     );
   }
-
   return (
     <motion.div
       className="flex-1 p-4 sm:p-8"
