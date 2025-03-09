@@ -196,7 +196,7 @@ const StudentDashboard = () => {
   ]);
   const [isOpen, setIsOpen] = useState(false);
   const [studentName, setStudentName] = useState("");
-  const [profileImage, setProfileImage] = useState(null); // New state for profile image
+  const [profileImage, setProfileImage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(null);
   const navigate = useNavigate();
@@ -215,7 +215,6 @@ const StudentDashboard = () => {
 
         const config = { headers: { Authorization: `Bearer ${token}` } };
 
-        // Fetch student details including profile image
         const studentResponse = await axios.get(
           `https://lms-o44p.onrender.com/api/students/email/${user.email}`,
           config
@@ -224,10 +223,9 @@ const StudentDashboard = () => {
           throw new Error("Student not found");
         }
         setStudentName(studentResponse.data.name || user.email);
-        setProfileImage(studentResponse.data.profileImage || null); // Set profile image from backend
+        setProfileImage(studentResponse.data.profileImage || null); 
         const studentId = studentResponse.data._id;
 
-        // Fetch total books
         const booksResponse = await axios.get(
           "https://lms-o44p.onrender.com/api/books",
           config
