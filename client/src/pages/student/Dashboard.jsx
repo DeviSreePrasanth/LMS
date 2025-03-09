@@ -234,14 +234,12 @@ const StudentDashboard = () => {
           ? booksResponse.data.length
           : 0;
 
-        // Fetch student's loans
         const loansResponse = await axios.get(
           `https://lms-o44p.onrender.com/api/loans?studentId=${studentId}`,
           config
         );
         const allLoans = loansResponse.data || [];
 
-        // Calculate active and overdue loans
         const activeLoans = allLoans.filter((loan) => !loan.returnDate).length;
         const overdueLoans = allLoans.filter(
           (loan) => !loan.returnDate && new Date(loan.dueDate) < new Date()
