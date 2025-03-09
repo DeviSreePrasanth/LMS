@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
-// Letter-by-letter animation component with optional spacing
 const animateLetters = (text, showAll, addSpacing = false) => {
   return text.split('').map((letter, index) => (
     <span
@@ -10,7 +9,7 @@ const animateLetters = (text, showAll, addSpacing = false) => {
       className={`inline-block ${showAll ? 'opacity-100' : 'opacity-0'} animate-fadeIn`}
       style={{
         animationDelay: `${index * 100}ms`,
-        marginRight: addSpacing && letter !== ' ' ? '4px' : '0px', // Add spacing between letters, not spaces
+        marginRight: addSpacing && letter !== ' ' ? '4px' : '0px', 
       }}
     >
       {letter}
@@ -25,19 +24,17 @@ const ArrivalIntro = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowAll(true);
-    }, 100); // Start animation almost immediately
+    }, 100); 
 
     const redirectTimer = setTimeout(() => {
       navigate("/login");
-    }, 3000); // Redirect after 3 seconds
+    }, 3000); 
 
     return () => {
       clearTimeout(timer);
       clearTimeout(redirectTimer);
     };
   }, [navigate]);
-
-  // Animation variants for text transition from left to right (for LMS only)
   const textVariants = {
     hidden: { opacity: 0, x: -100 },
     visible: {
@@ -52,9 +49,7 @@ const ArrivalIntro = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#1A1A1A] via-[#2C2C2C] to-[#1A1A1A]">
-      {/* Background UI combining Login and lines */}
       <div className="absolute inset-0">
-        {/* Animated background particles from Login */}
         {[...Array(20)].map((_, i) => (
           <motion.div
             key={i}
@@ -77,14 +72,12 @@ const ArrivalIntro = () => {
           />
         ))}
 
-        {/* Glowing orb effect from Login */}
         <motion.div
           className="absolute top-[-200px] left-[-200px] w-[400px] h-[400px] bg-[#00D4FF] rounded-full blur-3xl opacity-20"
           animate={{ opacity: [0.2, 0.3, 0.2] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         />
 
-        {/* Animated Lines from previous ArrivalIntro */}
         <motion.div
           className="absolute top-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent"
           animate={{ x: [-1000, 1000] }}
@@ -97,7 +90,6 @@ const ArrivalIntro = () => {
         />
       </div>
 
-      {/* Text Content */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen text-center">
         <motion.p
           className="text-yellow-400 text-6xl font-bold"
@@ -116,8 +108,6 @@ const ArrivalIntro = () => {
           {animateLetters('Library Management System', showAll, true)}
         </p>
       </div>
-
-      {/* CSS Animation Definition */}
       <style jsx>{`
         @keyframes fadeIn {
           from {
