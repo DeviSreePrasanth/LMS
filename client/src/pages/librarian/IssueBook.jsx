@@ -15,7 +15,6 @@ const IssueBook = ({ setActiveSection }) => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -34,7 +33,6 @@ const IssueBook = ({ setActiveSection }) => {
     };
     fetchData();
   }, []);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
 
