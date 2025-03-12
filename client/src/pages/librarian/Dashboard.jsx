@@ -454,14 +454,12 @@ const LibrarianDashboard = () => {
           config
         );
         setTopBooks(topBooksResponse.data.slice(0, 5));
-
         const categoryData = booksResponse.data.reduce((acc, book) => {
           const category = book.category || "Uncategorized";
           acc[category] = (acc[category] || 0) + 1;
           return acc;
         }, {});
         setCategories(categoryData);
-
         setError(null);
       } catch (err) {
         console.error(
@@ -469,7 +467,6 @@ const LibrarianDashboard = () => {
           err.response?.data || err.message
         );
         setError("Failed to load dashboard data. Please try again later.");
-
         setRecentActivities([
           { action: "Book 'The Great Gatsby' issued", timestamp: new Date() },
           {
