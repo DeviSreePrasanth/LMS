@@ -357,7 +357,6 @@ const BooksByCategory = ({ categories }) => {
       },
     },
   };
-
   return (
     <motion.div
       className="bg-white p-4 sm:p-6 rounded-xl mt-6 w-full max-w-3xl mx-auto border border-gray-200"
@@ -380,8 +379,6 @@ const BooksByCategory = ({ categories }) => {
     </motion.div>
   );
 };
-
-// Updated LibrarianDashboard (minimal changes)
 const LibrarianDashboard = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [statsData, setStatsData] = useState([
@@ -396,7 +393,6 @@ const LibrarianDashboard = () => {
   const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
-
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
