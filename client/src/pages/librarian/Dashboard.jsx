@@ -410,7 +410,6 @@ const LibrarianDashboard = () => {
         const totalBooks = Array.isArray(booksResponse.data)
           ? booksResponse.data.length
           : booksResponse.data.books?.length || 0;
-
         const activeLoansResponse = await axios.get(
           "https://lms-o44p.onrender.com/api/loans/active",
           config
