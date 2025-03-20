@@ -423,7 +423,6 @@ const LibrarianDashboard = () => {
         const registeredMembers = Array.isArray(studentsResponse.data)
           ? studentsResponse.data.length
           : studentsResponse.data.students?.length || 0;
-
         setStatsData([
           { title: "Total Books", value: totalBooks.toString(), icon: FaBook },
           {
