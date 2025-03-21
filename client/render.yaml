@@ -1,10 +1,64 @@
-services:
-  - type: static
-    name: lms-frontend
-    env: static
-    buildCommand: npm install && npm run build
-    staticPublishPath: build
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
+redirects:
+  # ✅ API Rewrites
+  - source: /api/auth/login
+    destination: https://lms-o44p.onrender.com/auth/login
+    status: 200
+
+  - source: /api/auth/register
+    destination: https://lms-o44p.onrender.com/auth/register
+    status: 200
+
+  - source: /api/books
+    destination: https://lms-o44p.onrender.com/books
+    status: 200
+
+  - source: /api/books/:id
+    destination: https://lms-o44p.onrender.com/books/:id
+    status: 200
+
+  - source: /api/books/top-borrowed
+    destination: https://lms-o44p.onrender.com/books/top-borrowed
+    status: 200
+
+  - source: /api/loans
+    destination: https://lms-o44p.onrender.com/loans
+    status: 200
+
+  - source: /api/loans/active
+    destination: https://lms-o44p.onrender.com/loans/active
+    status: 200
+
+  - source: /api/loans/return/:id
+    destination: https://lms-o44p.onrender.com/loans/return/:id
+    status: 200
+
+  - source: /api/activities/recent
+    destination: https://lms-o44p.onrender.com/activities/recent
+    status: 200
+
+  - source: /api/students
+    destination: https://lms-o44p.onrender.com/students
+    status: 200
+
+  - source: /api/students/:id
+    destination: https://lms-o44p.onrender.com/students/:id
+    status: 200
+
+  - source: /api/students/email/:email
+    destination: https://lms-o44p.onrender.com/students/email/:email
+    status: 200
+
+  # ✅ Fix "Page Not Found" on Refresh (for React/Vue)
+  - source: /*
+    destination: /index.html
+    status: 200
+
+headers:
+  - source: /*
+    headers:
+      - key: Access-Control-Allow-Origin
+        value: "*"
+      - key: Access-Control-Allow-Methods
+        value: "GET, POST, PUT, DELETE, OPTIONS"
+      - key: Access-Control-Allow-Headers
+        value: "X-Requested-With, Content-Type, Accept"
