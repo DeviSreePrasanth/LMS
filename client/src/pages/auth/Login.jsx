@@ -24,18 +24,22 @@ const decodeToken = (token) => {
 };
 
 const Login = () => {
-  const { login } = useContext(AuthContext);
+  const { login, loading: authLoading, error: authError } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [studentId, setStudentId] = useState("");
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [localError, setLocalError] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
-    setIsLoading(true);
+    setLocalError("");
+
+    // Basic client-side validation
+    if (!email || !password) {
+      setLocalError("Email and password are required.");
+      return;
+    }
 
     try {
       const loginResponse = await axios.post(
@@ -43,11 +47,11 @@ const Login = () => {
         {
           email,
           password,
-          studentId,
+          studentId: studentId || undefined, // Only send if provided
         }
       );
 
-      const { token, user } = loginResponse.data;
+      const { token, refreshToken, user } = loginResponse.data;
       if (!token || !user) {
         throw new Error("Invalid server response: missing token or user data");
       }
@@ -62,14 +66,15 @@ const Login = () => {
         studentId: user.studentId || studentId,
       };
 
-      await login(token, userData);
+      // Pass refreshToken to AuthContext if provided by the backend
+      await login(token, userData, refreshToken || null);
 
-      if (user.role === "student" && !studentId) {
-        throw new Error("Student ID is required for students");
-      }
-
+      // Navigate based on role
       switch (user.role) {
         case "student":
+          if (!userData.studentId) {
+            throw new Error("Student ID is required for students.");
+          }
           navigate("/student/dashboard");
           break;
         case "librarian":
@@ -80,11 +85,9 @@ const Login = () => {
       }
     } catch (err) {
       console.error("Login error:", err.response?.data || err.message);
-      setError(
-        err.response?.data?.message || "Invalid credentials or server error"
+      setLocalError(
+        err.response?.data?.message || err.message || "Invalid credentials or server error"
       );
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -169,9 +172,8 @@ const Login = () => {
             </div>
           </div>
 
-          {/* Form Section (Full Width on Mobile without Background Image, Solid Background on Desktop) */}
+          {/* Form Section */}
           <div className="relative w-full p-8 md:p-8 md:w-1/2 md:bg-[#2C2C2C]/90 md:backdrop-blur-md bg-[#2C2C2C]/90">
-            {/* Gradient Overlay removed for mobile */}
             <motion.h2
               className="relative text-3xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-[#00D4FF] to-[#FF007A] mb-6"
               initial={{ y: -50 }}
@@ -182,7 +184,7 @@ const Login = () => {
             </motion.h2>
 
             <AnimatePresence>
-              {error && (
+              {(localError || authError) && (
                 <motion.div
                   className="relative bg-[#FF007A]/20 border-l-4 border-[#FF007A] text-[#FF007A] p-3 mb-4 rounded-r-lg"
                   initial={{ x: 100, opacity: 0 }}
@@ -190,7 +192,7 @@ const Login = () => {
                   exit={{ x: -100, opacity: 0 }}
                   transition={{ duration: 0.4 }}
                 >
-                  <p>{error}</p>
+                  <p>{localError || authError}</p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -216,7 +218,7 @@ const Login = () => {
                   className="relative w-full p-3 bg-[#333333] border border-[#00D4FF] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00D4FF] focus:border-transparent transition-all duration-300 text-[#FFFFFF] hover:bg-[#444444]"
                   placeholder="Enter your email"
                   required
-                  disabled={isLoading}
+                  disabled={authLoading}
                 />
               </motion.div>
 
@@ -230,7 +232,7 @@ const Login = () => {
                   className="relative block text-sm font-medium text-[#FFFFFF] mb-2"
                   style={{ textShadow: "0 0 10px #00D4FF" }}
                 >
-                  Student ID (Students Only)
+                  Student ID (Required for Students)
                 </label>
                 <input
                   type="text"
@@ -239,7 +241,7 @@ const Login = () => {
                   onChange={(e) => setStudentId(e.target.value)}
                   className="relative w-full p-3 bg-[#333333] border border-[#00D4FF] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00D4FF] focus:border-transparent transition-all duration-300 text-[#FFFFFF] hover:bg-[#444444]"
                   placeholder="Enter your student ID"
-                  disabled={isLoading}
+                  disabled={authLoading}
                 />
               </motion.div>
 
@@ -263,16 +265,16 @@ const Login = () => {
                   className="relative w-full p-3 bg-[#333333] border border-[#00D4FF] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00D4FF] focus:border-transparent transition-all duration-300 text-[#FFFFFF] hover:bg-[#444444]"
                   placeholder="Enter your password"
                   required
-                  disabled={isLoading}
+                  disabled={authLoading}
                 />
               </motion.div>
 
               <button
                 type="submit"
                 className="relative w-full bg-[#00D4FF] text-[#FFFFFF] p-3 rounded-lg font-semibold flex items-center justify-center shadow-lg hover:bg-[#FF007A] transition-all duration-300"
-                disabled={isLoading}
+                disabled={authLoading}
               >
-                {isLoading ? (
+                {authLoading ? (
                   <>
                     <svg
                       className="animate-spin -ml-1 mr-3 h-5 w-5 text-[#FFFFFF]"
