@@ -186,7 +186,6 @@ const BookList = () => {
     bg: "#f4f7fa",
     headerBg: "#1f2937",
   };
-
   return (
     <motion.div
       className="p-4 sm:p-6 bg-[#f4f7fa] min-h-screen"
