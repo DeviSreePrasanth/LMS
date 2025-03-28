@@ -6,7 +6,7 @@ const Students = () => {
   const [students, setStudents] = useState([]);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedStudent, setSelectedStudent] = useState(null); // For showing details
+  const [selectedStudent, setSelectedStudent] = useState(null);
   const studentsPerPage = 20;
 
   useEffect(() => {
@@ -37,10 +37,7 @@ const Students = () => {
 
   const indexOfLastStudent = currentPage * studentsPerPage;
   const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
-  const currentStudents = students.slice(
-    indexOfFirstStudent,
-    indexOfLastStudent
-  );
+  const currentStudents = students.slice(indexOfFirstStudent, indexOfLastStudent);
   const totalPages = Math.ceil(students.length / studentsPerPage);
 
   const handleNextPage = () => {
@@ -59,14 +56,20 @@ const Students = () => {
     setSelectedStudent(null);
   };
 
-  const calculateFine = (dueDate) => {
+  const calculateFine = (dueDate, returnDate) => {
+    // If the book is returned, fine calculation stops at returnDate
+    if (returnDate) {
+      const due = new Date(dueDate);
+      const returned = new Date(returnDate);
+      const overdueDays = Math.max(0, Math.floor((returned - due) / (1000 * 60 * 60 * 24)));
+      const finePerDay = 5; // $5 per day overdue
+      return overdueDays > 0 ? overdueDays * finePerDay : 0;
+    }
+    // If not returned, calculate fine up to today
     const today = new Date();
     const due = new Date(dueDate);
-    const overdueDays = Math.max(
-      0,
-      Math.floor((today - due) / (1000 * 60 * 60 * 24))
-    );
-    const finePerDay = 5; // Example: $5 per day overdue
+    const overdueDays = Math.max(0, Math.floor((today - due) / (1000 * 60 * 60 * 24)));
+    const finePerDay = 5; // $5 per day overdue
     return overdueDays > 0 ? overdueDays * finePerDay : 0;
   };
 
@@ -245,10 +248,9 @@ const Students = () => {
                       </thead>
                       <tbody>
                         {selectedStudent.borrowedBooks.map((book) => {
-                          const fine = calculateFine(book.dueDate);
+                          const fine = calculateFine(book.dueDate, book.returnDate);
                           const isOverdue =
-                            !book.returnDate &&
-                            new Date(book.dueDate) < new Date();
+                            !book.returnDate && new Date(book.dueDate) < new Date();
                           return (
                             <tr
                               key={book._id}
@@ -268,9 +270,13 @@ const Students = () => {
                               </td>
                               <td className="py-2 px-3 sm:px-4 text-xs sm:text-sm">
                                 {book.returnDate ? (
-                                  <span className="text-green-500">
-                                    Returned
-                                  </span>
+                                  fine > 0 ? (
+                                    <span className="text-green-600">
+                                      Returned with Fine Paid
+                                    </span>
+                                  ) : (
+                                    <span className="text-green-500">Returned</span>
+                                  )
                                 ) : isOverdue ? (
                                   <span className="text-red-500">Overdue</span>
                                 ) : (
@@ -278,7 +284,13 @@ const Students = () => {
                                 )}
                               </td>
                               <td className="py-2 px-3 sm:px-4 text-xs sm:text-sm">
-                                {fine > 0 ? `$${fine}` : "-"}
+                                {book.returnDate
+                                  ? fine > 0
+                                    ? `$${fine} (Paid)`
+                                    : "-"
+                                  : fine > 0
+                                  ? `$${fine}`
+                                  : "-"}
                               </td>
                             </tr>
                           );
