@@ -109,7 +109,7 @@ bid,title,author,category,status
 108,The Handmaid’s Tale,Margaret Atwood,Fiction,available
 109,The Name of the Wind,Patrick Rothfuss,Fantasy,available
 110,A Game of Thrones,George R.R. Martin,Fantasy,available
-111,The Lion, the Witch and the Wardrobe,C.S. Lewis,Fantasy,available
+111,The Lion, the Witch and the Wardrobe,Fantasy,available
 112,The Diary of a Young Girl,Anne Frank,Autobiography,available
 113,Becoming,Michelle Obama,Autobiography,available
 114,Born a Crime,Trevor Noah,Autobiography,available
@@ -120,3 +120,83 @@ bid,title,author,category,status
 119,Einstein: His Life and Universe,Walter Isaacson,Biography,available
 120,The Wright Brothers,David McCullough,Biography,available
 121,Titan: The Life of John D. Rockefeller Sr.,Ron Chernow,Biography,available
+122,The Sun Also Rises,Ernest Hemingway,Fiction,available
+123,One Flew Over the Cuckoo’s Nest,Ken Kesey,Fiction,available
+124,Slaughterhouse-Five,Kurt Vonnegut,Fiction,available
+125,The Grapes of Wrath,John Steinbeck,Fiction,available
+126,Of Mice and Men,John Steinbeck,Fiction,available
+127,Catch-22,Joseph Heller,Fiction,available
+128,The Bell Jar,Sylvia Plath,Fiction,available
+129,Beloved,Toni Morrison,Fiction,available
+130,The Color Purple,Alice Walker,Fiction,available
+131,Their Eyes Were Watching God,Zora Neale Hurston,Fiction,available
+132,A Short History of Nearly Everything,Bill Bryson,Science,available
+133,Cosmos,Carl Sagan,Science,available
+134,The Gene: An Intimate History,Siddhartha Mukherjee,Science,available
+135,The Immortal Life of Henrietta Lacks,Rebecca Skloot,Science,available
+136,Gödel Escher, Bach Douglas Hofstadter,Science,available
+137,The History of the Ancient World,Susan Wise Bauer,History,available
+138,The Silk Roads,Peter Frankopan,History,available
+139,SPQR,Mary Beard,History,available
+140,The Guns of August,Barbara W. Tuchman,History,available
+141,Postwar: A History of Europe Since 1945,Tony Judt,History,available
+142,The Prince,Niccolò Machiavelli,Philosophy,available
+143,Thus Spoke Zarathustra,Friedrich Nietzsche,Philosophy,available
+144,Beyond Good and Evil,Friedrich Nietzsche,Philosophy,available
+145,The Social Contract,Jean-Jacques Rousseau,Philosophy,available
+146,Leviathan,Thomas Hobbes,Philosophy,available
+147,The 48 Laws of Power,Robert Greene,Personal Development,available
+148,Deep Work,Cal Newport,Personal Development,available
+149,The War of Art,Steven Pressfield,Personal Development,available
+150,The Power of Now,Eckhart Tolle,Spirituality,available
+151,Siddhartha,Hermann Hesse,Spirituality,available
+152,The Old Man and the Sea,Ernest Hemingway,Fiction,available
+153,Animal Farm,George Orwell,Fiction,available
+154,Fahrenheit 451,Ray Bradbury,Fiction,available
+155,The Giver,Lois Lowry,Fiction,available
+156,The Outsiders,S.E. Hinton,Fiction,available
+157,A Song of Ice and Fire: A Clash of Kings,George R.R. Martin,Fantasy,available
+158,The Eye of the World,Robert Jordan,Fantasy,available
+159,Mistborn: The Final Empire,Brandon Sanderson,Fantasy,available
+160,The Way of Kings,Brandon Sanderson,Fantasy,available
+161,The Night Circus,Erin Morgenstern,Fantasy,available
+162,Outliers,Malcolm Gladwell,Psychology,available
+163,The Tipping Point,Malcolm Gladwell,Psychology,available
+164,Influence: The Psychology of Persuasion,Robert B. Cialdini,Psychology,available
+165,Predictably Irrational,Dan Ariely,Psychology,available
+166,Man and His Symbols,Carl Gustav Jung,Psychology,available
+167,The Life of Leonardo da Vinci,Walter Isaacson,Biography,available
+168,Team of Rivals,Doris Kearns Goodwin,Biography,available
+169,The Autobiography of Benjamin Franklin,Benjamin Franklin,Autobiography,available
+170,Night,Elie Wiesel,Autobiography,available
+171,The Story of My Life,Helen Keller,Autobiography,available
+172,The Jungle,Upton Sinclair,Fiction,available
+173,Invisible Man,Ralph Ellison,Fiction,available
+174,Things Fall Apart,Chinua Achebe,Fiction,available
+175,One Hundred Years of Solitude,Gabriel García Márquez,Fiction,available
+176,Love in the Time of Cholera,Gabriel García Márquez,Fiction,available
+177,The Communist Manifesto,Karl Marx and Friedrich Engels,Philosophy,available
+178,Discourse on Method,René Descartes,Philosophy,available
+179,The Myth of Sisyphus,Albert Camus,Philosophy,available
+180,On Liberty,John Stuart Mill,Philosophy,available
+181,The Road to Serfdom,Friedrich Hayek,Economics,available
+182,The General Theory of Employment,John Maynard Keynes,Economics,available
+183,Misbehaving: The Making of Behavioral Economics,Richard H. Thaler,Economics,available
+184,Debt: The First 5,000 Years,David Graeber,Economics,available
+185,Zero to One,Peter Thiel,Business,available
+186,Start with Why,Simon Sinek,Business,available
+187,The Innovator’s Dilemma,Clayton M. Christensen,Business,available
+188,Built to Last,Jim Collins,Management,available
+189,The Design of Everyday Things,Don Norman,Design,available
+190,Don’t Make Me Think,Steve Krug,Design,available
+191,Harry Potter and the Sorcerer’s Stone,J.K. Rowling,Fantasy,available
+192,Harry Potter and the Chamber of Secrets,J.K. Rowling,Fantasy,available
+193,Harry Potter and the Prisoner of Azkaban,J.K. Rowling,Fantasy,available
+194,Harry Potter and the Goblet of Fire,J.K. Rowling,Fantasy,available
+195,Harry Potter and the Order of the Phoenix,J.K. Rowling,Fantasy,available
+196,Harry Potter and the Half-Blood Prince,J.K. Rowling,Fantasy,available
+197,Harry Potter and the Deathly Hallows,J.K. Rowling,Fantasy,available
+198,The Fellowship of the Ring,J.R.R. Tolkien,Fantasy,available
+199,The Two Towers,J.R.R. Tolkien,Fantasy,available
+200,The Return of the King,J.R.R. Tolkien,Fantasy,available
+201,The Screwtape Letters,C.S. Lewis,Fiction,available
