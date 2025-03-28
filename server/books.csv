@@ -1,17 +1,17 @@
 bid,title,author,category,status
-1,Steve Jobs,Walter Issacson,Biography,issued
-2,Discovery of India,Jawaharlal Nehru,History,issued
-3,My Experiments with Truth,Mahatma Gandhi,Autobiography,issued
-4,Object Oriented Programming with C++,E Balagurusamy,Education,issued
-5,Thinking with type,Ellen Lupton,Arts,issued
-6,The Photographer's,Lindsay Adler,Photography,issued
-7,Think and Grow,Napoleon Hill,Economics,issued
-8,The Fifth Discipline : The Art,Peter M.Senge,Management,issued
-9,A Theory of Justice,John Rawls,Law,issued
-10,Eat to Live,Joel Fuhrman,Health,issued
+1,Steve Jobs,Walter Issacson,Biography,available
+2,Discovery of India,Jawaharlal Nehru,History,available
+3,My Experiments with Truth,Mahatma Gandhi,Autobiography,available
+4,Object Oriented Programming with C++,E Balagurusamy,Education,available
+5,Thinking with type,Ellen Lupton,Arts,available
+6,The Photographer's,Lindsay Adler,Photography,available
+7,Think and Grow,Napoleon Hill,Economics,available
+8,The Fifth Discipline : The Art,Peter M.Senge,Management,available
+9,A Theory of Justice,John Rawls,Law,available
+10,Eat to Live,Joel Fuhrman,Health,available
 11,City of Heavenly Fire,Cassandra Clare,Fiction,available
 12,Da Vinci Code,Dan Brown,Fiction,available
-13,War and Peace,Leo Tolstoy,Philosophical fiction,issued
+13,War and Peace,Leo Tolstoy,Philosophical fiction,available
 14,Python For All,John Shovic,Education,available
 15,Automate The Boring Stuff With Python,Al Sweigart,Education,available
 16,Wings Of Fire,APJ Abdul Kalam,Autobiography,available
@@ -19,18 +19,18 @@ bid,title,author,category,status
 18,Who Will Cry When You Will Die,Robin Sharma,Personal Development,available
 19,Rich Dad Poor Dad,Robert T. Kiyosaki,Business,available
 20,Immortals of Meluha,Amish Tirpathi,High Fantasy,available
-21,A Brief History Of Time,Stephen Hawking,SPACE,issued
+21,A Brief History Of Time,Stephen Hawking,SPACE,available
 22,I Know Why The Cage Bird Sings,Maya Anguelo,Story,available
-23,Lord Of Files,William Golding,Fiction,issued
-24,Loara Dune,R. D Blackmore,Fiction,issued
-25,Jamacia Inn,Daphne,Fiction,issued
+23,Lord Of Files,William Golding,Fiction,available
+24,Loara Dune,R. D Blackmore,Fiction,available
+25,Jamacia Inn,Daphne,Fiction,available
 26,Kidnapped,Robert Louis,Fiction,available
 27,Treasure Island,Robert Louis,Fiction,available
 28,The Call Of Wild,Jack London,Fiction,available
 29,Charlottes Web,E. B White,Fiction,available
 30,The Wind In Willows,Kenneth Grahame,Fiction,available
 31,Being and Time,Martin Heldegger,Philosophy,available
-32,The Republic,Rocha Pereia,Philosophy,issued
+32,The Republic,Rocha Pereia,Philosophy,available
 33,Critique For Pure Reason,Paul Guyer,Philosophy,available
 34,The Prince,Rufus Godwin,Philosophy,available
 35,Ethics,Stuart Hampshire,Philosophy,available
@@ -38,19 +38,19 @@ bid,title,author,category,status
 37,The Dairy Of Young Girl,Anne Frank,Autobiography,available
 38,Mark Twain,Mark Twain,Autobiography,available
 39,Mein Kampf,Adolf Hitler,Autobiography,available
-40,Freakonomics,Steveb D.Levit,Economics,issued
+40,Freakonomics,Steveb D.Levit,Economics,available
 41,Thinking Fast and Slow,Daniel Kahneman,Economics,available
 42,Tell You About Capitalism,HA-Joon Chang,Economics,available
 43,Animal Spirits,Akerlof and Shiller,Economics,available
-44,The Black Swan,Nassim Nicholas Taleb,Economics,issued
+44,The Black Swan,Nassim Nicholas Taleb,Economics,available
 45,1984,George Orwell,Story,available
-46,The Lord Of Wings ,J.R.R.Tolken,Story,issued
+46,The Lord Of Wings ,J.R.R.Tolken,Story,available
 47,Kite Runner,Khaled Hosseini,Story,available
 48,Harry Potter,J.K.Rowling,Story,available
 49,The Book Theif,Markus Zusak,Story,available
 50,History Of 20th Century,Martin Gilbert,History,available
-51,"Guns,Germs,and Steel",Jared Daimond,History,issued
-52,A World lit Only by Fire,William Manchestar,History,issued
+51,"Guns,Germs,and Steel",Jared Daimond,History,available
+52,A World lit Only by Fire,William Manchestar,History,available
 53,The Crusades ,Thomas Asbridge,History,available
 54,Over The Edge Of The World,Laurence,History,available
 55,A Beautiful Mind ,Sylvia Nasar,Biography,available
@@ -58,5 +58,65 @@ bid,title,author,category,status
 57,Alexander Hamilton,Ron Chernow,Biography,available
 58,Barracoon,Zora Neale Hurston,Biography,available
 59,CHURCHILL : A Life,MArtin Glibert,Biography,available
-60,A Tale of Two Cities,Charles Dickens,Historical novel,issued
+60,A Tale of Two Cities,Charles Dickens,Historical novel,available
 61,Les Misérables,Victor Hugo,Historical fiction,available
+62,The Great Gatsby,F. Scott Fitzgerald,Fiction,available
+63,To Kill a Mockingbird,Harper Lee,Fiction,available
+64,Pride and Prejudice,Jane Austen,Fiction,available
+65,The Catcher in the Rye,J.D. Salinger,Fiction,available
+66,Brave New World,Aldous Huxley,Fiction,available
+67,The Hobbit,J.R.R. Tolkien,Fantasy,available
+68,The Alchemist,Paulo Coelho,Fiction,available
+69,The Road,Cormac McCarthy,Fiction,available
+70,Moby-Dick,Herman Melville,Fiction,available
+71,Crime and Punishment,Fyodor Dostoevsky,Fiction,available
+72,Sapiens: A Brief History of Humankind,Yuval Noah Harari,History,available
+73,The Second World War,Winston Churchill,History,available
+74,The Rise and Fall of the Third Reich,William L. Shirer,History,available
+75,The Art of War,Sun Tzu,Philosophy,available
+76,Man’s Search for Meaning,Viktor E. Frankl,Philosophy,available
+77,The Wealth of Nations,Adam Smith,Economics,available
+78,Capital in the Twenty-First Century,Thomas Piketty,Economics,available
+79,The Intelligent Investor,Benjamin Graham,Business,available
+80,Good to Great,Jim Collins,Management,available
+81,The Lean Startup,Eric Ries,Business,available
+82,The Power of Habit,Charles Duhigg,Personal Development,available
+83,Atomic Habits,James Clear,Personal Development,available
+84,Meditations,Marcus Aurelius,Philosophy,available
+85,The Stranger,Albert Camus,Fiction,available
+86,The Brothers Karamazov,Fyodor Dostoevsky,Fiction,available
+87,The Odyssey,Homer,Epic Poetry,available
+88,The Iliad,Homer,Epic Poetry,available
+89,The Divine Comedy,Dante Alighieri,Epic Poetry,available
+90,Beowulf,Unknown,Poetry,available
+91,The Origin of Species,Charles Darwin,Science,available
+92,The Selfish Gene,Richard Dawkins,Science,available
+93,The Double Helix,James D. Watson,Science,available
+94,The Structure of Scientific Revolutions,Thomas S. Kuhn,Science,available
+95,The Elements of Style,William Strunk Jr.,Education,available
+96,How to Win Friends and Influence People,Dale Carnegie,Personal Development,available
+97,The 7 Habits of Highly Effective People,Stephen R. Covey,Personal Development,available
+98,The Subtle Art of Not Giving a F*ck,Mark Manson,Personal Development,available
+99,The Four Agreements,Don Miguel Ruiz,Spirituality,available
+100,The Bhagavad Gita,Unknown,Spirituality,available
+101,The Tao Te Ching,Lao Tzu,Philosophy,available
+102,Zen and the Art of Motorcycle Maintenance,Robert M. Pirsig,Philosophy,available
+103,Dune,Frank Herbert,Science Fiction,available
+104,Foundation,Isaac Asimov,Science Fiction,available
+105,Neuromancer,William Gibson,Science Fiction,available
+106,The Martian,Andy Weir,Science Fiction,available
+107,Ender’s Game,Orson Scott Card,Science Fiction,available
+108,The Handmaid’s Tale,Margaret Atwood,Fiction,available
+109,The Name of the Wind,Patrick Rothfuss,Fantasy,available
+110,A Game of Thrones,George R.R. Martin,Fantasy,available
+111,The Lion, the Witch and the Wardrobe,C.S. Lewis,Fantasy,available
+112,The Diary of a Young Girl,Anne Frank,Autobiography,available
+113,Becoming,Michelle Obama,Autobiography,available
+114,Born a Crime,Trevor Noah,Autobiography,available
+115,Educated,Tara Westover,Autobiography,available
+116,The Autobiography of Malcolm X,Malcolm X,Autobiography,available
+117,The Glass Castle,Jeannette Walls,Autobiography,available
+118,Steve Jobs,Walter Isaacson,Biography,available
+119,Einstein: His Life and Universe,Walter Isaacson,Biography,available
+120,The Wright Brothers,David McCullough,Biography,available
+121,Titan: The Life of John D. Rockefeller Sr.,Ron Chernow,Biography,available
