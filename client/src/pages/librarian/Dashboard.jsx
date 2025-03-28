@@ -27,7 +27,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 // Register ChartJS components
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-// Sidebar, Header, StatsCard, RecentActivity, and TopBorrowedBooks remain unchanged
+// Sidebar, Header, StatsCard, TopBorrowedBooks, and BooksByCategory remain unchanged
 const Sidebar = ({
   setActiveSection,
   activeSection,
@@ -186,33 +186,35 @@ const RecentActivity = ({ activities }) => (
       Recent Activity
     </h3>
     <ul className="space-y-4 max-h-64 overflow-y-auto">
-      {activities.slice(0, 3).map(
-        (
-          activity,
-          index // Changed from slice(0, 5) to slice(0, 3)
-        ) => (
-          <motion.li
-            key={index}
-            className="flex items-center gap-3 p-3 bg-[#f4f7fa] rounded-md hover:bg-[#e0e7ff] transition-all duration-300"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3, delay: index * 0.1 }}
-          >
-            <FaClock className="text-[#1abc9c] text-lg" />
-            <div>
-              <p className="text-sm text-[#2c3e50] font-medium">
-                {activity.action}
-              </p>
+      {activities.slice(0, 3).map((activity, index) => (
+        <motion.li
+          key={index}
+          className="flex items-center gap-3 p-3 bg-[#f4f7fa] rounded-md hover:bg-[#e0e7ff] transition-all duration-300"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3, delay: index * 0.1 }}
+        >
+          <FaClock className="text-[#1abc9c] text-lg" />
+          <div>
+            <p className="text-sm text-[#2c3e50] font-medium">
+              {activity.action}
+            </p>
+            {/* Display issueDate if available (for issuance activities) */}
+            {activity.issueDate && (
               <p className="text-xs text-[#7f8c8d]">
-                {new Date(activity.timestamp).toLocaleString()}
+                Issued on: {new Date(activity.issueDate).toLocaleString()}
               </p>
-            </div>
-          </motion.li>
-        )
-      )}
+            )}
+            <p className="text-xs text-[#7f8c8d]">
+              {new Date(activity.timestamp).toLocaleString()}
+            </p>
+          </div>
+        </motion.li>
+      ))}
     </ul>
   </motion.div>
 );
+
 const TopBorrowedBooks = ({ books }) => (
   <motion.div
     className="bg-white p-4 sm:p-6 rounded-lg shadow-md mt-6 w-full max-w-3xl mx-auto"
@@ -248,8 +250,6 @@ const TopBorrowedBooks = ({ books }) => (
   </motion.div>
 );
 
-// Updated BooksByCategory to show top 10 categories with enhanced CSS
-// Updated BooksByCategory with responsive Pie chart
 const BooksByCategory = ({ categories }) => {
   // Sort categories by count and take top 10
   const sortedCategories = Object.entries(categories)
@@ -379,6 +379,7 @@ const BooksByCategory = ({ categories }) => {
     </motion.div>
   );
 };
+
 const LibrarianDashboard = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [statsData, setStatsData] = useState([
@@ -393,6 +394,7 @@ const LibrarianDashboard = () => {
   const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -410,6 +412,7 @@ const LibrarianDashboard = () => {
         const totalBooks = Array.isArray(booksResponse.data)
           ? booksResponse.data.length
           : booksResponse.data.books?.length || 0;
+
         const activeLoansResponse = await axios.get(
           "https://lms-o44p.onrender.com/api/loans/active",
           config
@@ -423,6 +426,7 @@ const LibrarianDashboard = () => {
         const registeredMembers = Array.isArray(studentsResponse.data)
           ? studentsResponse.data.length
           : studentsResponse.data.students?.length || 0;
+
         setStatsData([
           { title: "Total Books", value: totalBooks.toString(), icon: FaBook },
           {
@@ -441,6 +445,7 @@ const LibrarianDashboard = () => {
           "https://lms-o44p.onrender.com/api/activities/recent",
           config
         );
+        // Assuming the backend returns activities with an optional issueDate field
         setRecentActivities(activitiesResponse.data.slice(0, 5));
 
         const topBooksResponse = await axios.get(
@@ -448,6 +453,7 @@ const LibrarianDashboard = () => {
           config
         );
         setTopBooks(topBooksResponse.data.slice(0, 5));
+
         const categoryData = booksResponse.data.reduce((acc, book) => {
           const category = book.category || "Uncategorized";
           acc[category] = (acc[category] || 0) + 1;
@@ -461,8 +467,13 @@ const LibrarianDashboard = () => {
           err.response?.data || err.message
         );
         setError("Failed to load dashboard data. Please try again later.");
+        // Fallback data with issueDate for issuance activities
         setRecentActivities([
-          { action: "Book 'The Great Gatsby' issued", timestamp: new Date() },
+          {
+            action: "Book 'The Great Gatsby' issued",
+            timestamp: new Date(),
+            issueDate: new Date(), // Add issueDate for issuance activity
+          },
           {
             action: "Book '1984' returned",
             timestamp: new Date(Date.now() - 3600000),
