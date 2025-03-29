@@ -202,7 +202,6 @@ const BookList = () => {
         </p>
       )}
 
-      {/* Search Input */}
       <div className="mb-6 w-full max-w-md mx-auto relative">
         <label
           htmlFor="search"
