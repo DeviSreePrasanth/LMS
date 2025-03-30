@@ -35,7 +35,6 @@ const Login = () => {
     e.preventDefault();
     setLocalError("");
 
-    // Basic client-side validation
     if (!email || !password) {
       setLocalError("Email and password are required.");
       return;
@@ -47,7 +46,7 @@ const Login = () => {
         {
           email,
           password,
-          studentId: studentId || undefined, // Only send if provided
+          studentId: studentId || undefined,
         }
       );
 
@@ -66,10 +65,8 @@ const Login = () => {
         studentId: user.studentId || studentId,
       };
 
-      // Pass refreshToken to AuthContext if provided by the backend
       await login(token, userData, refreshToken || null);
 
-      // Navigate based on role
       switch (user.role) {
         case "student":
           if (!userData.studentId) {
@@ -91,15 +88,28 @@ const Login = () => {
     }
   };
 
-  // Input animation variants
   const inputVariants = {
     initial: { y: 20, opacity: 0 },
     animate: { y: 0, opacity: 1 },
   };
 
+  // Loading button animation variants
+  const buttonVariants = {
+    loading: {
+      scale: [1, 1.05, 1],
+      transition: {
+        duration: 1.5,
+        repeat: Infinity,
+        ease: "easeInOut",
+      },
+    },
+    idle: {
+      scale: 1,
+    },
+  };
+
   return (
     <div className="min-h-screen relative overflow-hidden bg-[#1f2937]">
-      {/* Animated background particles */}
       <div className="absolute inset-0">
         {[...Array(20)].map((_, i) => (
           <motion.div
@@ -124,7 +134,6 @@ const Login = () => {
         ))}
       </div>
 
-      {/* Glowing orb effect */}
       <div className="absolute top-[-200px] left-[-200px] w-[400px] h-[400px] bg-[#1abc9c] rounded-full blur-3xl opacity-20 animate-pulse" />
 
       <motion.div
@@ -139,7 +148,6 @@ const Login = () => {
           animate={{ scale: 1, rotate: 0 }}
           transition={{ duration: 0.8, type: "spring" }}
         >
-          {/* Left Half - Library Image with Wave Separator (Only in Desktop) */}
           <div className="hidden md:block relative w-full md:w-1/2">
             <img
               src={lib}
@@ -156,7 +164,6 @@ const Login = () => {
                 Welcome Back to Your Library
               </motion.p>
             </div>
-            {/* Wave Separator */}
             <div className="absolute bottom-0 md:bottom-auto md:right-0 w-full h-24 md:w-24 md:h-full">
               <svg
                 className="w-full h-full md:rotate-90"
@@ -172,7 +179,6 @@ const Login = () => {
             </div>
           </div>
 
-          {/* Form Section */}
           <div className="relative w-full p-8 md:p-8 md:w-1/2 md:bg-[#2d3748] md:backdrop-blur-md bg-[#2d3748]/90">
             <motion.h2
               className="relative text-3xl font-extrabold text-center text-[#e2e8f0] mb-6"
@@ -266,15 +272,19 @@ const Login = () => {
                 />
               </motion.div>
 
-              <button
+              <motion.button
                 type="submit"
-                className="relative w-full bg-[#1abc9c] text-[#e2e8f0] p-3 rounded-lg font-semibold flex items-center justify-center shadow-lg hover:bg-[#16a085] transition-all duration-300"
+                className="relative w-full bg-[#1abc9c] text-[#e2e8f0] p-3 rounded-lg font-semibold flex items-center justify-center shadow-lg hover:bg-[#16a085] transition-all duration-300 overflow-hidden"
+                variants={buttonVariants}
+                animate={authLoading ? "loading" : "idle"}
                 disabled={authLoading}
               >
                 {authLoading ? (
-                  <>
-                    <svg
-                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-[#e2e8f0]"
+                  <div className="flex items-center space-x-2">
+                    <motion.svg
+                      className="h-5 w-5 text-[#e2e8f0]"
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -292,13 +302,19 @@ const Login = () => {
                         fill="currentColor"
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       />
-                    </svg>
-                    Signing In...
-                  </>
+                    </motion.svg>
+                    <span>Logging In...</span>
+                    <motion.div
+                      className="absolute bottom-0 left-0 h-1 bg-[#e2e8f0]/30"
+                      initial={{ width: "0%" }}
+                      animate={{ width: "100%" }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    />
+                  </div>
                 ) : (
                   "Sign In"
                 )}
-              </button>
+              </motion.button>
             </form>
 
             <motion.p
