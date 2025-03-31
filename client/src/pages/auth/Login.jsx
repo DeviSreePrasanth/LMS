@@ -316,7 +316,6 @@ const Login = () => {
                 )}
               </motion.button>
             </form>
-
             <motion.p
               className="relative text-center text-[#7f8c8d] mt-4 text-sm"
               initial={{ opacity: 0 }}
