@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
@@ -24,12 +24,20 @@ const decodeToken = (token) => {
 };
 
 const Login = () => {
-  const { login, loading: authLoading, error: authError } = useContext(AuthContext);
+  const { login, loading: authLoading, error: authError, logout } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [studentId, setStudentId] = useState("");
   const [localError, setLocalError] = useState("");
   const navigate = useNavigate();
+
+  // Reset any existing session errors on mount
+  useEffect(() => {
+    setLocalError(""); // Clear local errors
+    if (authError) {
+      logout(); // Clear any existing session if there's an error
+    }
+  }, [authError, logout]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -200,7 +208,7 @@ const Login = () => {
             </motion.h2>
 
             <AnimatePresence>
-              {(localError || authError) && (
+              {localError && (
                 <motion.div
                   className="relative bg-[#e74c3c]/20 border-l-4 border-[#e74c3c] text-[#e74c3c] p-3 mb-4 rounded-r-lg"
                   initial={{ x: 100, opacity: 0 }}
@@ -208,7 +216,7 @@ const Login = () => {
                   exit={{ x: -100, opacity: 0 }}
                   transition={{ duration: 0.4 }}
                 >
-                  <p>{localError || authError}</p>
+                  <p>{localError}</p>
                 </motion.div>
               )}
             </AnimatePresence>
