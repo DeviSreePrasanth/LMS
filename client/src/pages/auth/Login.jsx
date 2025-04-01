@@ -29,6 +29,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [studentId, setStudentId] = useState("");
   const [localError, setLocalError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false); // Local state for button loading
   const navigate = useNavigate();
 
   // Reset any existing session errors on mount
@@ -42,9 +43,11 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLocalError("");
+    setIsSubmitting(true); // Start loading animation
 
     if (!email || !password) {
       setLocalError("Email and password are required.");
+      setIsSubmitting(false); // Stop loading if validation fails
       return;
     }
 
@@ -93,6 +96,8 @@ const Login = () => {
       setLocalError(
         err.response?.data?.message || err.message || "Invalid credentials or server error"
       );
+    } finally {
+      setIsSubmitting(false); // Stop loading animation regardless of success or failure
     }
   };
 
@@ -241,7 +246,7 @@ const Login = () => {
                   className="relative w-full p-3 bg-[#4a5568] border border-[#1abc9c] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1abc9c] focus:border-transparent transition-all duration-300 text-[#e2e8f0] hover:bg-[#5a677a]"
                   placeholder="Enter your email"
                   required
-                  disabled={authLoading}
+                  disabled={isSubmitting} // Use local state here
                 />
               </motion.div>
 
@@ -263,7 +268,7 @@ const Login = () => {
                   onChange={(e) => setStudentId(e.target.value)}
                   className="relative w-full p-3 bg-[#4a5568] border border-[#1abc9c] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1abc9c] focus:border-transparent transition-all duration-300 text-[#e2e8f0] hover:bg-[#5a677a]"
                   placeholder="Enter your student ID"
-                  disabled={authLoading}
+                  disabled={isSubmitting} // Use local state here
                 />
               </motion.div>
 
@@ -286,7 +291,7 @@ const Login = () => {
                   className="relative w-full p-3 bg-[#4a5568] border border-[#1abc9c] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1abc9c] focus:border-transparent transition-all duration-300 text-[#e2e8f0] hover:bg-[#5a677a]"
                   placeholder="Enter your password"
                   required
-                  disabled={authLoading}
+                  disabled={isSubmitting} // Use local state here
                 />
               </motion.div>
 
@@ -295,12 +300,12 @@ const Login = () => {
                 className="relative w-full text-[#e2e8f0] p-3 rounded-lg font-semibold flex items-center justify-center shadow-lg transition-all duration-300 overflow-hidden"
                 variants={buttonVariants}
                 initial="idle"
-                animate={authLoading ? "loading" : "idle"}
-                whileHover={!authLoading ? "hover" : undefined}
-                disabled={authLoading}
+                animate={isSubmitting ? "loading" : "idle"} // Use local state here
+                whileHover={!isSubmitting ? "hover" : undefined} // Use local state here
+                disabled={isSubmitting} // Use local state here
               >
                 <AnimatePresence mode="wait">
-                  {authLoading ? (
+                  {isSubmitting ? (
                     <motion.div
                       key="loading"
                       initial={{ opacity: 0, y: 20 }}
