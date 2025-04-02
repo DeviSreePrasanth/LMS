@@ -10,7 +10,7 @@ const IntroPage = () => {
   };
 
   const handleSignUpClick = () => {
-    navigate('/signup'); // Navigate to sign-up route
+    navigate('/register'); // Navigate to sign-up route
   };
 
   return (
@@ -24,19 +24,19 @@ const IntroPage = () => {
       {/* Content Container */}
       <div className="relative z-10 flex flex-col items-center md:items-start justify-between md:justify-start min-h-screen md:min-h-0 w-full max-w-md md:max-w-xl lg:max-w-2xl">
         {/* Heading - Visible only on mobile (below md) */}
-        <h1 className="text-3xl xs:text-4xl sm:text-5xl text-blue-900 font-bold leading-tight text-center md:hidden mt-8">
+        <h1 className="text-3xl xs:text-4xl sm:text-5xl text-[#083069] font-bold leading-tight text-center md:hidden mt-8">
           Welcome to<br />Library<br />Management<br />System
         </h1>
 
-        {/* Spacer to push buttons to the bottom on mobile */}
+        {/* Spacer to push buttons to the bottom on mobile only */}
         <div className="flex-grow md:hidden"></div>
 
-        {/* Buttons Container - Centered and larger on mobile, unchanged on desktop */}
-        <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-4 w-full md:w-auto mb-8 md:mb-0">
+        {/* Buttons Container */}
+        <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-4 w-full md:w-auto mb-8 md:mb-0 md:mt-8">
           {/* Login Button */}
           <button
             onClick={handleLoginClick}
-            className="mt-66 bg-purple-600 text-white font-semibold py-3 px-8 xs:py-4 xs:px-10 md:py-2 md:px-6 rounded-full hover:bg-purple-700 transition duration-300 text-base xs:text-lg sm:text-xl md:text-xl shadow-lg w-full md:w-auto"
+            className="md:mt-66 bg-purple-600 text-white font-semibold py-3 px-8 xs:py-4 xs:px-10 md:py-3 md:px-8 rounded-full hover:bg-purple-700 transition duration-300 text-base xs:text-lg sm:text-xl md:text-2xl shadow-lg w-full md:w-auto"
           >
             Login
           </button>
@@ -44,7 +44,7 @@ const IntroPage = () => {
           {/* Sign up Button */}
           <button
             onClick={handleSignUpClick}
-            className="mt-66 bg-transparent border-2 border-purple-600 text-purple-600 font-semibold py-3 px-8 xs:py-4 xs:px-10 md:py-2 md:px-6 rounded-full hover:bg-purple-600 hover:text-white transition duration-300 text-base xs:text-lg sm:text-xl md:text-xl shadow-lg w-full md:w-auto"
+            className="md:mt-66 bg-transparent border-2 border-purple-600 text-purple-600 font-semibold py-3 px-8 xs:py-4 xs:px-10 md:py-3 md:px-8 rounded-full hover:bg-purple-600 hover:text-white transition duration-300 text-base xs:text-lg sm:text-xl md:text-2xl shadow-lg w-full md:w-auto"
           >
             Sign up
           </button>
