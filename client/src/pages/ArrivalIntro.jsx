@@ -24,7 +24,7 @@ const IntroPage = () => {
       {/* Content Container */}
       <div className="relative z-10 flex flex-col items-center md:items-start justify-between md:justify-start min-h-screen md:min-h-0 w-full max-w-md md:max-w-xl lg:max-w-2xl">
         {/* Heading - Visible only on mobile (below md) */}
-        <h1 className="text-3xl xs:text-4xl sm:text-5xl text-[#083069] font-bold leading-tight text-center md:hidden mt-8">
+        <h1 className="text-4xl xs:text-5xl sm:text-6xl text-[#083069] font-bold leading-tight text-center md:hidden mt-8">
           Welcome to<br />Library<br />Management<br />System
         </h1>
 
