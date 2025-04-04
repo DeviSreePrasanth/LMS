@@ -200,7 +200,6 @@ const Login = () => {
               </svg>
             </div>
           </div>
-
           <div className="relative w-full p-8 md:p-8 md:w-1/2 md:bg-white md:backdrop-blur-md bg-white/90">
             <motion.h2
               className="relative text-3xl font-extrabold text-center text-[#1E3A8A] mb-6"
