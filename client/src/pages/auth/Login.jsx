@@ -209,7 +209,6 @@ const Login = () => {
             >
               Sign In
             </motion.h2>
-
             <AnimatePresence>
               {localError && (
                 <motion.div
