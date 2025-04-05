@@ -223,228 +223,228 @@ const BookList = () => {
         </div>
       </div>
 
-      {!filteredBooks.length ? (
-        <p className="text-center text-[#7f8c8d] text-sm sm:text-base">
-          No books match the selected filters or search
-        </p>
-      ) : (
-        <>
-          <div className="overflow-x-auto w-full text-left sm:mx-auto">
-            <table className="w-full border-collapse bg-white shadow-md rounded-lg">
-              <thead className="bg-[#1f2937] text-white">
-                <tr>
-                  <th className="py-2 px-2 sm:px-4 text-left text-xs sm:text-sm">
-                    Book ID
-                  </th>
-                  <th className="py-2 px-2 sm:px-4 text-left text-xs sm:text-sm">
-                    Title
-                  </th>
-                  <th className="py-2 px-2 sm:px-4 text-left text-xs sm:text-sm">
-                    Author
-                  </th>
-                  <th className="py-2 px-2 sm:px-4 text-left text-xs sm:text-sm">
-                    Category
-                    <select
-                      name="category"
-                      value={filters.category}
-                      onChange={handleFilterChange}
-                      className="block w-full mt-1 p-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 bg-[#f4f7fa] text-[#2c3e50] text-xs sm:text-sm"
-                    >
-                      <option value="">All</option>
-                      {uniqueCategories.map((category) => (
-                        <option key={category} value={category}>
-                          {category.charAt(0).toUpperCase() + category.slice(1)}
-                        </option>
-                      ))}
-                    </select>
-                  </th>
-                  <th className="py-2 px-2 sm:px-4 text-center text-xs sm:text-sm">
-                    Status
-                    <select
-                      name="status"
-                      value={filters.status}
-                      onChange={handleFilterChange}
-                      className="block w-full mt-1 p-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 bg-[#f4f7fa] text-[#2c3e50] text-xs sm:text-sm"
-                    >
-                      <option value="">All</option>
-                      <option value="available">Available</option>
-                      <option value="issued">Issued</option>
-                    </select>
-                  </th>
-                  <th className="py-2 px-2 sm:px-4 text-center text-xs sm:text-sm">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentBooks.map((book) => (
-                  <motion.tr
-                    key={book._id}
-                    className="hover:bg-gray-100 border-b border-gray-200 transition duration-300 ease-in-out"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                      duration: 0.3,
-                      delay: currentBooks.indexOf(book) * 0.1,
-                    }}
-                  >
-                    <td className="py-2 px-2 sm:px-4 text-[#2c3e50] text-xs sm:text-sm">
+      <div className="overflow-x-auto w-full text-left sm:mx-auto">
+        <table className="w-full border-collapse bg-white shadow-md rounded-lg">
+          <thead className="bg-[#1f2937] text-white">
+            <tr>
+              <th className="py-2 px-2 sm:px-4 text-left text-xs sm:text-sm">
+                Book ID
+              </th>
+              <th className="py-2 px-2 sm:px-4 text-left text-xs sm:text-sm">
+                Title
+              </th>
+              <th className="py-2 px-2 sm:px-4 text-left text-xs sm:text-sm">
+                Author
+              </th>
+              <th className="py-2 px-2 sm:px-4 text-left text-xs sm:text-sm">
+                Category
+                <select
+                  name="category"
+                  value={filters.category}
+                  onChange={handleFilterChange}
+                  className="block w-full mt-1 p-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 bg-[#f4f7fa] text-[#2c3e50] text-xs sm:text-sm"
+                >
+                  <option value="">All</option>
+                  {uniqueCategories.map((category) => (
+                    <option key={category} value={category}>
+                      {category.charAt(0).toUpperCase() + category.slice(1)}
+                    </option>
+                  ))}
+                </select>
+              </th>
+              <th className="py-2 px-2 sm:px-4 text-center text-xs sm:text-sm">
+                Status
+                <select
+                  name="status"
+                  value={filters.status}
+                  onChange={handleFilterChange}
+                  className="block w-full mt-1 p-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 bg-[#f4f7fa] text-[#2c3e50] text-xs sm:text-sm"
+                >
+                  <option value="">All</option>
+                  <option value="available">Available</option>
+                  <option value="issued">Issued</option>
+                </select>
+              </th>
+              <th className="py-2 px-2 sm:px-4 text-center text-xs sm:text-sm">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {!filteredBooks.length ? (
+              <tr className="hover:bg-gray-100 border-b border-gray-200 transition duration-300 ease-in-out">
+                <td colSpan="6" className="py-4 text-center text-[#7f8c8d] text-sm sm:text-base">
+                  No books match the selected filters or search
+                </td>
+              </tr>
+            ) : (
+              currentBooks.map((book) => (
+                <motion.tr
+                  key={book._id}
+                  className="hover:bg-gray-100 border-b border-gray-200 transition duration-300 ease-in-out"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.3,
+                    delay: currentBooks.indexOf(book) * 0.1,
+                  }}
+                >
+                  <td className="py-2 px-2 sm:px-4 text-[#2c3e50] text-xs sm:text-sm">
+                    {editingBook === book._id ? (
+                      <input
+                        type="number"
+                        name="bid"
+                        value={editData.bid}
+                        onChange={handleEditChange}
+                        className="border rounded p-1 w-full focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 bg-[#f4f7fa] text-[#2c3e50] text-xs sm:text-sm"
+                        disabled
+                      />
+                    ) : (
+                      book.bid
+                    )}
+                  </td>
+                  <td className="py-2 px-2 sm:px-4 text-[#2c3e50] text-xs sm:text-sm">
+                    {editingBook === book._id ? (
+                      <input
+                        type="text"
+                        name="title"
+                        value={editData.title}
+                        onChange={handleEditChange}
+                        className="border rounded p-1 w-full focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 bg-[#f4f7fa] text-[#2c3e50] text-xs sm:text-sm"
+                      />
+                    ) : (
+                      book.title
+                    )}
+                  </td>
+                  <td className="py-2 px-2 sm:px-4 text-[#2c3e50] text-xs sm:text-sm">
+                    {editingBook === book._id ? (
+                      <input
+                        type="text"
+                        name="author"
+                        value={editData.author}
+                        onChange={handleEditChange}
+                        className="border rounded p-1 w-full focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 bg-[#f4f7fa] text-[#2c3e50] text-xs sm:text-sm"
+                      />
+                    ) : (
+                      book.author
+                    )}
+                  </td>
+                  <td className="py-2 px-2 sm:px-4 text-[#2c3e50] text-xs sm:text-sm">
+                    {editingBook === book._id ? (
+                      <input
+                        type="text"
+                        name="category"
+                        value={editData.category}
+                        onChange={handleEditChange}
+                        className="border rounded p-1 w-full focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 bg-[#f4f7fa] text-[#2c3e50] text-xs sm:text-sm"
+                      />
+                    ) : (
+                      book.category
+                    )}
+                  </td>
+                  <td className="py-2 px-2 sm:px-4 text-center text-xs sm:text-sm">
+                    {editingBook === book._id ? (
+                      <select
+                        name="status"
+                        value={editData.status}
+                        onChange={handleEditChange}
+                        className="border rounded p-1 w-full focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 bg-[#f4f7fa] text-[#2c3e50] text-xs sm:text-sm"
+                      >
+                        <option value="available">Available</option>
+                        <option value="issued">Issued</option>
+                      </select>
+                    ) : (
+                      <span
+                        className={`${
+                          book.status === "available"
+                            ? "text-[#1abc9c]"
+                            : "text-red-500"
+                        } font-semibold`}
+                      >
+                        {book.status}
+                      </span>
+                    )}
+                  </td>
+                  <td className="py-2 px-2 sm:px-4 text-center">
+                    <div className="flex justify-center space-x-2">
                       {editingBook === book._id ? (
-                        <input
-                          type="number"
-                          name="bid"
-                          value={editData.bid}
-                          onChange={handleEditChange}
-                          className="border rounded p-1 w-full focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 bg-[#f4f7fa] text-[#2c3e50] text-xs sm:text-sm"
-                          disabled
-                        />
+                        <>
+                          <motion.button
+                            onClick={handleEditSubmit}
+                            className="bg-[#059669] hover:bg-[#047857] text-white px-2 sm:px-3 py-1 rounded transition duration-200 text-xs sm:text-sm"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            Save
+                          </motion.button>
+                          <motion.button
+                            onClick={() => setEditingBook(null)}
+                            className="bg-[#6b7280] hover:bg-[#4b5563] text-white px-2 sm:px-3 py-1 rounded transition duration-200 text-xs sm:text-sm"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            Cancel
+                          </motion.button>
+                        </>
                       ) : (
-                        book.bid
+                        <>
+                          <motion.button
+                            onClick={() => handleEdit(book)}
+                            className="bg-[#f59e0b] hover:bg-[#fbbf24] text-white px-2 sm:px-3 py-1 rounded transition duration-200 text-xs sm:text-sm"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            Edit
+                          </motion.button>
+                          <motion.button
+                            onClick={() => handleDelete(book._id)}
+                            className="bg-[#dc2626] hover:bg-[#b91c1c] text-white px-2 sm:px-3 py-1 rounded transition duration-200 text-xs sm:text-sm"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            Delete
+                          </motion.button>
+                        </>
                       )}
-                    </td>
-                    <td className="py-2 px-2 sm:px-4 text-[#2c3e50] text-xs sm:text-sm">
-                      {editingBook === book._id ? (
-                        <input
-                          type="text"
-                          name="title"
-                          value={editData.title}
-                          onChange={handleEditChange}
-                          className="border rounded p-1 w-full focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 bg-[#f4f7fa] text-[#2c3e50] text-xs sm:text-sm"
-                        />
-                      ) : (
-                        book.title
-                      )}
-                    </td>
-                    <td className="py-2 px-2 sm:px-4 text-[#2c3e50] text-xs sm:text-sm">
-                      {editingBook === book._id ? (
-                        <input
-                          type="text"
-                          name="author"
-                          value={editData.author}
-                          onChange={handleEditChange}
-                          className="border rounded p-1 w-full focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 bg-[#f4f7fa] text-[#2c3e50] text-xs sm:text-sm"
-                        />
-                      ) : (
-                        book.author
-                      )}
-                    </td>
-                    <td className="py-2 px-2 sm:px-4 text-[#2c3e50] text-xs sm:text-sm">
-                      {editingBook === book._id ? (
-                        <input
-                          type="text"
-                          name="category"
-                          value={editData.category}
-                          onChange={handleEditChange}
-                          className="border rounded p-1 w-full focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 bg-[#f4f7fa] text-[#2c3e50] text-xs sm:text-sm"
-                        />
-                      ) : (
-                        book.category
-                      )}
-                    </td>
-                    <td className="py-2 px-2 sm:px-4 text-center text-xs sm:text-sm">
-                      {editingBook === book._id ? (
-                        <select
-                          name="status"
-                          value={editData.status}
-                          onChange={handleEditChange}
-                          className="border rounded p-1 w-full focus:outline-none focus:ring-2 focus:ring-[#1abc9c] transition duration-200 bg-[#f4f7fa] text-[#2c3e50] text-xs sm:text-sm"
-                        >
-                          <option value="available">Available</option>
-                          <option value="issued">Issued</option>
-                        </select>
-                      ) : (
-                        <span
-                          className={`${
-                            book.status === "available"
-                              ? "text-[#1abc9c]"
-                              : "text-red-500"
-                          } font-semibold`}
-                        >
-                          {book.status}
-                        </span>
-                      )}
-                    </td>
-                    <td className="py-2 px-2 sm:px-4 text-center">
-                      <div className="flex justify-center space-x-2">
-                        {editingBook === book._id ? (
-                          <>
-                            <motion.button
-                              onClick={handleEditSubmit}
-                              className="bg-[#059669] hover:bg-[#047857] text-white px-2 sm:px-3 py-1 rounded transition duration-200 text-xs sm:text-sm"
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                            >
-                              Save
-                            </motion.button>
-                            <motion.button
-                              onClick={() => setEditingBook(null)}
-                              className="bg-[#6b7280] hover:bg-[#4b5563] text-white px-2 sm:px-3 py-1 rounded transition duration-200 text-xs sm:text-sm"
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                            >
-                              Cancel
-                            </motion.button>
-                          </>
-                        ) : (
-                          <>
-                            <motion.button
-                              onClick={() => handleEdit(book)}
-                              className="bg-[#f59e0b] hover:bg-[#fbbf24] text-white px-2 sm:px-3 py-1 rounded transition duration-200 text-xs sm:text-sm"
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                            >
-                              Edit
-                            </motion.button>
-                            <motion.button
-                              onClick={() => handleDelete(book._id)}
-                              className="bg-[#dc2626] hover:bg-[#b91c1c] text-white px-2 sm:px-3 py-1 rounded transition duration-200 text-xs sm:text-sm"
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                            >
-                              Delete
-                            </motion.button>
-                          </>
-                        )}
-                      </div>
-                    </td>
-                  </motion.tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="flex justify-center mt-4 space-x-2 sm:space-x-4">
-            <motion.button
-              onClick={handlePreviousPage}
-              disabled={currentPage === 1}
-              className={`px-3 sm:px-4 py-1 sm:py-2 rounded-md text-white transition duration-200 text-xs sm:text-sm ${
-                currentPage === 1
-                  ? "bg-[#7f8c8d] cursor-not-allowed"
-                  : "bg-[#2c3e50] hover:bg-[#34495e]"
-              }`}
-              whileHover={{ scale: currentPage === 1 ? 1 : 1.05 }}
-              whileTap={{ scale: currentPage === 1 ? 1 : 0.95 }}
-            >
-              Previous
-            </motion.button>
-            <span className="text-[#2c3e50] self-center text-xs sm:text-sm">
-              Page {currentPage} of {totalPages}
-            </span>
-            <motion.button
-              onClick={handleNextPage}
-              disabled={currentPage === totalPages}
-              className={`px-3 sm:px-4 py-1 sm:py-2 rounded-md text-white transition duration-200 text-xs sm:text-sm ${
-                currentPage === totalPages
-                  ? "bg-[#7f8c8d] cursor-not-allowed"
-                  : "bg-[#2c3e50] hover:bg-[#34495e]"
-              }`}
-              whileHover={{ scale: currentPage === totalPages ? 1 : 1.05 }}
-              whileTap={{ scale: currentPage === totalPages ? 1 : 0.95 }}
-            >
-              Next
-            </motion.button>
-          </div>
-        </>
-      )}
+                    </div>
+                  </td>
+                </motion.tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+      <div className="flex justify-center mt-4 space-x-2 sm:space-x-4">
+        <motion.button
+          onClick={handlePreviousPage}
+          disabled={currentPage === 1}
+          className={`px-3 sm:px-4 py-1 sm:py-2 rounded-md text-white transition duration-200 text-xs sm:text-sm ${
+            currentPage === 1
+              ? "bg-[#7f8c8d] cursor-not-allowed"
+              : "bg-[#2c3e50] hover:bg-[#34495e]"
+          }`}
+          whileHover={{ scale: currentPage === 1 ? 1 : 1.05 }}
+          whileTap={{ scale: currentPage === 1 ? 1 : 0.95 }}
+        >
+          Previous
+        </motion.button>
+        <span className="text-[#2c3e50] self-center text-xs sm:text-sm">
+          Page {currentPage} of {totalPages}
+        </span>
+        <motion.button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          className={`px-3 sm:px-4 py-1 sm:py-2 rounded-md text-white transition duration-200 text-xs sm:text-sm ${
+            currentPage === totalPages
+              ? "bg-[#7f8c8d] cursor-not-allowed"
+              : "bg-[#2c3e50] hover:bg-[#34495e]"
+          }`}
+          whileHover={{ scale: currentPage === totalPages ? 1 : 1.05 }}
+          whileTap={{ scale: currentPage === totalPages ? 1 : 0.95 }}
+        >
+          Next
+        </motion.button>
+      </div>
     </motion.div>
   );
 };
