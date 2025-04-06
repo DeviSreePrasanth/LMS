@@ -181,4 +181,5 @@ const AddStudent = ({ setActiveSection }) => {
     </motion.div>
   );
 };
+
 export default AddStudent;
