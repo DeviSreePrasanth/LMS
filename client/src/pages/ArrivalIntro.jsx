@@ -1,25 +1,35 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import backgroundImage from '../assets/dd.png'; // Ensure the path is correct
+import desktopBg from '../assets/dd.png'; // Desktop background image
+import mobileBg from '../assets/mobile.png'; // Mobile background image (replace with your actual mobile image path)
 
 const IntroPage = () => {
   const navigate = useNavigate();
 
   const handleLoginClick = () => {
-    navigate('/login'); // Navigate to login route
+    navigate('/login');
   };
 
   const handleSignUpClick = () => {
-    navigate('/register'); // Navigate to sign-up route
+    navigate('/register');
   };
 
   return (
-    <div
-      className="relative min-h-screen w-full bg-cover bg-[60%_center] md:bg-center flex items-center justify-start md:justify-start px-4 sm:px-6 md:px-10 lg:px-16 xl:px-24"
-      style={{ backgroundImage: `url(${backgroundImage})` }}
-    >
-      {/* Overlay for better text readability */}
-      <div className="absolute inset-0 bg-black opacity-20"></div>
+    <div className="relative min-h-screen w-full flex items-center justify-start md:justify-start px-4 sm:px-6 md:px-10 lg:px-16 xl:px-24">
+      {/* Background Images - Different for mobile and desktop */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Mobile Background (shown on screens smaller than md) */}
+        <div className="md:hidden absolute inset-0 bg-cover bg-center"
+             style={{ backgroundImage: `url(${mobileBg})` }}>
+          <div className="absolute inset-0 bg-black opacity-20"></div>
+        </div>
+        
+        {/* Desktop Background (shown on md screens and larger) */}
+        <div className="hidden md:block absolute inset-0 bg-cover bg-[60%_center] md:bg-center"
+             style={{ backgroundImage: `url(${desktopBg})` }}>
+          <div className="absolute inset-0 bg-black opacity-20"></div>
+        </div>
+      </div>
 
       {/* Content Container */}
       <div className="relative z-10 flex flex-col items-center md:items-start justify-between md:justify-start min-h-screen md:min-h-0 w-full max-w-md md:max-w-xl lg:max-w-2xl">
