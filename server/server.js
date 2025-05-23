@@ -18,7 +18,7 @@ connectDB();
 const allowedOrigins = [
   'https://lms-ten-cyan.vercel.app',
   'https://lms-1-zxtb.onrender.com',
-  'https://localhost:5173'
+  'http://localhost:5173'
 ];
 
 // CORS Configuration
