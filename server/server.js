@@ -17,7 +17,6 @@ connectDB();
 // Allowed origins list
 const allowedOrigins = [
   'https://lms-ten-cyan.vercel.app',
-  'https://lms-1-zxtb.onrender.com',
   'http://localhost:5173'
 ];
 

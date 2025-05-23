@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { BiLogOut } from "react-icons/bi";
 import { FaBook, FaClock, FaCalendar, FaBars, FaTimes } from "react-icons/fa";
 
-// Sidebar Component (unchanged)
+// Sidebar Component
 const Sidebar = ({
   setActiveSection,
   activeSection,
@@ -76,49 +76,11 @@ const Sidebar = ({
 };
 
 // Updated Header Component
-const Header = ({ isOpen, setIsOpen, name, profileImage, setProfileImage }) => {
-  const [isUploading, setIsUploading] = useState(false);
-  const fileInputRef = useRef(null);
+const Header = ({ isOpen, setIsOpen, name }) => {
   const { user } = useContext(AuthContext);
 
-  const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file || !user) return;
-
-    setIsUploading(true);
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "student_profile"); // Replace with your upload preset
-    formData.append("cloud_name", "your_cloud_name"); // Replace with your Cloud Name
-
-    try {
-      // Upload to Cloudinary
-      const cloudinaryResponse = await axios.post(
-        "https://api.cloudinary.com/v1_1/your_cloud_name/image/upload", // Replace with your Cloud Name
-        formData
-      );
-      const imageUrl = cloudinaryResponse.data.secure_url;
-
-      // Update backend with the new image URL
-      const token = localStorage.getItem("token");
-      await axios.put(
-        `https://lmsbackend-six.vercel.app/api/students/email/${user.email}`,
-        { profileImage: imageUrl },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      // Update local state
-      setProfileImage(imageUrl);
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      alert(
-        "Failed to upload image. Please check your network or credentials."
-      );
-    } finally {
-      setIsUploading(false);
-    }
-  };
+  // Get the first letter of the name or fallback to "S" for Student
+  const initial = name ? name.charAt(0).toUpperCase() : "S";
 
   return (
     <motion.div
@@ -141,30 +103,20 @@ const Header = ({ isOpen, setIsOpen, name, profileImage, setProfileImage }) => {
           <span className="text-[#7f8c8d] font-medium text-sm sm:text-base">
             Welcome, {name || "Student"}
           </span>
-          <motion.img
-            src={profileImage || "https://via.placeholder.com/40"}
-            alt="Profile"
-            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full cursor-pointer border-2 border-[#34495e]"
-            whileHover={{ scale: 1.1 }}
-            onClick={() => fileInputRef.current.click()}
-          />
-          <input
-            type="file"
-            accept="image/*"
-            ref={fileInputRef}
-            onChange={handleImageUpload}
-            className="hidden"
-          />
-          {isUploading && (
-            <span className="text-[#2c3e50] text-sm">Uploading...</span>
-          )}
+          <motion.div
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#1abc9c] flex items-center justify-center text-white text-xl sm:text-2xl font-semibold border-2 border-[#34495e] shadow-sm cursor-pointer"
+            whileHover={{ scale: 1.1, boxShadow: "0 0 8px rgba(0,0,0,0.2)" }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            {initial}
+          </motion.div>
         </div>
       </div>
     </motion.div>
   );
 };
 
-// StatsCard Component (unchanged)
+// StatsCard Component
 const StatsCard = ({ title, value, icon: Icon, color }) => (
   <motion.div
     className="bg-white p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1 w-full"
@@ -182,7 +134,7 @@ const StatsCard = ({ title, value, icon: Icon, color }) => (
   </motion.div>
 );
 
-// Updated StudentDashboard Component
+// StudentDashboard Component
 const StudentDashboard = () => {
   const {
     user,
@@ -203,7 +155,6 @@ const StudentDashboard = () => {
   ]);
   const [isOpen, setIsOpen] = useState(false);
   const [studentName, setStudentName] = useState("");
-  const [profileImage, setProfileImage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(null);
   const navigate = useNavigate();
@@ -230,7 +181,6 @@ const StudentDashboard = () => {
           throw new Error("Student not found");
         }
         setStudentName(studentResponse.data.name || user.email);
-        setProfileImage(studentResponse.data.profileImage || null);
         const studentId = studentResponse.data._id;
 
         const booksResponse = await axios.get(
@@ -372,8 +322,6 @@ const StudentDashboard = () => {
           isOpen={isOpen}
           setIsOpen={setIsOpen}
           name={studentName}
-          profileImage={profileImage}
-          setProfileImage={setProfileImage}
         />
         <br />
         {renderContent()}
