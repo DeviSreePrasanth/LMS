@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import AddBook from "./AddBook";
@@ -27,7 +27,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 // Register ChartJS components
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-// Sidebar, Header, StatsCard, TopBorrowedBooks, and BooksByCategory remain unchanged
+// Sidebar Component
 const Sidebar = ({
   setActiveSection,
   activeSection,
@@ -98,24 +98,10 @@ const Sidebar = ({
   );
 };
 
+// Updated Header Component
 const Header = ({ isOpen, setIsOpen }) => {
-  const [profileImage, setProfileImage] = useState(
-    localStorage.getItem("profileImage") || "https://via.placeholder.com/40"
-  );
-  const fileInputRef = useRef(null);
-
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const imageData = reader.result;
-        setProfileImage(imageData);
-        localStorage.setItem("profileImage", imageData);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  // Use "L" as the default initial for "Librarian"
+  const initial = "L";
 
   return (
     <motion.div
@@ -138,26 +124,20 @@ const Header = ({ isOpen, setIsOpen }) => {
           <span className="text-[#7f8c8d] font-medium text-sm sm:text-base">
             Welcome, Librarian
           </span>
-          <motion.img
-            src={profileImage}
-            alt="Profile"
-            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full cursor-pointer border-2 border-[#34495e]"
-            whileHover={{ scale: 1.1 }}
-            onClick={() => fileInputRef.current.click()}
-          />
-          <input
-            type="file"
-            accept="image/*"
-            ref={fileInputRef}
-            onChange={handleImageUpload}
-            className="hidden"
-          />
+          <motion.div
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#1abc9c] flex items-center justify-center text-white text-xl sm:text-2xl font-semibold border-2 border-[#34495e] shadow-sm cursor-pointer"
+            whileHover={{ scale: 1.1, boxShadow: "0 0 8px rgba(0,0,0,0.2)" }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            {initial}
+          </motion.div>
         </div>
       </div>
     </motion.div>
   );
 };
 
+// StatsCard Component
 const StatsCard = ({ title, value, icon: Icon }) => (
   <motion.div
     className="bg-white p-4 sm:p-6 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1 w-full"
@@ -175,6 +155,7 @@ const StatsCard = ({ title, value, icon: Icon }) => (
   </motion.div>
 );
 
+// RecentActivity Component
 const RecentActivity = ({ activities }) => (
   <motion.div
     className="bg-white p-4 sm:p-6 rounded-lg shadow-md mt-6 w-full max-w-3xl mx-auto"
@@ -199,10 +180,10 @@ const RecentActivity = ({ activities }) => (
             <p className="text-sm text-[#2c3e50] font-medium">
               {activity.action}
             </p>
-            {/* Display issueDate if available (for issuance activities) */}
             {activity.issueDate && (
               <p className="text-xs text-[#7f8c8d]">
-                Issued on: {new Date(activity.issueDate).toLocaleString()}
+                Issued on:
+System: {new Date(activity.issueDate).toLocaleString()}
               </p>
             )}
             <p className="text-xs text-[#7f8c8d]">
@@ -215,6 +196,7 @@ const RecentActivity = ({ activities }) => (
   </motion.div>
 );
 
+// TopBorrowedBooks Component
 const TopBorrowedBooks = ({ books }) => (
   <motion.div
     className="bg-white p-4 sm:p-6 rounded-lg shadow-md mt-6 w-full max-w-3xl mx-auto"
@@ -250,8 +232,8 @@ const TopBorrowedBooks = ({ books }) => (
   </motion.div>
 );
 
+// BooksByCategory Component
 const BooksByCategory = ({ categories }) => {
-  // Sort categories by count and take top 10
   const sortedCategories = Object.entries(categories)
     .sort(([, a], [, b]) => b - a)
     .slice(0, 10);
@@ -264,31 +246,31 @@ const BooksByCategory = ({ categories }) => {
       {
         data: values,
         backgroundColor: [
-          "#FF6B6B", // Vibrant Red
-          "#4ECDC4", // Turquoise
-          "#45B7D1", // Sky Blue
-          "#96CEB4", // Mint Green
-          "#FFEEAD", // Soft Yellow
-          "#D4A5A5", // Soft Pink
-          "#9B59B6", // Purple
-          "#3498DB", // Bright Blue
-          "#E67E22", // Orange
-          "#2ECC71", // Emerald Green
+          "#FF6B6B",
+          "#4ECDC4",
+          "#45B7D1",
+          "#96CEB4",
+          "#FFEEAD",
+          "#D4A5A5",
+          "#9B59B6",
+          "#3498DB",
+          "#E67E22",
+          "#2ECC71",
         ],
         borderWidth: 2,
         borderColor: "#ffffff",
         hoverOffset: 15,
         hoverBackgroundColor: [
-          "#FF8787", // Lighter Red
-          "#6BE8DF", // Lighter Turquoise
-          "#63C8E5", // Lighter Sky Blue
-          "#AEE5CB", // Lighter Mint Green
-          "#FFF5C9", // Lighter Soft Yellow
-          "#E5BFBF", // Lighter Soft Pink
-          "#B377D0", // Lighter Purple
-          "#5DADE2", // Lighter Bright Blue
-          "#F39C41", // Lighter Orange
-          "#52E495", // Lighter Emerald Green
+          "#FF8787",
+          "#6BE8DF",
+          "#63C8E5",
+          "#AEE5CB",
+          "#FFF5C9",
+          "#E5BFBF",
+          "#B377D0",
+          "#5DADE2",
+          "#F39C41",
+          "#52E495",
         ],
       },
     ],
@@ -296,27 +278,27 @@ const BooksByCategory = ({ categories }) => {
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false, // Allows custom sizing
-    aspectRatio: 1, // Maintains a 1:1 aspect ratio for the chart (circular shape)
+    maintainAspectRatio: false,
+    aspectRatio: 1,
     plugins: {
       legend: {
-        position: window.innerWidth < 768 ? "bottom" : "right", // Legend below on mobile, right on desktop
+        position: window.innerWidth < 768 ? "bottom" : "right",
         labels: {
           font: {
             size:
-              window.innerWidth < 640 ? 10 : window.innerWidth < 1024 ? 12 : 14, // Smaller font on mobile, medium on tablet, larger on desktop
+              window.innerWidth < 640 ? 10 : window.innerWidth < 1024 ? 12 : 14,
             family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
           },
           padding:
-            window.innerWidth < 640 ? 8 : window.innerWidth < 1024 ? 12 : 20, // Reduced padding on mobile, medium on tablet, larger on desktop
+            window.innerWidth < 640 ? 8 : window.innerWidth < 1024 ? 12 : 20,
           usePointStyle: true,
           pointStyle: "circle",
           boxWidth:
-            window.innerWidth < 640 ? 6 : window.innerWidth < 1024 ? 8 : 10, // Smaller legend boxes on mobile, medium on tablet, larger on desktop
+            window.innerWidth < 640 ? 6 : window.innerWidth < 1024 ? 8 : 10,
           color: "#2c3e50",
           generateLabels: (chart) => {
             return chart.data.labels.map((label, index) => ({
-              text: label.length > 15 ? `${label.slice(0, 15)}...` : label, // Truncate long labels
+              text: label.length > 15 ? `${label.slice(0, 15)}...` : label,
               fillStyle: chart.data.datasets[0].backgroundColor[index],
               strokeStyle: "#ffffff",
               lineWidth: 1,
@@ -330,17 +312,17 @@ const BooksByCategory = ({ categories }) => {
         backgroundColor: "rgba(44, 62, 80, 0.9)",
         titleFont: {
           size:
-            window.innerWidth < 640 ? 12 : window.innerWidth < 1024 ? 14 : 16, // Smaller on mobile, medium on tablet, larger on desktop
+            window.innerWidth < 640 ? 12 : window.innerWidth < 1024 ? 14 : 16,
           weight: "bold",
           color: "#ffffff",
         },
         bodyFont: {
           size:
-            window.innerWidth < 640 ? 10 : window.innerWidth < 1024 ? 12 : 14, // Smaller on mobile, medium on tablet, larger on desktop
+            window.innerWidth < 640 ? 10 : window.innerWidth < 1024 ? 12 : 14,
           color: "#ffffff",
         },
         padding:
-          window.innerWidth < 640 ? 6 : window.innerWidth < 1024 ? 8 : 12, // Smaller padding on mobile, medium on tablet, larger on desktop
+          window.innerWidth < 640 ? 6 : window.innerWidth < 1024 ? 8 : 12,
         cornerRadius: 6,
         boxPadding: 4,
         callbacks: {
@@ -363,6 +345,7 @@ const BooksByCategory = ({ categories }) => {
       },
     },
   };
+
   return (
     <motion.div
       className="bg-white p-4 sm:p-6 rounded-xl mt-6 w-full max-w-3xl mx-auto border border-gray-200"
@@ -386,6 +369,7 @@ const BooksByCategory = ({ categories }) => {
   );
 };
 
+// LibrarianDashboard Component
 const LibrarianDashboard = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [statsData, setStatsData] = useState([
@@ -443,15 +427,13 @@ const LibrarianDashboard = () => {
           {
             title: "Registered Members",
             value: registeredMembers.toString(),
-            icon: FaUsers,
-          },
+            icon: FaUsers },
         ]);
 
         const activitiesResponse = await axios.get(
           "https://lmsbackend-six.vercel.app/api/activities/recent",
           config
         );
-        // Assuming the backend returns activities with an optional issueDate field
         setRecentActivities(activitiesResponse.data.slice(0, 5));
 
         const topBooksResponse = await axios.get(
@@ -473,12 +455,11 @@ const LibrarianDashboard = () => {
           err.response?.data || err.message
         );
         setError("Failed to load dashboard data. Please try again later.");
-        // Fallback data with issueDate for issuance activities
         setRecentActivities([
           {
             action: "Book 'The Great Gatsby' issued",
             timestamp: new Date(),
-            issueDate: new Date(), // Add issueDate for issuance activity
+            issueDate: new Date(),
           },
           {
             action: "Book '1984' returned",
@@ -518,7 +499,6 @@ const LibrarianDashboard = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("profileImage");
     navigate("/login");
   };
 
@@ -594,4 +574,5 @@ const LibrarianDashboard = () => {
     </div>
   );
 };
+
 export default LibrarianDashboard;
