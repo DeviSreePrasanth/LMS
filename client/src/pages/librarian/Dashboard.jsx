@@ -303,13 +303,16 @@ const BooksByCategory = ({ categories }) => {
         position: window.innerWidth < 768 ? "bottom" : "right", // Legend below on mobile, right on desktop
         labels: {
           font: {
-            size: window.innerWidth < 640 ? 10 : window.innerWidth < 1024 ? 12 : 14, // Smaller font on mobile, medium on tablet, larger on desktop
+            size:
+              window.innerWidth < 640 ? 10 : window.innerWidth < 1024 ? 12 : 14, // Smaller font on mobile, medium on tablet, larger on desktop
             family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
           },
-          padding: window.innerWidth < 640 ? 8 : window.innerWidth < 1024 ? 12 : 20, // Reduced padding on mobile, medium on tablet, larger on desktop
+          padding:
+            window.innerWidth < 640 ? 8 : window.innerWidth < 1024 ? 12 : 20, // Reduced padding on mobile, medium on tablet, larger on desktop
           usePointStyle: true,
           pointStyle: "circle",
-          boxWidth: window.innerWidth < 640 ? 6 : window.innerWidth < 1024 ? 8 : 10, // Smaller legend boxes on mobile, medium on tablet, larger on desktop
+          boxWidth:
+            window.innerWidth < 640 ? 6 : window.innerWidth < 1024 ? 8 : 10, // Smaller legend boxes on mobile, medium on tablet, larger on desktop
           color: "#2c3e50",
           generateLabels: (chart) => {
             return chart.data.labels.map((label, index) => ({
@@ -326,15 +329,18 @@ const BooksByCategory = ({ categories }) => {
       tooltip: {
         backgroundColor: "rgba(44, 62, 80, 0.9)",
         titleFont: {
-          size: window.innerWidth < 640 ? 12 : window.innerWidth < 1024 ? 14 : 16, // Smaller on mobile, medium on tablet, larger on desktop
+          size:
+            window.innerWidth < 640 ? 12 : window.innerWidth < 1024 ? 14 : 16, // Smaller on mobile, medium on tablet, larger on desktop
           weight: "bold",
           color: "#ffffff",
         },
         bodyFont: {
-          size: window.innerWidth < 640 ? 10 : window.innerWidth < 1024 ? 12 : 14, // Smaller on mobile, medium on tablet, larger on desktop
+          size:
+            window.innerWidth < 640 ? 10 : window.innerWidth < 1024 ? 12 : 14, // Smaller on mobile, medium on tablet, larger on desktop
           color: "#ffffff",
         },
-        padding: window.innerWidth < 640 ? 6 : window.innerWidth < 1024 ? 8 : 12, // Smaller padding on mobile, medium on tablet, larger on desktop
+        padding:
+          window.innerWidth < 640 ? 6 : window.innerWidth < 1024 ? 8 : 12, // Smaller padding on mobile, medium on tablet, larger on desktop
         cornerRadius: 6,
         boxPadding: 4,
         callbacks: {
@@ -406,7 +412,7 @@ const LibrarianDashboard = () => {
         const config = { headers: { Authorization: `Bearer ${token}` } };
 
         const booksResponse = await axios.get(
-          "https://lms-o44p.onrender.com/api/books",
+          "https://lmsbackend-six.vercel.app/api/books",
           config
         );
         const totalBooks = Array.isArray(booksResponse.data)
@@ -414,13 +420,13 @@ const LibrarianDashboard = () => {
           : booksResponse.data.books?.length || 0;
 
         const activeLoansResponse = await axios.get(
-          "https://lms-o44p.onrender.com/api/loans/active",
+          "https://lmsbackend-six.vercel.app/api/loans/active",
           config
         );
         const activeLoansCount = activeLoansResponse.data.loans?.length || 0;
 
         const studentsResponse = await axios.get(
-          "https://lms-o44p.onrender.com/api/students",
+          "https://lmsbackend-six.vercel.app/api/students",
           config
         );
         const registeredMembers = Array.isArray(studentsResponse.data)
@@ -442,14 +448,14 @@ const LibrarianDashboard = () => {
         ]);
 
         const activitiesResponse = await axios.get(
-          "https://lms-o44p.onrender.com/api/activities/recent",
+          "https://lmsbackend-six.vercel.app/api/activities/recent",
           config
         );
         // Assuming the backend returns activities with an optional issueDate field
         setRecentActivities(activitiesResponse.data.slice(0, 5));
 
         const topBooksResponse = await axios.get(
-          "https://lms-o44p.onrender.com/api/books/top-borrowed",
+          "https://lmsbackend-six.vercel.app/api/books/top-borrowed",
           config
         );
         setTopBooks(topBooksResponse.data.slice(0, 5));

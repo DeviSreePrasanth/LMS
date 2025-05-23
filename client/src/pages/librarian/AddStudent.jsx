@@ -29,7 +29,7 @@ const AddStudent = ({ setActiveSection }) => {
 
     try {
       const response = await axios.post(
-        "https://lms-o44p.onrender.com/api/auth/register",
+        "https://lmsbackend-six.vercel.app/api/auth/register",
         formData
       );
       setSuccess("Student added successfully! Redirecting...");

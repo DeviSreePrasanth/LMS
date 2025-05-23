@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import lib from './lib.jpg';
+import lib from "./lib.jpg";
 
 // Function to decode JWT token (unchanged)
 const decodeToken = (token) => {
@@ -24,7 +24,12 @@ const decodeToken = (token) => {
 };
 
 const Login = () => {
-  const { login, loading: authLoading, error: authError, logout } = useContext(AuthContext);
+  const {
+    login,
+    loading: authLoading,
+    error: authError,
+    logout,
+  } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [studentId, setStudentId] = useState("");
@@ -52,7 +57,7 @@ const Login = () => {
 
     try {
       const loginResponse = await axios.post(
-        "https://lms-o44p.onrender.com/api/auth/login",
+        "https://lmsbackend-six.vercel.app/api/auth/login",
         {
           email,
           password,
@@ -93,7 +98,9 @@ const Login = () => {
     } catch (err) {
       console.error("Login error:", err.response?.data || err.message);
       setLocalError(
-        err.response?.data?.message || err.message || "Invalid credentials or server error"
+        err.response?.data?.message ||
+          err.message ||
+          "Invalid credentials or server error"
       );
     } finally {
       setIsSubmitting(false);
@@ -230,9 +237,7 @@ const Login = () => {
                 animate="animate"
                 transition={{ delay: 0.2 }}
               >
-                <label
-                  className="relative block text-sm font-medium text-[#1E3A8A] mb-2"
-                >
+                <label className="relative block text-sm font-medium text-[#1E3A8A] mb-2">
                   Email Address
                 </label>
                 <input
@@ -253,9 +258,7 @@ const Login = () => {
                 animate="animate"
                 transition={{ delay: 0.3 }}
               >
-                <label
-                  className="relative block text-sm font-medium text-[#1E3A8A] mb-2"
-                >
+                <label className="relative block text-sm font-medium text-[#1E3A8A] mb-2">
                   Student ID (Required for Students)
                 </label>
                 <input
@@ -275,9 +278,7 @@ const Login = () => {
                 animate="animate"
                 transition={{ delay: 0.4 }}
               >
-                <label
-                  className="relative block text-sm font-medium text-[#1E3A8A] mb-2"
-                >
+                <label className="relative block text-sm font-medium text-[#1E3A8A] mb-2">
                   Password
                 </label>
                 <input
@@ -314,7 +315,11 @@ const Login = () => {
                       <motion.svg
                         className="h-5 w-5 text-white"
                         animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                        transition={{
+                          duration: 1,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"

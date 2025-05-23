@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import axios from 'axios';
-import { AuthContext } from '../../context/AuthContext';
+import React, { useState, useEffect, useContext } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import axios from "axios";
+import { AuthContext } from "../../context/AuthContext";
 
 const BorrowedBooks = () => {
   const { user } = useContext(AuthContext);
@@ -12,14 +12,14 @@ const BorrowedBooks = () => {
   useEffect(() => {
     const fetchStudentData = async () => {
       if (!user || !user.email) {
-        setError('User not authenticated or email missing');
+        setError("User not authenticated or email missing");
         setLoading(false);
         return;
       }
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem("token");
         const studentResponse = await axios.get(
-          `https://lms-o44p.onrender.com/api/students/email/${user.email}`,
+          `https://lmsbackend-six.vercel.app/api/students/email/${user.email}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -27,7 +27,7 @@ const BorrowedBooks = () => {
         const student = studentResponse.data;
 
         const loansResponse = await axios.get(
-          `https://lms-o44p.onrender.com/api/loans?studentId=${student._id}`,
+          `https://lmsbackend-six.vercel.app/api/loans?studentId=${student._id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -40,7 +40,7 @@ const BorrowedBooks = () => {
         setStudentData({ ...student, borrowedBooks, returnedBooks });
         setLoading(false);
       } catch (err) {
-        setError(err.response?.data?.message || 'Failed to fetch student data');
+        setError(err.response?.data?.message || "Failed to fetch student data");
         setLoading(false);
       }
     };
@@ -71,11 +71,11 @@ const BorrowedBooks = () => {
   };
 
   const palette = {
-    primary: '#2c3e50',
-    accent: '#1abc9c',
-    warning: '#e74c3c',
-    muted: '#7f8c8d',
-    bg: '#f4f7fa',
+    primary: "#2c3e50",
+    accent: "#1abc9c",
+    warning: "#e74c3c",
+    muted: "#7f8c8d",
+    bg: "#f4f7fa",
   };
 
   if (loading) {
@@ -196,7 +196,7 @@ const BorrowedBooks = () => {
                             )}
                           </td>
                           <td className="py-2 px-3 sm:px-4 text-xs sm:text-sm">
-                            {fine > 0 ? `$${fine}` : '-'}
+                            {fine > 0 ? `$${fine}` : "-"}
                           </td>
                         </motion.tr>
                       );
@@ -227,11 +227,11 @@ const BorrowedBooks = () => {
                       exit={{ opacity: 0, x: 20 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <strong>{book.title}</strong> - Returned on{' '}
+                      <strong>{book.title}</strong> - Returned on{" "}
                       {new Date(book.returnDate).toLocaleDateString()}
                       {fine > 0 ? (
                         <span className="text-green-600">
-                          {' '}
+                          {" "}
                           (Returned with Fine Paid: ${fine})
                         </span>
                       ) : (

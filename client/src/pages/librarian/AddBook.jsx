@@ -32,7 +32,7 @@ const AddBook = () => {
 
     try {
       const response = await axios.post(
-        "https://lms-o44p.onrender.com/api/books",
+        "https://lmsbackend-six.vercel.app/api/books",
         formData,
         {
           headers: {

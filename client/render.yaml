@@ -1,51 +1,51 @@
 redirects:
   # ✅ API Rewrites
   - source: /api/auth/login
-    destination: https://lms-o44p.onrender.com/auth/login
+    destination: https://lmsbackend-six.vercel.app/auth/login
     status: 200
 
   - source: /api/auth/register
-    destination: https://lms-o44p.onrender.com/auth/register
+    destination: https://lmsbackend-six.vercel.app/auth/register
     status: 200
 
   - source: /api/books
-    destination: https://lms-o44p.onrender.com/books
+    destination: https://lmsbackend-six.vercel.app/books
     status: 200
 
   - source: /api/books/:id
-    destination: https://lms-o44p.onrender.com/books/:id
+    destination: https://lmsbackend-six.vercel.app/books/:id
     status: 200
 
   - source: /api/books/top-borrowed
-    destination: https://lms-o44p.onrender.com/books/top-borrowed
+    destination: https://lmsbackend-six.vercel.app/books/top-borrowed
     status: 200
 
   - source: /api/loans
-    destination: https://lms-o44p.onrender.com/loans
+    destination: https://lmsbackend-six.vercel.app/loans
     status: 200
 
   - source: /api/loans/active
-    destination: https://lms-o44p.onrender.com/loans/active
+    destination: https://lmsbackend-six.vercel.app/loans/active
     status: 200
 
   - source: /api/loans/return/:id
-    destination: https://lms-o44p.onrender.com/loans/return/:id
+    destination: https://lmsbackend-six.vercel.app/loans/return/:id
     status: 200
 
   - source: /api/activities/recent
-    destination: https://lms-o44p.onrender.com/activities/recent
+    destination: https://lmsbackend-six.vercel.app/activities/recent
     status: 200
 
   - source: /api/students
-    destination: https://lms-o44p.onrender.com/students
+    destination: https://lmsbackend-six.vercel.app/students
     status: 200
 
   - source: /api/students/:id
-    destination: https://lms-o44p.onrender.com/students/:id
+    destination: https://lmsbackend-six.vercel.app/students/:id
     status: 200
 
   - source: /api/students/email/:email
-    destination: https://lms-o44p.onrender.com/students/email/:email
+    destination: https://lmsbackend-six.vercel.app/students/email/:email
     status: 200
 
   # ✅ Fix "Page Not Found" on Refresh (for React/Vue)

@@ -103,7 +103,7 @@ const Header = ({ isOpen, setIsOpen, name, profileImage, setProfileImage }) => {
       // Update backend with the new image URL
       const token = localStorage.getItem("token");
       await axios.put(
-        `https://lms-o44p.onrender.com/api/students/email/${user.email}`,
+        `https://lmsbackend-six.vercel.app/api/students/email/${user.email}`,
         { profileImage: imageUrl },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -112,7 +112,9 @@ const Header = ({ isOpen, setIsOpen, name, profileImage, setProfileImage }) => {
       setProfileImage(imageUrl);
     } catch (error) {
       console.error("Error uploading image:", error);
-      alert("Failed to upload image. Please check your network or credentials.");
+      alert(
+        "Failed to upload image. Please check your network or credentials."
+      );
     } finally {
       setIsUploading(false);
     }
@@ -191,7 +193,12 @@ const StudentDashboard = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [statsData, setStatsData] = useState([
     { title: "Total Books", value: "0", icon: FaBook, color: "text-[#1abc9c]" },
-    { title: "My Loans", value: "0", icon: FaCalendar, color: "text-[#16a085]" },
+    {
+      title: "My Loans",
+      value: "0",
+      icon: FaCalendar,
+      color: "text-[#16a085]",
+    },
     { title: "Overdue", value: "0", icon: FaClock, color: "text-[#e74c3c]" },
   ]);
   const [isOpen, setIsOpen] = useState(false);
@@ -216,18 +223,18 @@ const StudentDashboard = () => {
         const config = { headers: { Authorization: `Bearer ${token}` } };
 
         const studentResponse = await axios.get(
-          `https://lms-o44p.onrender.com/api/students/email/${user.email}`,
+          `https://lmsbackend-six.vercel.app/api/students/email/${user.email}`,
           config
         );
         if (!studentResponse.data) {
           throw new Error("Student not found");
         }
         setStudentName(studentResponse.data.name || user.email);
-        setProfileImage(studentResponse.data.profileImage || null); 
+        setProfileImage(studentResponse.data.profileImage || null);
         const studentId = studentResponse.data._id;
 
         const booksResponse = await axios.get(
-          "https://lms-o44p.onrender.com/api/books",
+          "https://lmsbackend-six.vercel.app/api/books",
           config
         );
         const totalBooks = Array.isArray(booksResponse.data)
@@ -235,7 +242,7 @@ const StudentDashboard = () => {
           : 0;
 
         const loansResponse = await axios.get(
-          `https://lms-o44p.onrender.com/api/loans?studentId=${studentId}`,
+          `https://lmsbackend-six.vercel.app/api/loans?studentId=${studentId}`,
           config
         );
         const allLoans = loansResponse.data || [];
@@ -246,13 +253,31 @@ const StudentDashboard = () => {
         ).length;
 
         setStatsData([
-          { title: "Total Books", value: totalBooks.toString(), icon: FaBook, color: "text-[#1abc9c]" },
-          { title: "My Loans", value: activeLoans.toString(), icon: FaCalendar, color: "text-[#16a085]" },
-          { title: "Overdue", value: overdueLoans.toString(), icon: FaClock, color: "text-[#e74c3c]" },
+          {
+            title: "Total Books",
+            value: totalBooks.toString(),
+            icon: FaBook,
+            color: "text-[#1abc9c]",
+          },
+          {
+            title: "My Loans",
+            value: activeLoans.toString(),
+            icon: FaCalendar,
+            color: "text-[#16a085]",
+          },
+          {
+            title: "Overdue",
+            value: overdueLoans.toString(),
+            icon: FaClock,
+            color: "text-[#e74c3c]",
+          },
         ]);
         setFetchError(null);
       } catch (err) {
-        console.error("Error fetching dashboard data:", err.response?.data || err.message);
+        console.error(
+          "Error fetching dashboard data:",
+          err.response?.data || err.message
+        );
         setFetchError(
           err.response?.status === 404
             ? "Student profile not found. Contact your librarian."
@@ -260,9 +285,24 @@ const StudentDashboard = () => {
         );
         setStudentName(user.email);
         setStatsData([
-          { title: "Total Books", value: "N/A", icon: FaBook, color: "text-[#1abc9c]" },
-          { title: "My Loans", value: "0", icon: FaCalendar, color: "text-[#16a085]" },
-          { title: "Overdue", value: "0", icon: FaClock, color: "text-[#e74c3c]" },
+          {
+            title: "Total Books",
+            value: "N/A",
+            icon: FaBook,
+            color: "text-[#1abc9c]",
+          },
+          {
+            title: "My Loans",
+            value: "0",
+            icon: FaCalendar,
+            color: "text-[#16a085]",
+          },
+          {
+            title: "Overdue",
+            value: "0",
+            icon: FaClock,
+            color: "text-[#e74c3c]",
+          },
         ]);
       } finally {
         setLoading(false);

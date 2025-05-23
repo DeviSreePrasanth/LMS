@@ -19,7 +19,7 @@ const StudentBookList = () => {
     const fetchBooks = async () => {
       try {
         const response = await axios.get(
-          "https://lms-o44p.onrender.com/api/books"
+          "https://lmsbackend-six.vercel.app/api/books"
         );
         const sortedBooks = response.data.sort((a, b) => a.bid - b.bid);
         setBooks(sortedBooks);

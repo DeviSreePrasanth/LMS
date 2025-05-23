@@ -28,7 +28,7 @@ const BookList = () => {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          "https://lms-o44p.onrender.com/api/books",
+          "https://lmsbackend-six.vercel.app/api/books",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -89,7 +89,7 @@ const BookList = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.delete(
-        `https://lms-o44p.onrender.com/api/books/${bookId}`,
+        `https://lmsbackend-six.vercel.app/api/books/${bookId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -134,7 +134,7 @@ const BookList = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.put(
-        `https://lms-o44p.onrender.com/api/books/${editingBook}`,
+        `https://lmsbackend-six.vercel.app/api/books/${editingBook}`,
         editData,
         {
           headers: {
@@ -273,7 +273,10 @@ const BookList = () => {
           <tbody>
             {!filteredBooks.length ? (
               <tr className="hover:bg-gray-100 border-b border-gray-200 transition duration-300 ease-in-out">
-                <td colSpan="6" className="py-4 text-center text-[#7f8c8d] text-sm sm:text-base">
+                <td
+                  colSpan="6"
+                  className="py-4 text-center text-[#7f8c8d] text-sm sm:text-base"
+                >
                   No books match the selected filters or search
                 </td>
               </tr>

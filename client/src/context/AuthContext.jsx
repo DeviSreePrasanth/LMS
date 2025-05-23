@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
   const verifyToken = useCallback(async (accessToken) => {
     try {
       const response = await axios.get(
-        "https://lms-o44p.onrender.com/api/auth/verify",
+        "https://lmsbackend-six.vercel.app/api/auth/verify",
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }
@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
       if (!storedRefreshToken) throw new Error("No refresh token available");
 
       const response = await axios.post(
-        "https://lms-o44p.onrender.com/api/auth/refresh",
+        "https://lmsbackend-six.vercel.app/api/auth/refresh",
         {
           refreshToken: storedRefreshToken,
         }

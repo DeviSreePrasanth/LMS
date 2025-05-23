@@ -13,14 +13,14 @@ const Students = () => {
     const fetchStudents = async () => {
       try {
         const studentsResponse = await axios.get(
-          "https://lms-o44p.onrender.com/api/students"
+          "https://lmsbackend-six.vercel.app/api/students"
         );
         const studentsData = studentsResponse.data;
 
         const studentsWithLoans = await Promise.all(
           studentsData.map(async (student) => {
             const loansResponse = await axios.get(
-              `https://lms-o44p.onrender.com/api/loans?studentId=${student._id}`
+              `https://lmsbackend-six.vercel.app/api/loans?studentId=${student._id}`
             );
             return { ...student, borrowedBooks: loansResponse.data };
           })
@@ -37,7 +37,10 @@ const Students = () => {
 
   const indexOfLastStudent = currentPage * studentsPerPage;
   const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
-  const currentStudents = students.slice(indexOfFirstStudent, indexOfLastStudent);
+  const currentStudents = students.slice(
+    indexOfFirstStudent,
+    indexOfLastStudent
+  );
   const totalPages = Math.ceil(students.length / studentsPerPage);
 
   const handleNextPage = () => {
@@ -61,14 +64,20 @@ const Students = () => {
     if (returnDate) {
       const due = new Date(dueDate);
       const returned = new Date(returnDate);
-      const overdueDays = Math.max(0, Math.floor((returned - due) / (1000 * 60 * 60 * 24)));
+      const overdueDays = Math.max(
+        0,
+        Math.floor((returned - due) / (1000 * 60 * 60 * 24))
+      );
       const finePerDay = 5; // $5 per day overdue
       return overdueDays > 0 ? overdueDays * finePerDay : 0;
     }
     // If not returned, calculate fine up to today
     const today = new Date();
     const due = new Date(dueDate);
-    const overdueDays = Math.max(0, Math.floor((today - due) / (1000 * 60 * 60 * 24)));
+    const overdueDays = Math.max(
+      0,
+      Math.floor((today - due) / (1000 * 60 * 60 * 24))
+    );
     const finePerDay = 5; // $5 per day overdue
     return overdueDays > 0 ? overdueDays * finePerDay : 0;
   };
@@ -248,9 +257,13 @@ const Students = () => {
                       </thead>
                       <tbody>
                         {selectedStudent.borrowedBooks.map((book) => {
-                          const fine = calculateFine(book.dueDate, book.returnDate);
+                          const fine = calculateFine(
+                            book.dueDate,
+                            book.returnDate
+                          );
                           const isOverdue =
-                            !book.returnDate && new Date(book.dueDate) < new Date();
+                            !book.returnDate &&
+                            new Date(book.dueDate) < new Date();
                           return (
                             <tr
                               key={book._id}
@@ -275,7 +288,9 @@ const Students = () => {
                                       Returned with Fine Paid
                                     </span>
                                   ) : (
-                                    <span className="text-green-500">Returned</span>
+                                    <span className="text-green-500">
+                                      Returned
+                                    </span>
                                   )
                                 ) : isOverdue ? (
                                   <span className="text-red-500">Overdue</span>

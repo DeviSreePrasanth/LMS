@@ -34,7 +34,7 @@ const ReturnBook = ({ setActiveSection }) => {
         }
 
         const studentsResponse = await axios.get(
-          "https://lms-o44p.onrender.com/api/students",
+          "https://lmsbackend-six.vercel.app/api/students",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -42,7 +42,7 @@ const ReturnBook = ({ setActiveSection }) => {
         setStudents(studentsResponse.data);
 
         const activeLoansResponse = await axios.get(
-          "https://lms-o44p.onrender.com/api/loans/active",
+          "https://lmsbackend-six.vercel.app/api/loans/active",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -132,7 +132,7 @@ const ReturnBook = ({ setActiveSection }) => {
       }
 
       const response = await axios.put(
-        `https://lms-o44p.onrender.com/api/loans/return/${formData.issuedBookId}`,
+        `https://lmsbackend-six.vercel.app/api/loans/return/${formData.issuedBookId}`,
         submitData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -151,7 +151,7 @@ const ReturnBook = ({ setActiveSection }) => {
       });
 
       const updatedResponse = await axios.get(
-        "https://lms-o44p.onrender.com/api/loans/active",
+        "https://lmsbackend-six.vercel.app/api/loans/active",
         {
           headers: { Authorization: `Bearer ${token}` },
         }

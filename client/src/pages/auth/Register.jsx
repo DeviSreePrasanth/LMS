@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import libb from './libb.jpg';
+import libb from "./libb.jpg";
 
 const Register = () => {
   const { login } = useContext(AuthContext);
@@ -25,7 +25,7 @@ const Register = () => {
 
     try {
       const response = await axios.post(
-        "https://lms-o44p.onrender.com/api/auth/register",
+        "https://lmsbackend-six.vercel.app/api/auth/register",
         {
           name,
           email,
@@ -183,9 +183,7 @@ const Register = () => {
                 animate="animate"
                 transition={{ delay: 0.2 }}
               >
-                <label
-                  className="relative block text-sm font-medium text-[#1E3A8A] mb-2"
-                >
+                <label className="relative block text-sm font-medium text-[#1E3A8A] mb-2">
                   Your Name
                 </label>
                 <input
@@ -206,9 +204,7 @@ const Register = () => {
                 animate="animate"
                 transition={{ delay: 0.3 }}
               >
-                <label
-                  className="relative block text-sm font-medium text-[#1E3A8A] mb-2"
-                >
+                <label className="relative block text-sm font-medium text-[#1E3A8A] mb-2">
                   Email Address
                 </label>
                 <input
@@ -229,9 +225,7 @@ const Register = () => {
                 animate="animate"
                 transition={{ delay: 0.4 }}
               >
-                <label
-                  className="relative block text-sm font-medium text-[#1E3A8A] mb-2"
-                >
+                <label className="relative block text-sm font-medium text-[#1E3A8A] mb-2">
                   Student ID
                 </label>
                 <input
@@ -252,9 +246,7 @@ const Register = () => {
                 animate="animate"
                 transition={{ delay: 0.5 }}
               >
-                <label
-                  className="relative block text-sm font-medium text-[#1E3A8A] mb-2"
-                >
+                <label className="relative block text-sm font-medium text-[#1E3A8A] mb-2">
                   Password
                 </label>
                 <input

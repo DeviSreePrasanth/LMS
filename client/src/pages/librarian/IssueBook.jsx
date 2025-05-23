@@ -19,12 +19,12 @@ const IssueBook = ({ setActiveSection }) => {
     const fetchData = async () => {
       try {
         const studentsResponse = await axios.get(
-          "https://lms-o44p.onrender.com/api/students"
+          "https://lmsbackend-six.vercel.app/api/students"
         );
         setStudents(studentsResponse.data);
 
         const booksResponse = await axios.get(
-          "https://lms-o44p.onrender.com/api/books"
+          "https://lmsbackend-six.vercel.app/api/books"
         );
         setBooks(booksResponse.data);
       } catch (err) {
@@ -73,7 +73,7 @@ const IssueBook = ({ setActiveSection }) => {
 
     try {
       const response = await axios.post(
-        "https://lms-o44p.onrender.com/api/loans",
+        "https://lmsbackend-six.vercel.app/api/loans",
         submitData
       );
       setSuccess("Book issued successfully!");

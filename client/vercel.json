@@ -2,51 +2,51 @@
   "rewrites": [
     {
       "source": "/api/auth/login",
-      "destination": "https://lms-o44p.onrender.com/auth/login"
+      "destination": "https://lmsbackend-six.vercel.app/auth/login"
     },
     {
       "source": "/api/auth/register",
-      "destination": "https://lms-o44p.onrender.com/auth/register"
+      "destination": "https://lmsbackend-six.vercel.app/auth/register"
     },
     {
       "source": "/api/books",
-      "destination": "https://lms-o44p.onrender.com/books"
+      "destination": "https://lmsbackend-six.vercel.app/books"
     },
     {
       "source": "/api/books/:id",
-      "destination": "https://lms-o44p.onrender.com/books/:id"
+      "destination": "https://lmsbackend-six.vercel.app/books/:id"
     },
     {
       "source": "/api/books/top-borrowed",
-      "destination": "https://lms-o44p.onrender.com/books/top-borrowed"
+      "destination": "https://lmsbackend-six.vercel.app/books/top-borrowed"
     },
     {
       "source": "/api/loans",
-      "destination": "https://lms-o44p.onrender.com/loans"
+      "destination": "https://lmsbackend-six.vercel.app/loans"
     },
     {
       "source": "/api/loans/active",
-      "destination": "https://lms-o44p.onrender.com/loans/active"
+      "destination": "https://lmsbackend-six.vercel.app/loans/active"
     },
     {
       "source": "/api/loans/return/:id",
-      "destination": "https://lms-o44p.onrender.com/loans/return/:id"
+      "destination": "https://lmsbackend-six.vercel.app/loans/return/:id"
     },
     {
       "source": "/api/activities/recent",
-      "destination": "https://lms-o44p.onrender.com/activities/recent"
+      "destination": "https://lmsbackend-six.vercel.app/activities/recent"
     },
     {
       "source": "/api/students",
-      "destination": "https://lms-o44p.onrender.com/students"
+      "destination": "https://lmsbackend-six.vercel.app/students"
     },
     {
       "source": "/api/students/:id",
-      "destination": "https://lms-o44p.onrender.com/students/:id"
+      "destination": "https://lmsbackend-six.vercel.app/students/:id"
     },
     {
       "source": "/api/students/email/:email",
-      "destination": "https://lms-o44p.onrender.com/students/email/:email"
+      "destination": "https://lmsbackend-six.vercel.app/students/email/:email"
     },
     {
       "source": "/(.*)",
